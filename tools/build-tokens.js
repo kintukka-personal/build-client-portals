@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// Builds a client's CSS design tokens from clients/<slug>/brand/brand.json.
+// Builds a client's CSS design tokens from clients/<slug>/brand/<slug>-brand.json.
 //
 //   node tools/build-tokens.js onyx
 //
-// Writes clients/<slug>/brand/tokens.css and, if brand-sheet.html exists beside it,
+// Writes clients/<slug>/brand/<slug>-tokens.css and, if <slug>-brand-sheet.html exists beside it,
 // refreshes the block between "/* @tokens */" and "/* @/tokens */" so the sheet stays
-// a single self-contained file. Also prints the contrast ratios that BRAND.md quotes.
+// a single self-contained file. Also prints the contrast ratios that <slug>-brand.md quotes.
 // No dependencies.
 
 const fs = require('fs');
@@ -15,7 +15,7 @@ const slug = process.argv[2];
 if (!slug) { console.error('usage: node tools/build-tokens.js <client-slug>'); process.exit(1); }
 
 const dir = path.join(__dirname, '..', 'clients', slug, 'brand');
-const brand = JSON.parse(fs.readFileSync(path.join(dir, 'brand.json'), 'utf8'));
+const brand = JSON.parse(fs.readFileSync(path.join(dir, `${slug}-brand.json`), 'utf8'));
 
 // ---- colour helpers --------------------------------------------------------
 function hexToRgb(hex) {
@@ -40,7 +40,7 @@ const type = brand.typography;
 const shape = brand.shape;
 
 const lines = [];
-lines.push(`/* ${brand.meta.client} design tokens. Generated from brand.json v${brand.meta.version} by tools/build-tokens.js. Do not edit by hand. */`);
+lines.push(`/* ${brand.meta.client} design tokens. Generated from ${slug}-brand.json v${brand.meta.version} by tools/build-tokens.js. Do not edit by hand. */`);
 lines.push(':root {');
 lines.push('  /* palette */');
 for (const [k, v] of Object.entries(pal)) lines.push(`  --c-${k}: ${v.hex};`);
@@ -69,19 +69,19 @@ lines.push(`  --sim-border: ${brand.simstudio.shapeAndStrength.borderWeight}px;`
 lines.push('}');
 const css = lines.join('\n') + '\n';
 
-fs.writeFileSync(path.join(dir, 'tokens.css'), css);
-console.log(`wrote ${path.relative(process.cwd(), path.join(dir, 'tokens.css'))} (${lines.length - 2} declarations)`);
+fs.writeFileSync(path.join(dir, `${slug}-tokens.css`), css);
+console.log(`wrote ${path.relative(process.cwd(), path.join(dir, `${slug}-tokens.css`))} (${lines.length - 2} declarations)`);
 
 // ---- inject into the brand sheet -------------------------------------------
-const sheet = path.join(dir, 'brand-sheet.html');
+const sheet = path.join(dir, `${slug}-brand-sheet.html`);
 if (fs.existsSync(sheet)) {
   const html = fs.readFileSync(sheet, 'utf8');
   const open = '/* @tokens */', close = '/* @/tokens */';
   const a = html.indexOf(open), b = html.indexOf(close);
-  if (a === -1 || b === -1) throw new Error('brand-sheet.html has no @tokens markers');
+  if (a === -1 || b === -1) throw new Error(`${slug}-brand-sheet.html has no @tokens markers`);
   const out = html.slice(0, a + open.length) + '\n' + css + html.slice(b);
   fs.writeFileSync(sheet, out);
-  console.log('refreshed tokens inside brand-sheet.html');
+  console.log(`refreshed tokens inside ${slug}-brand-sheet.html`);
 }
 
 // ---- contrast report -------------------------------------------------------
