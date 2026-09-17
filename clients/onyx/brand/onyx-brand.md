@@ -7,10 +7,10 @@ learning portal and every SimStudio simulation built for it.
 
 | File | What it is |
 | --- | --- |
-| `brand.json` | The machine-readable truth. Every colour, type step, shape value, component rule and the SimStudio kit. Edit this, nothing else. |
-| `tokens.css` | Generated from `brand.json` by `node tools/build-tokens.js onyx`. The portal imports it. Never hand-edited. |
-| `brand-sheet.html` | The visual portfolio. Open it in a browser. Self-contained, dark, phone-first. Send it to the client for sign-off. |
-| `assets/onyx-logo.svg`, `assets/onyx-mark.svg`, `assets/recover-logo.svg` | Vector stand-ins drawn from the site. The client's master files replace them at the same paths. |
+| `onyx-brand.json` | The machine-readable truth. Every colour, type step, shape value, component rule and the SimStudio kit. Edit this, nothing else. |
+| `onyx-tokens.css` | Generated from `onyx-brand.json` by `node tools/build-tokens.js onyx`. The portal imports it. Never hand-edited. |
+| `onyx-brand-sheet.html` | The visual portfolio. Open it in a browser. Self-contained, dark, phone-first. Send it to the client for sign-off. |
+| `assets/onyx-logo.svg`, `assets/onyx-mark.svg`, `assets/onyx-recover-logo.svg` | Vector stand-ins drawn from the site. The client's master files replace them at the same paths. |
 | `assets/reference/` | Cropped captures of the logo, the sub-brand lockup and each component, plus a contact sheet of the sixteen screens the portfolio was built from. |
 
 ---
@@ -26,7 +26,7 @@ learning portal and every SimStudio simulation built for it.
 - **Equipment partners shown on site:** Fitness Passport, Life Fitness, Hammer Strength (Official Training Center), Panatta, Rogue, Watson Gym Equipment.
 - **Web:** onyxgym.com.au, with a Member Login tab pinned to every page.
 
-A pricing snapshot as observed on the day sits in `brand.json` under `identity.pricingSnapshot`. It is demo content for the portal, not a price list.
+A pricing snapshot as observed on the day sits in `onyx-brand.json` under `identity.pricingSnapshot`. It is demo content for the portal, not a price list.
 
 ## 2. Voice
 
@@ -133,7 +133,7 @@ Square-cornered throughout. Buttons, cards, tabs, inputs and frames sit at 0 rad
 
 ## 7. Components
 
-Rebuilt from the tokens on the brand sheet. Specifications are in `brand.json` under `components`.
+Rebuilt from the tokens on the brand sheet. Specifications are in `onyx-brand.json` under `components`.
 
 - **Primary button.** Amber fill, uppercase SemiBold, 18px 44px padding, 0 radius. Full-width inside the menu overlay, fixed-width and centred on pages. Portal text is Ink.
 - **Secondary button.** Derived: transparent with a 2px green border and green text.
@@ -184,7 +184,7 @@ Shape and strength: screen dim 60%, roundness 0, border weight 3px. Typeface Pop
 **To confirm with ONYX before the portal ships:**
 
 1. Master logo files for the lockup, the mark and RECOVER by ONYX.
-2. Any existing brand guideline document. Where it disagrees with this portfolio, the guideline wins and `brand.json` is updated.
+2. Any existing brand guideline document. Where it disagrees with this portfolio, the guideline wins and `onyx-brand.json` is updated.
 3. Photo library and usage rights for staff portraits inside the portal.
 4. Legal entity name for the portal footer.
 5. Which gym management system sits behind Member Login, so the portal can deep-link to it.

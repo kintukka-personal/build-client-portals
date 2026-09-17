@@ -8,7 +8,7 @@
     "capturedBy": "WiseTech Global (Daniel Moreira)",
     "sources": [
       "https://onyxgym.com.au/ (mobile captures, 16 screens: home, memberships, RECOVER, meet the team, founders, coaches, contact)",
-      "assets/reference/site-contact-sheet.jpg"
+      "assets/reference/onyx-site-contact-sheet.jpg"
     ],
     "confirmWithClient": [
       "Master logo files (SVG or AI) for the ONYX lockup, the gem mark and the RECOVER by ONYX lockup",
@@ -95,7 +95,7 @@
     "subBrand": {
       "name": "RECOVER by ONYX",
       "description": "RECOVER. in outlined italic condensed green capitals with a full stop; 'by' in a white script; the ONYX mark and wordmark in white beneath.",
-      "files": { "vector": "assets/recover-logo.svg", "capture": "assets/reference/recover-logo-capture.png" }
+      "files": { "vector": "assets/onyx-recover-logo.svg", "capture": "assets/reference/onyx-recover-logo-capture.png" }
     },
     "wordmarkTreatment": "The O in ONYX carries a diagonal cut across its upper-left, echoing the facet line in the mark."
   },

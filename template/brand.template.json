@@ -1,5 +1,5 @@
 {
-  "_help": "Copy to clients/<slug>/brand/brand.json and fill in. Every _help key is deleted as its section is completed. clients/onyx/brand/brand.json is the worked example.",
+  "_help": "Copy to clients/<slug>/brand/<slug>-brand.json and fill in. Every _help key is deleted as its section is completed. clients/onyx/brand/onyx-brand.json is the worked example.",
   "meta": {
     "client": "", "slug": "", "version": "0.1.0", "status": "draft", "capturedOn": "", "capturedBy": "",
     "sources": [], "confirmWithClient": []

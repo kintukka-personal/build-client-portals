@@ -8,14 +8,17 @@ visual sheet the client signs off. ONYX is the worked example: `clients/onyx/bra
 
 ```
 clients/<slug>/brand/
-  brand.json          the truth; edit this and nothing else
-  tokens.css          generated; never hand-edited
-  brand-sheet.html    the visual portfolio for sign-off
-  BRAND.md            the written portfolio
+  <slug>-brand.json          the truth; edit this and nothing else
+  <slug>-tokens.css          generated; never hand-edited
+  <slug>-brand-sheet.html    the visual portfolio for sign-off
+  <slug>-brand.md            the written portfolio
   assets/
-    <slug>-logo.svg   lockup (client master file, or a stand-in until it arrives)
-    <slug>-mark.svg   mark alone
-    reference/        cropped captures and a contact sheet of the sources
+    <slug>-logo.svg          lockup (client master file, or a stand-in until it arrives)
+    <slug>-mark.svg          mark alone
+    reference/<slug>-*       cropped captures and a contact sheet of the sources
+
+Every file carries the client slug, so files from different clients never collide when
+they sit side by side in a download folder, an email or a build.
 ```
 
 ## Steps
@@ -29,29 +32,29 @@ clients/<slug>/brand/
    dominant value across a flat region. Record hex and RGB.
 3. **Identify the typeface** from letterform shapes and confirm against Google Fonts or
    the site's CSS when it is reachable. Record the weights actually in use.
-4. **Fill `brand.json`** starting from `template/brand.template.json`. Every section has a
+4. **Fill `<slug>-brand.json`** starting from `template/brand.template.json`. Every section has a
    `_help` note. Keep the client's own words for positioning and promise.
 5. **Derive the portal tones.** Surface, raised surface, ink, muted, hairline, pressed
    states, error. Mark every derived colour as derived in its usage note.
 6. **Run the contrast check.** `node tools/build-tokens.js <slug>` prints every pair. Any
-   site pattern that fails AA gets a portal variant and a sentence in BRAND.md saying so.
+   site pattern that fails AA gets a portal variant and a sentence in `<slug>-brand.md` saying so.
    Shapes and colours stay as the site has them; only the ink changes.
 7. **Draw the logo stand-ins** as SVG from a zoomed capture with a 10% grid over it.
    Geometry first, then stroke weight. Write the replacement note in the file comment.
-8. **Build the sheet.** Copy `clients/onyx/brand/brand-sheet.html`, replace the content,
+8. **Build the sheet.** Copy `clients/onyx/brand/onyx-brand-sheet.html` to `<slug>-brand-sheet.html`, replace the content,
    keep the `/* @tokens */` markers, run the build again so the tokens are injected.
 9. **Render and check** at 390px and 1280px with Playwright. Headless Chromium alone
    clamps windows to 500px wide, so use device emulation for phone widths.
-10. **Write BRAND.md** from the sheet. Snapshot, voice, logo, colour with the contrast
+10. **Write `<slug>-brand.md`** from the sheet. Snapshot, voice, logo, colour with the contrast
     table, type, shape, components, imagery, portal translation, SimStudio kit, provenance.
-11. **Send the sheet** to the client. Their corrections go into `brand.json`, the build
+11. **Send the sheet** to the client. Their corrections go into `<slug>-brand.json`, the build
     runs, the version bumps, the changelog gets a line.
 
 ## The SimStudio kit
 
-Six decisions and three shape values, straight out of `brand.json → simstudio`. Enter them
+Six decisions and three shape values, straight out of `<slug>-brand.json → simstudio`. Enter them
 in *Settings → Brand kits*, save the kit under the client's name, *Export* it and keep the
-`.simbrand.json` beside `brand.json`. Every simulation for the client wears the kit, and the
+`.simbrand.json` beside `<slug>-brand.json`. Every simulation for the client wears the kit, and the
 portal's callout styling matches it.
 
 ## Time
