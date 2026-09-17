@@ -29,7 +29,7 @@ clients/<slug>/portal/
    step count. When it lands, point at the file and set `demo` to false.
 5. **Build.** `node tools/build-portal.js <slug>`. The build refuses a path that names an
    unknown item, an item with an unknown audience or area, and warns on a missing file.
-6. **Walk it** on a phone: name prompt, a simulation to completion, a guide ticked through,
+6. **Walk it** on a phone: the landing pick, name prompt, a simulation to completion, a guide ticked through,
    a wrong key then the right one, an export from Me. Check the desktop rail.
 7. **Hand it over** as a link or a folder. Keys go to the client separately.
 
