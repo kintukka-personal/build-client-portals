@@ -1,0 +1,235 @@
+{
+  "meta": {
+    "client": "ONYX Gym & Fitness",
+    "slug": "onyx",
+    "version": "1.0.0",
+    "status": "captured-from-public-site",
+    "capturedOn": "2026-09-17",
+    "capturedBy": "WiseTech Global (Daniel Moreira)",
+    "sources": [
+      "https://onyxgym.com.au/ (mobile captures, 16 screens: home, memberships, RECOVER, meet the team, founders, coaches, contact)",
+      "assets/reference/site-contact-sheet.jpg"
+    ],
+    "confirmWithClient": [
+      "Master logo files (SVG or AI) for the ONYX lockup, the gem mark and the RECOVER by ONYX lockup",
+      "Any existing brand guideline document; the hex values below are pixel-sampled from the live site",
+      "Photo library and usage rights for staff portraits used inside the portal",
+      "Legal entity name and ABN for the portal footer",
+      "Which gym management system sits behind Member Login, so the portal can deep-link to it"
+    ]
+  },
+
+  "identity": {
+    "name": "ONYX",
+    "tradingName": "ONYX Gym & Fitness",
+    "styling": "ONYX is always set in capitals in running text. RECOVER is always set in capitals. Never Onyx, never Recover.",
+    "sector": "24/7 gym, group fitness, personal training and contrast-therapy recovery",
+    "positioning": "One of Sydney's top rated 24/7 gyms. Not only a gym, but also a community.",
+    "promise": "We believe in creating an environment where you feel comfortable to be yourself, regardless of your training experience or goals.",
+    "website": "https://onyxgym.com.au",
+    "locations": [
+      { "name": "Alexandria", "address": "20 Bowden Street, Alexandria NSW", "status": "open", "note": "Flagship. Biggest 24/7 gym in Alexandria. Near Green Square, Waterloo, Zetland, Mascot and Sydney Airport." },
+      { "name": "Artarmon", "address": "Artarmon NSW", "status": "pre-registration", "note": "Second site. Site menu carries REGISTER ARTARMON beside JOIN ALEXANDRIA." }
+    ],
+    "offering": [
+      "Gym: 24/7 access, state-of-the-art equipment",
+      "Classes: unlimited group fitness on every membership",
+      "Personal training: coaches with bodybuilding and powerlifting backgrounds",
+      "RECOVER by ONYX: infrared sauna and ice bath contrast therapy, Together and Solo rooms",
+      "Evolt360 body scan and report",
+      "Fitness Passport accepted"
+    ],
+    "subBrands": [
+      { "name": "RECOVER by ONYX", "styling": "RECOVER in outlined italic green caps, 'by' in a script face, then the ONYX mark and wordmark small underneath.", "purpose": "Recovery rooms: infrared sauna and ice bath memberships and session packages." }
+    ],
+    "partners": ["Fitness Passport", "Life Fitness", "Hammer Strength (Official Training Center)", "Panatta", "Rogue", "Watson Gym Equipment"],
+    "people": [
+      { "name": "Katie King", "role": "Co Founder", "public": true },
+      { "name": "Joey", "role": "Co Founder", "public": true },
+      { "name": "Mick Abboud", "role": "Head of Excellence", "public": true }
+    ],
+    "pricingSnapshot": {
+      "note": "Observed 2026-09-17. Reference only for portal demo content; the client's system is the source of truth for live prices.",
+      "joiningFee": "$59",
+      "plans": [
+        { "name": "ONYX Platinum – 6 Month Membership", "price": "$34.99 per week, billed fortnightly ($69.98)", "badge": "MOST POPULAR", "includes": ["24/7 access", "Unlimited group fitness classes"] },
+        { "name": "ONYX Black – 12 Month Membership", "price": "$28.99 per week, billed fortnightly ($57.98)", "includes": ["24/7 access", "Unlimited group fitness classes", "Free Evolt360 Body Scan & Report (valued at $50)", "Free RECOVER Solo session (valued at $45)"] },
+        { "name": "ONYX Black – Paid In Full Membership", "price": "$1299 once off, 12 months (equivalent $24.98 per week)", "includes": ["24/7 access", "Unlimited group fitness classes", "Free Evolt360 Body Scan & Report (valued at $50)", "Free RECOVER Solo session (valued at $45)"] }
+      ]
+    }
+  },
+
+  "voice": {
+    "tone": ["confident", "warm", "community-first", "plain-spoken", "direct"],
+    "rules": [
+      "Speak to one person: 'you', 'your goals', 'whenever it suits you'.",
+      "Lead with the benefit, then the detail. 'Train whenever it suits your schedule' before opening hours.",
+      "Sentence case for headings. One phrase in the heading carries the green emphasis, never the whole line.",
+      "UPPERCASE for navigation items, buttons, tabs and section labels only.",
+      "Australian English: colour, programme is not used, 'centre', 'organise'.",
+      "Short paragraphs. Lists use the outlined circle-tick, never plain bullets.",
+      "Exclamation marks are rare and earned. One per page at most."
+    ],
+    "vocabulary": {
+      "always": ["ONYX", "RECOVER by ONYX", "members", "coaches", "community", "24/7", "group fitness classes", "personal training"],
+      "never": ["Onyx", "Recover", "customers", "trainers (use coaches)", "users", "clients (members are members)"]
+    },
+    "headlinePattern": "White heading with a single green-emphasised phrase. Examples: 'Meet ONYX <green>Coaches</green>', 'Biggest <green>24/7 Gym</green> in Alexandria', 'Not only a gym, but also a <green>community.</green>'"
+  },
+
+  "logo": {
+    "primary": {
+      "name": "ONYX horizontal lockup",
+      "description": "Green outlined gem mark on the left; ONYX wordmark in condensed grey capitals; '— GYM & FITNESS —' in small green capitals beneath the wordmark, flanked by short dashes.",
+      "files": { "vector": "assets/onyx-logo.svg", "capture": "assets/reference/onyx-logo-capture.png" },
+      "fileStatus": "The SVG is a vector stand-in drawn from the site. The client's master file replaces it at the same path and nothing else changes.",
+      "minWidthPx": 120,
+      "clearSpace": "Height of the gem mark on all sides.",
+      "backgrounds": { "use": ["black", "near-black photography with the standard 60% black dim"], "avoid": ["white or light backgrounds: the site never shows the lockup on light; if a light context is unavoidable use the mark alone in black"] }
+    },
+    "mark": {
+      "name": "ONYX gem mark",
+      "description": "Irregular five-sided outlined stone with one internal facet line, drawn in green at a consistent stroke. Used alone as the favicon, the app icon, and the watermark in the bottom-right of bio panels (white, 40% opacity).",
+      "files": { "vector": "assets/onyx-mark.svg" }
+    },
+    "subBrand": {
+      "name": "RECOVER by ONYX",
+      "description": "RECOVER. in outlined italic condensed green capitals with a full stop; 'by' in a white script; the ONYX mark and wordmark in white beneath.",
+      "files": { "vector": "assets/recover-logo.svg", "capture": "assets/reference/recover-logo-capture.png" }
+    },
+    "wordmarkTreatment": "The O in ONYX carries a diagonal cut across its upper-left, echoing the facet line in the mark."
+  },
+
+  "color": {
+    "palette": {
+      "black":     { "hex": "#000000", "rgb": "0 0 0",       "name": "ONYX Black",  "usage": "Page canvas, card fills, menu overlay. The brand is dark-native." },
+      "green":     { "hex": "#8DCA76", "rgb": "141 202 118", "name": "ONYX Green",  "usage": "Primary brand colour. Headline emphasis, mark, dividers, frames, ticks, links, the Member Login tab, pricing labels, bio panels." },
+      "amber":     { "hex": "#FFBA00", "rgb": "255 186 0",   "name": "Action Amber","usage": "Every call to action: BOOK NOW, JOIN TODAY, CONTACT US. Also the letter-spaced section labels inside the menu and the MOST POPULAR ribbon text." },
+      "white":     { "hex": "#FFFFFF", "rgb": "255 255 255", "name": "White",       "usage": "Headings, body copy, menu items, form field fills." },
+      "grey":      { "hex": "#ACACAC", "rgb": "172 172 172", "name": "Wordmark Grey","usage": "ONYX wordmark, partner logos, the outlined section numerals (03, 04)." },
+      "ink":       { "hex": "#0A0A0A", "rgb": "10 10 10",    "name": "Ink",         "usage": "Text on green or amber fills where AA contrast is required (portal use)." },
+      "surface":   { "hex": "#111111", "rgb": "17 17 17",    "name": "Surface",     "usage": "Portal cards and panels that must sit visibly on the black canvas. Derived, not on the site." },
+      "surface2":  { "hex": "#1A1A1A", "rgb": "26 26 26",    "name": "Surface raised","usage": "Hover states, nested panels, input backgrounds on dark. Derived." },
+      "greenDeep": { "hex": "#5E9A49", "rgb": "94 154 73",   "name": "Green deep",  "usage": "Pressed state of green controls, focus rings on green. Derived." },
+      "greenTint": { "hex": "#8DCA7626", "rgb": "141 202 118 / 15%", "name": "Green tint", "usage": "Selected row, active nav, subtle highlight backgrounds. Derived." },
+      "amberDeep": { "hex": "#D99E00", "rgb": "217 158 0",   "name": "Amber deep",  "usage": "Pressed state of amber buttons. Derived." },
+      "error":     { "hex": "#E5484D", "rgb": "229 72 77",   "name": "Error red",   "usage": "Validation, wrong attempts in simulations. The site has no red; this one is chosen to read on black beside the green. Derived." },
+      "muted":     { "hex": "#8A8A8A", "rgb": "138 138 138", "name": "Muted text",  "usage": "Secondary text, captions, timestamps. Derived from Wordmark Grey." },
+      "line":      { "hex": "#2A2A2A", "rgb": "42 42 42",    "name": "Hairline",    "usage": "Quiet dividers between rows. Brand green is used for feature dividers, this is for structure. Derived." }
+    },
+    "roles": {
+      "bg": "black",
+      "surface": "surface",
+      "surfaceRaised": "surface2",
+      "text": "white",
+      "textMuted": "muted",
+      "textOnPrimary": "ink",
+      "textOnCta": "ink",
+      "primary": "green",
+      "primaryDeep": "greenDeep",
+      "primaryTint": "greenTint",
+      "cta": "amber",
+      "ctaDeep": "amberDeep",
+      "link": "green",
+      "border": "green",
+      "borderQuiet": "line",
+      "success": "green",
+      "warning": "amber",
+      "error": "error",
+      "focus": "amber",
+      "logoWordmark": "grey"
+    },
+    "contrastRules": [
+      "Green on black and white on black pass AA and AAA for body text. Both are the workhorses.",
+      "Amber on black passes AA for body text. Use it for labels and buttons, not paragraphs.",
+      "White on green (1.9:1) and white on amber (1.7:1) fail AA at every size. The site uses both on its marketing pages. The portal does not: text on a green or amber fill is set in Ink (#0A0A0A), which passes at 11:1 and 12:1. Large display headings on the green bio panel are the one place white on green survives, and only above 32px bold.",
+      "Muted grey on black passes AA for body text and is the ceiling for secondary text; nothing dimmer."
+    ]
+  },
+
+  "typography": {
+    "family": "Poppins",
+    "source": "Google Fonts, SIL Open Font License. Self-host the woff2 files for the portal so it works offline.",
+    "fallback": "'Poppins', 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif",
+    "weights": { "regular": 400, "medium": 500, "semibold": 600, "bold": 700 },
+    "scale": {
+      "display": { "size": "44px", "weight": 600, "lineHeight": 1.1, "letterSpacing": "-0.01em", "use": "Hero headings. Mobile hero on the site sits at roughly 44 to 48px." },
+      "h1":      { "size": "32px", "weight": 600, "lineHeight": 1.15, "letterSpacing": "-0.01em", "use": "Page titles inside the portal." },
+      "h2":      { "size": "26px", "weight": 600, "lineHeight": 1.2,  "letterSpacing": "0", "use": "Section headings, pricing card labels." },
+      "h3":      { "size": "20px", "weight": 600, "lineHeight": 1.3,  "letterSpacing": "0", "use": "Card titles, person names." },
+      "price":   { "size": "56px", "weight": 700, "lineHeight": 1,    "letterSpacing": "-0.02em", "use": "The big green figure on a pricing card. Also fits stat tiles." },
+      "body":    { "size": "17px", "weight": 400, "lineHeight": 1.6,  "letterSpacing": "0", "use": "Paragraphs. The site runs body at roughly 17 to 18px on mobile." },
+      "bodySmall": { "size": "15px", "weight": 400, "lineHeight": 1.55, "letterSpacing": "0", "use": "Captions, meta, checklist items in dense lists." },
+      "label":   { "size": "13px", "weight": 600, "lineHeight": 1.2,  "letterSpacing": "0.28em", "transform": "uppercase", "use": "Section labels such as MEET THE TEAM and GYM in the menu, set in amber." },
+      "nav":     { "size": "18px", "weight": 600, "lineHeight": 1.2,  "letterSpacing": "0.02em", "transform": "uppercase", "use": "Menu items: GYM, CLASSES, PERSONAL TRAINING." },
+      "button":  { "size": "16px", "weight": 600, "lineHeight": 1,    "letterSpacing": "0.04em", "transform": "uppercase", "use": "BOOK NOW, JOIN TODAY, CONTACT US." },
+      "tab":     { "size": "15px", "weight": 600, "lineHeight": 1,    "letterSpacing": "0.06em", "transform": "uppercase", "use": "The vertical MEMBER LOGIN tab." }
+    },
+    "rules": [
+      "Marketing pages centre their text. The portal left-aligns body copy and lists; centred text is kept for hero blocks and empty states.",
+      "Headings never exceed two lines on a phone. Cut words, not size.",
+      "Numerals in pricing and stats use the price style in green.",
+      "Outlined display numerals (03, 04) are Poppins Bold at 120px+, 2px grey stroke, transparent fill, sitting behind or beside a photo."
+    ]
+  },
+
+  "shape": {
+    "radius": { "none": "0px", "control": "0px", "card": "0px", "pill": "999px", "avatar": "50%" },
+    "note": "The brand is square-cornered. Buttons, cards, tabs, inputs and frames all sit at 0 radius. The only circles are avatars, the circle-tick icon and the play button.",
+    "borderWidth": { "hairline": "1px", "frame": "2px", "emphasis": "3px" },
+    "frame": "Feature cards are framed by a 2px green line with a deliberate gap at the top where the green label tab sits over the frame edge.",
+    "shadow": "None. Depth comes from black on black tone steps and green lines, never from drop shadows.",
+    "dim": "Hero photography sits under a 60 to 70% black overlay so white and green type stay legible."
+  },
+
+  "components": {
+    "buttonPrimary": { "fill": "amber", "text": "ink (site: white)", "padding": "18px 44px", "radius": "0", "case": "uppercase", "weight": 600, "hover": "amberDeep", "note": "Full-width inside the menu overlay; fixed-width and centred on pages." },
+    "buttonSecondary": { "fill": "transparent", "border": "2px green", "text": "green", "hover": "greenTint fill", "note": "Derived for the portal. The site uses only the amber button and text links." },
+    "textLink": { "text": "green", "arrow": "→ trailing, 1px stroke", "case": "uppercase for LEARN MORE, sentence case inline", "note": "Inline links inside paragraphs are green with no underline." },
+    "sideTab": { "fill": "green", "text": "ink (site: white)", "position": "fixed, right edge, vertically centred, rotated 90°", "label": "MEMBER LOGIN", "size": "72px wide, 270px tall" },
+    "pricingCard": { "frame": "2px green with top gap", "labelTab": "green fill, white text, overlaps the frame top", "price": "56px bold green", "divider": "1px green", "list": "circle-tick, white", "cta": "amber button", "ribbon": "MOST POPULAR: rotated black ribbon, white outlined text, amber edge lines" },
+    "teamCard": { "avatar": "circle, 1px green ring, 480px on desktop", "name": "h3 white", "role": "body white", "action": "LEARN MORE → green uppercase", "layout": "centred stack" },
+    "bioPanel": { "fill": "green", "text": "white on the site; ink in the portal", "heading": "h2", "divider": "1px white at 40%", "list": "circle-tick", "watermark": "gem mark, white, bottom right" },
+    "menuOverlay": { "fill": "black", "items": "nav style white with right chevrons", "sectionLabel": "label style amber, centred, with back chevron on the left", "ctas": "two full-width amber buttons stacked" },
+    "checklistItem": { "icon": "outlined circle with tick, 1.5px stroke, currentColor", "gap": "16px", "text": "body" },
+    "sectionNumeral": { "text": "two-digit, Poppins Bold 120px+, 2px grey outline, no fill", "placement": "behind the corner of a photo" },
+    "divider": { "feature": "1px green, 150px tall vertical between hero and first section", "quiet": "1px line colour" },
+    "input": { "fill": "white", "border": "1px green", "text": "ink", "placeholder": "#909090", "radius": "0", "height": "56px", "note": "The portal's dark variant: surface2 fill, 1px green border, white text." },
+    "slideIndicator": { "shape": "short horizontal bars", "active": "green", "inactive": "white" },
+    "iconography": "Thick 3-bar hamburger and thick X in green. Chevrons 2px white. Circle-tick 1.5px. Play button: white outlined circle with solid triangle."
+  },
+
+  "imagery": {
+    "style": "Real coaches and members, photographed in the gym. Black ONYX tees. Dark interiors with green structural accents on pillars and walls.",
+    "portraits": "Arms crossed, straight to camera, grey brick wall with a diagonal green stripe behind. Cropped to a circle for cards, square for bios.",
+    "treatment": "Heroes are dimmed 60 to 70% black. Never bright, never washed out. No stock imagery.",
+    "portalGuidance": "Onboarding content uses the client's own photos of the real space: reception, gym floor, RECOVER rooms, class studio. A screenshot-heavy simulation sits on a plain black canvas, no photo behind it."
+  },
+
+  "portal": {
+    "theme": "dark",
+    "canvas": "black",
+    "nav": "Left rail on desktop, bottom bar plus full-screen overlay menu on phone, mirroring the site's overlay pattern.",
+    "audienceColours": { "employee": "green", "manager": "amber", "owner": "white" },
+    "notes": [
+      "Text on any green or amber fill is Ink, not white. This is the one deliberate departure from the marketing site and it is for legibility.",
+      "Cards are 0 radius with a 1px hairline border, upgrading to 2px green when active or selected.",
+      "The gem mark is the favicon and the app icon on a black square."
+    ]
+  },
+
+  "simstudio": {
+    "kitName": "ONYX",
+    "decisions": {
+      "highlight":    { "hex": "#8DCA76", "paints": "the click target, the arrow, the typed field" },
+      "box":          { "hex": "#FFBA00", "paints": "a region to read, drawn apart from the target" },
+      "playerAccent": { "hex": "#FFBA00", "paints": "Next and the progress bar" },
+      "calloutPaper": { "hex": "#000000", "paints": "the card the prompt sits on" },
+      "calloutInk":   { "hex": "#FFFFFF", "paints": "the words on it" },
+      "wrongAttempt": { "hex": "#E5484D", "paints": "a miss and the note that follows it" }
+    },
+    "shapeAndStrength": { "screenDim": 0.6, "roundness": 0, "borderWeight": 3 },
+    "typeface": "Poppins",
+    "note": "Six decisions and three shape values, matching the Brand kits dialog. Save as a kit named ONYX in SimStudio, then Export to keep a .simbrand.json copy beside this file."
+  }
+}
