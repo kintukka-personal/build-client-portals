@@ -1,0 +1,85 @@
+{
+  "_help": "Copy to clients/<slug>/brand/brand.json and fill in. Every _help key is deleted as its section is completed. clients/onyx/brand/brand.json is the worked example.",
+  "meta": {
+    "client": "", "slug": "", "version": "0.1.0", "status": "draft", "capturedOn": "", "capturedBy": "",
+    "sources": [], "confirmWithClient": []
+  },
+  "identity": {
+    "_help": "The client's own words. Positioning and promise are quotes from their site, not paraphrases.",
+    "name": "", "tradingName": "", "styling": "", "sector": "", "positioning": "", "promise": "", "website": "",
+    "locations": [{ "name": "", "address": "", "status": "open", "note": "" }],
+    "offering": [], "subBrands": [], "partners": [], "people": [{ "name": "", "role": "", "public": true }]
+  },
+  "voice": {
+    "_help": "Five tone words, then rules a copywriter can follow. Vocabulary is what the client calls things.",
+    "tone": [], "rules": [], "vocabulary": { "always": [], "never": [] }, "headlinePattern": ""
+  },
+  "logo": {
+    "_help": "Describe the geometry in words as well as pointing at the file, so a stand-in can be drawn.",
+    "primary": { "name": "", "description": "", "files": { "vector": "assets/<slug>-logo.svg", "capture": "" }, "fileStatus": "", "minWidthPx": 120, "clearSpace": "", "backgrounds": { "use": [], "avoid": [] } },
+    "mark": { "name": "", "description": "", "files": { "vector": "assets/<slug>-mark.svg" } },
+    "subBrand": null
+  },
+  "color": {
+    "_help": "palette holds every colour with hex, rgb, name and usage; mark derived ones as Derived. roles point at palette keys and drive tokens.css. build-tokens.js fails on a role that names a missing key.",
+    "palette": {
+      "bg":       { "hex": "", "rgb": "", "name": "", "usage": "" },
+      "primary":  { "hex": "", "rgb": "", "name": "", "usage": "" },
+      "cta":      { "hex": "", "rgb": "", "name": "", "usage": "" },
+      "white":    { "hex": "#FFFFFF", "rgb": "255 255 255", "name": "White", "usage": "" },
+      "ink":      { "hex": "", "rgb": "", "name": "Ink", "usage": "Text on primary or cta fills where AA is required. Derived." },
+      "surface":  { "hex": "", "rgb": "", "name": "Surface", "usage": "Derived." },
+      "surface2": { "hex": "", "rgb": "", "name": "Surface raised", "usage": "Derived." },
+      "muted":    { "hex": "", "rgb": "", "name": "Muted text", "usage": "Derived." },
+      "line":     { "hex": "", "rgb": "", "name": "Hairline", "usage": "Derived." },
+      "error":    { "hex": "", "rgb": "", "name": "Error", "usage": "Derived." }
+    },
+    "roles": {
+      "bg": "bg", "surface": "surface", "surfaceRaised": "surface2", "text": "white", "textMuted": "muted",
+      "textOnPrimary": "ink", "textOnCta": "ink", "primary": "primary", "primaryDeep": "primary", "primaryTint": "primary",
+      "cta": "cta", "ctaDeep": "cta", "link": "primary", "border": "primary", "borderQuiet": "line",
+      "success": "primary", "warning": "cta", "error": "error", "focus": "cta", "logoWordmark": "white"
+    },
+    "contrastRules": []
+  },
+  "typography": {
+    "_help": "One family. Record the weights in use. Scale steps are the ones tokens.css and the sheet expect; keep the keys, change the values.",
+    "family": "", "source": "", "fallback": "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif",
+    "weights": { "regular": 400, "medium": 500, "semibold": 600, "bold": 700 },
+    "scale": {
+      "display":   { "size": "44px", "weight": 600, "lineHeight": 1.1,  "letterSpacing": "-0.01em", "use": "" },
+      "h1":        { "size": "32px", "weight": 600, "lineHeight": 1.15, "letterSpacing": "-0.01em", "use": "" },
+      "h2":        { "size": "26px", "weight": 600, "lineHeight": 1.2,  "letterSpacing": "0", "use": "" },
+      "h3":        { "size": "20px", "weight": 600, "lineHeight": 1.3,  "letterSpacing": "0", "use": "" },
+      "price":     { "size": "56px", "weight": 700, "lineHeight": 1,    "letterSpacing": "-0.02em", "use": "" },
+      "body":      { "size": "17px", "weight": 400, "lineHeight": 1.6,  "letterSpacing": "0", "use": "" },
+      "bodySmall": { "size": "15px", "weight": 400, "lineHeight": 1.55, "letterSpacing": "0", "use": "" },
+      "label":     { "size": "13px", "weight": 600, "lineHeight": 1.2,  "letterSpacing": "0.2em", "transform": "uppercase", "use": "" },
+      "nav":       { "size": "18px", "weight": 600, "lineHeight": 1.2,  "letterSpacing": "0.02em", "transform": "uppercase", "use": "" },
+      "button":    { "size": "16px", "weight": 600, "lineHeight": 1,    "letterSpacing": "0.04em", "transform": "uppercase", "use": "" },
+      "tab":       { "size": "15px", "weight": 600, "lineHeight": 1,    "letterSpacing": "0.06em", "transform": "uppercase", "use": "" }
+    },
+    "rules": []
+  },
+  "shape": {
+    "radius": { "none": "0px", "control": "0px", "card": "0px", "pill": "999px", "avatar": "50%" },
+    "note": "", "borderWidth": { "hairline": "1px", "frame": "2px", "emphasis": "3px" }, "frame": "", "shadow": "", "dim": ""
+  },
+  "components": { "_help": "One entry per pattern seen on the site: fill, text, border, radius, case, size, and a note on the portal variant where the site pattern fails contrast." },
+  "imagery": { "style": "", "portraits": "", "treatment": "", "portalGuidance": "" },
+  "portal": { "theme": "dark", "canvas": "bg", "nav": "", "audienceColours": { "employee": "primary", "manager": "cta", "owner": "white" }, "notes": [] },
+  "simstudio": {
+    "_help": "The six decisions from Settings → Brand kits, plus shape and strength. Save the kit under the client's name and export it beside this file.",
+    "kitName": "",
+    "decisions": {
+      "highlight":    { "hex": "", "paints": "the click target, the arrow, the typed field" },
+      "box":          { "hex": "", "paints": "a region to read, drawn apart from the target" },
+      "playerAccent": { "hex": "", "paints": "Next and the progress bar" },
+      "calloutPaper": { "hex": "", "paints": "the card the prompt sits on" },
+      "calloutInk":   { "hex": "", "paints": "the words on it" },
+      "wrongAttempt": { "hex": "", "paints": "a miss and the note that follows it" }
+    },
+    "shapeAndStrength": { "screenDim": 0.6, "roundness": 0, "borderWeight": 3 },
+    "typeface": "", "note": ""
+  }
+}

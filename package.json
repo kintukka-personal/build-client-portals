@@ -1,0 +1,10 @@
+{
+  "name": "client-portals",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Branded client learning portals and brand portfolios, built beside SimStudio.",
+  "scripts": {
+    "tokens": "node tools/build-tokens.js"
+  },
+  "engines": { "node": ">=18" }
+}
