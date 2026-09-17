@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#000000">
+<title><!-- @title --></title>
+<meta name="description" content="<!-- @description -->">
+<!-- @favicon -->
+<!-- @fonts -->
+<style>
+/* @tokens */
+/* @/tokens */
+
+/* ---- base ---- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; height: 100%; }
+body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); font-size: var(--t-body-size); line-height: var(--t-body-lh); -webkit-font-smoothing: antialiased; }
+a { color: var(--link); text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+h1, h2, h3, h4 { margin: 0; font-weight: var(--w-semibold); }
+p { margin: 0 0 1em; } p:last-child { margin-bottom: 0; }
+svg { display: block; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.g { color: var(--primary); } .a { color: var(--cta); } .muted { color: var(--text-muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+
+/* ---- shell ---- */
+.shell { min-height: 100vh; display: flex; flex-direction: column; }
+.top { position: sticky; top: 0; z-index: 20; background: rgba(0,0,0,.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border-quiet); padding-top: env(safe-area-inset-top); }
+.top .in { display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 16px; }
+.top .logo { width: 128px; }
+.hamb { width: 36px; height: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+.hamb i { display: block; height: 4px; background: var(--primary); }
+.rail { display: none; }
+main { flex: 1; padding: 0 16px calc(84px + env(safe-area-inset-bottom)); max-width: 720px; width: 100%; margin: 0 auto; }
+.tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(0,0,0,.96); border-top: 1px solid var(--border-quiet); padding-bottom: env(safe-area-inset-bottom); }
+.tabbar a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 10px; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--text-muted); }
+.tabbar a svg { width: 22px; height: 22px; }
+.tabbar a[aria-current] { color: var(--primary); }
+
+@media (min-width: 960px) {
+  .shell { flex-direction: row; }
+  .top, .tabbar { display: none; }
+  .rail { display: flex; flex-direction: column; width: 264px; flex: none; position: sticky; top: 0; height: 100vh; border-right: 1px solid var(--border-quiet); padding: 28px 22px; }
+  .rail .logo { width: 150px; margin-bottom: 36px; }
+  .rail nav a { display: flex; align-items: center; gap: 14px; padding: 12px 10px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--text); border-left: 2px solid transparent; }
+  .rail nav a svg { width: 20px; height: 20px; }
+  .rail nav a[aria-current] { color: var(--primary); border-left-color: var(--primary); background: var(--primary-tint); }
+  .rail .aud { margin-top: 28px; grid-template-columns: 1fr; }
+  .rail .aud button { justify-content: flex-start; padding: 11px 12px; }
+  .rail .foot { margin-top: auto; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .rail .foot .btn { width: 100%; margin-bottom: 14px; }
+  main { padding: 36px 40px 60px; max-width: 980px; margin: 0; }
+}
+
+/* ---- audience switch ---- */
+.aud { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.aud button { text-align: center; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: var(--w-semibold); padding: 10px 4px; border: 1px solid var(--border-quiet); color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 6px; }
+.aud button svg { width: 11px; height: 11px; }
+.aud button.on { border-color: var(--ac); color: var(--ac); background: color-mix(in srgb, var(--ac) 14%, transparent); }
+.aud button[data-c="primary"] { --ac: var(--primary); } .aud button[data-c="cta"] { --ac: var(--cta); } .aud button[data-c="white"] { --ac: #fff; }
+.aud-wrap { padding: 14px 0 6px; }
+@media (min-width: 960px) { .aud-wrap { display: none; } }
+
+/* ---- type ---- */
+.h1 { font-size: var(--t-h1-size); line-height: var(--t-h1-lh); letter-spacing: var(--t-h1-ls); }
+.h2 { font-size: var(--t-h2-size); line-height: var(--t-h2-lh); }
+.label { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--cta); font-weight: var(--w-semibold); }
+.section { margin-top: 30px; }
+.section > .label { margin-bottom: 10px; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.section-head h3 { font-size: 18px; }
+.section-head a { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: var(--w-semibold); }
+
+/* ---- buttons ---- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 24px; background: var(--cta); color: var(--text-on-cta); font-size: 14px; font-weight: var(--w-semibold); letter-spacing: .04em; text-transform: uppercase; border-radius: var(--r-control); text-decoration: none; }
+.btn:hover { background: var(--cta-deep); }
+.btn.outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+.btn.outline:hover { background: var(--primary-tint); }
+.btn.ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border-quiet); }
+.btn.ghost:hover { color: var(--text); border-color: var(--text-muted); }
+.btn.block { width: 100%; }
+.btn.small { min-height: 40px; padding: 8px 16px; font-size: 12px; }
+.btn[disabled] { opacity: .45; cursor: default; }
+.btn svg { width: 16px; height: 16px; }
+.linkmore { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; font-weight: var(--w-medium); color: var(--primary); display: inline-flex; align-items: center; gap: 8px; }
+.linkmore svg { width: 20px; height: 10px; }
+
+/* ---- cards ---- */
+.card { display: block; background: var(--surface); border: 1px solid var(--border-quiet); padding: 16px; color: inherit; position: relative; }
+.card + .card { margin-top: 10px; }
+.card.active { border: 2px solid var(--primary); padding: 15px; }
+a.card:hover { border-color: var(--text-muted); }
+.card .type { display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); font-weight: var(--w-semibold); }
+.card .type.amber { color: var(--cta); }
+.card .type .dot { color: var(--text-muted); letter-spacing: 0; }
+.card h4 { font-size: 17px; margin: 6px 0 4px; }
+.card .meta { font-size: 13px; color: var(--text-muted); }
+.card .blurb { font-size: 14px; color: var(--text-muted); margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card .state { position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; color: var(--primary); }
+.card .state.prog { color: var(--cta); }
+.card.done h4 { color: var(--text-muted); }
+.demo { display: inline-block; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border-quiet); padding: 2px 6px; font-weight: var(--w-semibold); }
+.prog { height: 4px; background: var(--surface-raised); margin: 12px 0 6px; }
+.prog i { display: block; height: 100%; background: var(--cta); transition: width .3s ease; }
+.prog.green i { background: var(--primary); }
+.row-list .card { display: grid; grid-template-columns: 28px 1fr 22px; gap: 12px; align-items: center; padding: 12px 14px; }
+.row-list .card .n { font-size: 12px; color: var(--text-muted); font-weight: var(--w-semibold); }
+.row-list .card h4 { margin: 0; font-size: 15px; }
+.row-list .card .meta { margin-top: 2px; }
+.row-list .card .state { position: static; }
+.grid2 { display: grid; gap: 10px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .grid2 { grid-template-columns: 1fr 1fr; } .grid2 .card + .card { margin-top: 0; } }
+
+/* ---- home ---- */
+.hero { padding: 22px 0 6px; }
+.hero h1 { font-size: 30px; line-height: 1.12; }
+@media (min-width: 960px) { .hero h1 { font-size: 40px; } }
+.hero p { color: var(--text-muted); margin-top: 8px; }
+.bignum { font-size: 44px; font-weight: var(--w-bold); line-height: 1; letter-spacing: -.02em; color: var(--primary); }
+.bignum small { font-size: 16px; font-weight: var(--w-regular); color: var(--text-muted); letter-spacing: 0; margin-left: 6px; }
+
+/* ---- learn ---- */
+.search { display: flex; align-items: center; gap: 10px; background: var(--surface-raised); border: 1px solid var(--border); padding: 0 14px; height: 52px; margin-top: 14px; }
+.search svg { width: 18px; height: 18px; color: var(--text-muted); flex: none; }
+.search input { flex: 1; background: none; border: 0; color: var(--text); font: inherit; font-size: 16px; min-width: 0; }
+.search input::placeholder { color: var(--text-muted); }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0 4px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chips button { flex: none; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: var(--w-semibold); padding: 8px 12px; border: 1px solid var(--border-quiet); color: var(--text-muted); }
+.chips button.on { border-color: var(--primary); color: var(--primary); background: var(--primary-tint); }
+.empty { padding: 40px 20px; text-align: center; color: var(--text-muted); border: 1px dashed var(--border-quiet); }
+
+/* ---- item ---- */
+.back { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--primary); padding: 18px 0 14px; }
+.back svg { width: 16px; height: 16px; }
+.item-head .type { display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); font-weight: var(--w-semibold); }
+.item-head h1 { font-size: 28px; line-height: 1.15; margin: 10px 0 8px; }
+@media (min-width: 960px) { .item-head h1 { font-size: 36px; } }
+.item-head .meta { font-size: 14px; color: var(--text-muted); }
+.item-head .blurb { margin-top: 12px; }
+.done-banner { display: flex; align-items: center; gap: 12px; background: var(--primary); color: var(--text-on-primary); padding: 12px 14px; margin-top: 18px; font-size: 14px; font-weight: var(--w-medium); }
+.done-banner svg { width: 20px; height: 20px; flex: none; }
+.done-banner b { font-weight: var(--w-semibold); }
+.frame { margin-top: 20px; border: 1px solid var(--border); background: #000; position: relative; }
+.frame iframe { display: block; width: 100%; height: 62vh; min-height: 380px; border: 0; background: #000; }
+@media (min-width: 720px) { .frame iframe { height: auto; aspect-ratio: 16 / 9; min-height: 0; } }
+.frame-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+.frame-actions .note { font-size: 13px; color: var(--text-muted); flex: 1 1 100%; }
+@media (min-width: 720px) { .frame-actions .note { flex: 1; } }
+.video-ph { margin-top: 20px; aspect-ratio: 16 / 9; border: 1px solid var(--border-quiet); background: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 20px; color: var(--text-muted); }
+.video-ph svg { width: 64px; height: 64px; color: var(--text); }
+video { display: block; width: 100%; margin-top: 20px; background: #000; border: 1px solid var(--border); }
+.steps { margin: 20px 0 0; padding: 0; list-style: none; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 32px 1fr 28px; gap: 14px; align-items: start; padding: 14px 0; border-top: 1px solid var(--border-quiet); }
+.steps li:first-child { border-top: 0; }
+.steps li .n { counter-increment: s; font-size: 13px; font-weight: var(--w-semibold); color: var(--primary); padding-top: 3px; }
+.steps li .n::before { content: counter(s, decimal-leading-zero); }
+.steps li p { margin: 0; }
+.steps li.done p { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--border); }
+.tick { width: 28px; height: 28px; border: 1.5px solid var(--text-muted); border-radius: 50%; display: grid; place-items: center; color: transparent; }
+.tick svg { width: 14px; height: 14px; }
+li.done .tick { border-color: var(--primary); background: var(--primary); color: var(--text-on-primary); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; align-items: center; }
+.actions .note { font-size: 13px; color: var(--text-muted); flex: 1 1 100%; }
+.article { margin-top: 20px; max-width: 64ch; }
+.article p { margin-bottom: 1em; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 36px; }
+.pager a { border: 1px solid var(--border-quiet); padding: 12px 14px; color: inherit; }
+.pager a:hover { border-color: var(--text-muted); }
+.pager a .k { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-weight: var(--w-semibold); display: block; margin-bottom: 4px; }
+.pager a .t { font-size: 14px; display: block; }
+.pager a.next { text-align: right; }
+
+/* ---- support ---- */
+.contact { display: grid; grid-template-columns: 1fr; gap: 2px; }
+.contact .name { font-weight: var(--w-semibold); }
+.contact .role { color: var(--primary); font-size: 13px; }
+.contact .detail, .contact .how { font-size: 13px; color: var(--text-muted); }
+details { border-top: 1px solid var(--border-quiet); }
+details:last-of-type { border-bottom: 1px solid var(--border-quiet); }
+summary { list-style: none; cursor: pointer; padding: 14px 32px 14px 0; position: relative; font-weight: var(--w-medium); }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: ""; position: absolute; right: 8px; top: 20px; width: 9px; height: 9px; border-right: 2px solid var(--primary); border-bottom: 2px solid var(--primary); transform: rotate(45deg); }
+details[open] summary::after { transform: rotate(-135deg); top: 24px; }
+details .ans { padding: 0 0 16px; color: var(--text-muted); font-size: 15px; }
+
+/* ---- me ---- */
+.field { display: flex; gap: 10px; align-items: stretch; margin-top: 10px; }
+.input { flex: 1; height: 48px; padding: 0 14px; font: inherit; font-size: 16px; color: var(--text); background: var(--surface-raised); border: 1px solid var(--border); border-radius: 0; min-width: 0; }
+.input::placeholder { color: var(--text-muted); }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; font-size: 14px; }
+.kv .k { color: var(--text-muted); }
+.hist { margin: 0; padding: 0; list-style: none; }
+.hist li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border-quiet); font-size: 14px; }
+.hist li:first-child { border-top: 0; }
+.hist li span:last-child { color: var(--text-muted); white-space: nowrap; }
+
+/* ---- overlay menu ---- */
+.menu { position: fixed; inset: 0; z-index: 40; background: #000; padding: 0 16px calc(24px + env(safe-area-inset-bottom)); overflow-y: auto; display: none; flex-direction: column; }
+.menu.open { display: flex; }
+.menu .head { display: flex; align-items: center; justify-content: space-between; height: 60px; margin-top: env(safe-area-inset-top); }
+.menu .head .logo { width: 128px; }
+.closex { width: 36px; height: 36px; position: relative; }
+.closex::before, .closex::after { content: ""; position: absolute; left: -4px; right: -4px; top: 50%; height: 4px; margin-top: -2px; background: var(--primary); transform: rotate(45deg); }
+.closex::after { transform: rotate(-45deg); }
+.menu nav a { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; font-size: 18px; font-weight: var(--w-semibold); letter-spacing: .02em; text-transform: uppercase; color: var(--text); border-bottom: 1px solid var(--border-quiet); }
+.menu nav a::after { content: ""; width: 10px; height: 10px; border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg); }
+.menu .label { text-align: center; margin: 26px 0 12px; }
+.menu .ctas { display: grid; gap: 6px; margin-top: auto; padding-top: 28px; }
+.menu .fine { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 16px; line-height: 1.5; }
+
+/* ---- dialogs and toast ---- */
+dialog { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 24px; width: min(92vw, 420px); margin: auto; }
+dialog::backdrop { background: rgba(0,0,0,.75); }
+dialog h3 { font-size: 20px; margin-bottom: 8px; }
+dialog p { color: var(--text-muted); font-size: 15px; }
+dialog .field { margin-top: 16px; }
+dialog .actions { margin-top: 16px; justify-content: flex-end; }
+dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height: 1.4em; }
+.toast { position: fixed; left: 16px; right: 16px; bottom: calc(92px + env(safe-area-inset-bottom)); z-index: 50; background: var(--primary); color: var(--text-on-primary); padding: 12px 14px; font-size: 14px; font-weight: var(--w-medium); display: flex; align-items: center; gap: 10px; opacity: 0; transform: translateY(8px); transition: opacity .25s, transform .25s; pointer-events: none; }
+.toast.show { opacity: 1; transform: none; }
+.toast svg { width: 18px; height: 18px; flex: none; }
+@media (min-width: 960px) { .toast { left: auto; right: 32px; bottom: 32px; width: 360px; } }
+.footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border-quiet); font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- @symbols -->
+    <symbol id="i-home" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-learn" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z"/></symbol>
+    <symbol id="i-support" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/><path d="m5.6 5.6 4 4M14.4 14.4l4 4M18.4 5.6l-4 4M9.6 14.4l-4 4"/></g></symbol>
+    <symbol id="i-me" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M21.5 11.2v.8a9.5 9.5 0 1 1-5.6-8.7M8.5 11.8l3 3 9-9.5"/></symbol>
+    <symbol id="i-tick" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-prog" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9.5"/><path d="M12 6v6l4 2.5"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="10.5" width="14" height="10" rx="1"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></g></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></g></symbol>
+    <symbol id="i-arrow" viewBox="0 0 26 12"><path fill="none" stroke="currentColor" stroke-width="1.4" d="M0 6h24M19 1l5 5-5 5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-play" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" stroke-width="3"/><path d="M26 20v24l20-12z" fill="currentColor"/></symbol>
+    <symbol id="i-full" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m-5-5 5 5 5-5M4 20h16"/></symbol>
+  </defs>
+</svg>
+
+<div class="shell">
+  <header class="top">
+    <div class="in">
+      <a href="#/home" aria-label="Home"><svg class="logo" viewBox="0 0 216 80" data-logo><use href="#logo"/></svg></a>
+      <button class="hamb" id="open-menu" aria-label="Open menu"><i></i><i></i><i></i></button>
+    </div>
+  </header>
+
+  <aside class="rail">
+    <a href="#/home" aria-label="Home"><svg class="logo" viewBox="0 0 216 80" data-logo><use href="#logo"/></svg></a>
+    <nav id="rail-nav"></nav>
+    <div class="aud" id="rail-aud"></div>
+    <div class="foot">
+      <a class="btn block" id="rail-login" target="_blank" rel="noopener">Member login</a>
+      <div id="rail-foot"></div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="aud-wrap"><div class="aud" id="top-aud"></div></div>
+    <div id="view" aria-live="polite"></div>
+    <div class="footer" id="footer"></div>
+  </main>
+
+  <nav class="tabbar" id="tabbar"></nav>
+</div>
+
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="head">
+    <svg class="logo" viewBox="0 0 216 80" data-logo><use href="#logo"/></svg>
+    <button class="closex" id="close-menu" aria-label="Close menu"></button>
+  </div>
+  <nav id="menu-nav"></nav>
+  <div class="label">Who are you here as</div>
+  <div class="aud" id="menu-aud"></div>
+  <div class="ctas">
+    <a class="btn block" id="menu-login" target="_blank" rel="noopener">Member login</a>
+    <button class="btn outline block" id="menu-export">Export progress card</button>
+  </div>
+  <div class="fine" id="menu-fine"></div>
+</div>
+
+<dialog id="dlg-name">
+  <h3>What should we call you?</h3>
+  <p>Your name goes on your progress card and nowhere else. It stays on this device.</p>
+  <div class="field"><input class="input" id="name-input" autocomplete="given-name" placeholder="First name"></div>
+  <div class="actions"><button class="btn ghost small" id="name-skip" type="button">Skip</button><button class="btn small" id="name-save" type="button">Save</button></div>
+</dialog>
+
+<dialog id="dlg-key">
+  <h3 id="key-title">Enter the access key</h3>
+  <p id="key-text">This area is for managers. The key is remembered on this device.</p>
+  <div class="field"><input class="input" id="key-input" autocomplete="off" autocapitalize="characters" placeholder="Access key"></div>
+  <div class="err" id="key-err"></div>
+  <div class="actions"><button class="btn ghost small" id="key-cancel" type="button">Cancel</button><button class="btn small" id="key-unlock" type="button">Unlock</button></div>
+</dialog>
+
+<dialog id="dlg-confirm">
+  <h3 id="confirm-title">Are you sure?</h3>
+  <p id="confirm-text"></p>
+  <div class="actions"><button class="btn ghost small" id="confirm-no" type="button">Cancel</button><button class="btn small" id="confirm-yes" type="button">Yes</button></div>
+</dialog>
+
+<div class="toast" id="toast" role="status"><svg><use href="#i-check"/></svg><span id="toast-text"></span></div>
+
+<!-- @config -->
+<script>
+(function () {
+  'use strict';
+  const CFG = JSON.parse(document.getElementById('portal-config').textContent);
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const byId = Object.fromEntries(CFG.items.map(i => [i.id, i]));
+  const TYPE = { simulation: 'Simulation', video: 'Video', guide: 'Guide', checklist: 'Checklist', article: 'Article', link: 'Link' };
+
+  // ---- state ------------------------------------------------------------
+  const KEY = CFG.storageKey;
+  const fresh = () => ({ name: '', audience: 'employee', unlocked: { employee: true }, items: {}, checks: {}, lastOpened: null, created: new Date().toISOString() });
+  let S = fresh();
+  try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+
+  const aud = () => CFG.audiences.find(a => a.id === S.audience) || CFG.audiences[0];
+  const visible = () => CFG.items.filter(i => i.audience === S.audience || (S.audience !== 'employee' && i.audience === 'employee'));
+  const pathFor = a => CFG.paths.find(p => p.audience === a);
+  const status = id => (S.items[id] && S.items[id].status) || 'new';
+  const isDone = id => status(id) === 'complete';
+  const pathProgress = p => { const done = p.items.filter(isDone).length; return { done, total: p.items.length, pct: p.items.length ? Math.round(done / p.items.length * 100) : 0 }; };
+
+  function complete(id, extra) {
+    const it = byId[id]; if (!it) return;
+    const was = isDone(id);
+    S.items[id] = Object.assign({}, S.items[id], { status: 'complete', completedAt: new Date().toISOString() }, extra || {});
+    save();
+    if (!was) toast('Completed: ' + it.title);
+    render();
+  }
+  function start(id) {
+    if (!S.items[id]) { S.items[id] = { status: 'in-progress', startedAt: new Date().toISOString() }; }
+    S.lastOpened = id; save();
+  }
+
+  // ---- routing ----------------------------------------------------------
+  function route() {
+    const h = location.hash.replace(/^#\/?/, '') || 'home';
+    const [pathPart, qs] = h.split('?');
+    const seg = pathPart.split('/');
+    return { view: seg[0] || 'home', id: seg[1] || null, q: new URLSearchParams(qs || '') };
+  }
+  const go = h => { location.hash = h; };
+  window.addEventListener('hashchange', render);
+
+  // ---- chrome -----------------------------------------------------------
+  const navIcon = { home: 'i-home', learn: 'i-learn', support: 'i-support', me: 'i-me' };
+  function renderNav() {
+    const r = route(); const cur = r.view === 'item' ? 'learn' : r.view;
+    const link = n => `<a href="#/${n.id}" ${cur === n.id ? 'aria-current="page"' : ''}><svg><use href="#${navIcon[n.id]}"/></svg><span>${esc(n.label)}</span></a>`;
+    $('#tabbar').innerHTML = CFG.nav.map(link).join('');
+    $('#rail-nav').innerHTML = CFG.nav.map(link).join('');
+    $('#menu-nav').innerHTML = CFG.nav.map(n => `<a href="#/${n.id}" data-close>${esc(n.label)}</a>`).join('');
+    const audHtml = CFG.audiences.map(a => `<button type="button" data-aud="${a.id}" data-c="${a.colour}" class="${a.id === S.audience ? 'on' : ''}" aria-pressed="${a.id === S.audience}">${a.key && !S.unlocked[a.id] ? '<svg><use href="#i-lock"/></svg>' : ''}${esc(a.label)}</button>`).join('');
+    ['#top-aud', '#rail-aud', '#menu-aud'].forEach(s => { $(s).innerHTML = audHtml; });
+    $('#rail-login').href = CFG.client.memberLogin; $('#menu-login').href = CFG.client.memberLogin;
+    $('#rail-foot').textContent = CFG.client.tradingName + ' · ' + CFG.client.site;
+    $('#menu-fine').textContent = CFG.client.tradingName + ' · ' + CFG.client.address;
+    $('#footer').textContent = CFG.footer;
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-aud]'); if (b) { switchAudience(b.dataset.aud); return; }
+    if (e.target.closest('[data-close]')) closeMenu();
+  });
+  function switchAudience(id) {
+    const a = CFG.audiences.find(x => x.id === id); if (!a) return;
+    if (a.key && !S.unlocked[id]) { askKey(a); return; }
+    S.audience = id; save(); closeMenu(); go('home');
+    render();
+  }
+  const openMenu = () => { $('#menu').classList.add('open'); document.body.style.overflow = 'hidden'; };
+  const closeMenu = () => { $('#menu').classList.remove('open'); document.body.style.overflow = ''; };
+  $('#open-menu').addEventListener('click', openMenu);
+  $('#close-menu').addEventListener('click', closeMenu);
+  $('#menu-export').addEventListener('click', () => { closeMenu(); exportCard(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+  // ---- dialogs ----------------------------------------------------------
+  function askName() {
+    const d = $('#dlg-name'); $('#name-input').value = S.name || '';
+    d.showModal();
+    $('#name-save').onclick = () => { S.name = $('#name-input').value.trim(); save(); d.close(); render(); };
+    $('#name-skip').onclick = () => { S.name = ''; S.nameSkipped = true; save(); d.close(); render(); };
+  }
+  function askKey(a) {
+    const d = $('#dlg-key'); $('#key-title').textContent = a.label + ' area'; $('#key-text').textContent = a.intro + ' Enter the access key; it is remembered on this device.';
+    $('#key-input').value = ''; $('#key-err').textContent = '';
+    d.showModal(); setTimeout(() => $('#key-input').focus(), 30);
+    const tryKey = () => {
+      const v = $('#key-input').value.trim().toUpperCase();
+      if (v && v === String(a.key).toUpperCase()) { S.unlocked[a.id] = true; S.audience = a.id; save(); d.close(); closeMenu(); go('home'); render(); toast(a.label + ' area unlocked'); }
+      else { $('#key-err').textContent = 'That key does not match. Check with the manager on duty.'; $('#key-input').select(); }
+    };
+    $('#key-unlock').onclick = tryKey;
+    $('#key-input').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); tryKey(); } };
+    $('#key-cancel').onclick = () => d.close();
+  }
+  function confirm(title, text, yes) {
+    const d = $('#dlg-confirm'); $('#confirm-title').textContent = title; $('#confirm-text').textContent = text;
+    d.showModal(); $('#confirm-yes').onclick = () => { d.close(); yes(); }; $('#confirm-no').onclick = () => d.close();
+  }
+  let toastT;
+  function toast(msg) { $('#toast-text').textContent = msg; $('#toast').classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => $('#toast').classList.remove('show'), 2800); }
+
+  // ---- pieces -----------------------------------------------------------
+  const stateIcon = id => isDone(id) ? '<svg class="state" aria-label="Complete"><use href="#i-check"/></svg>' : status(id) === 'in-progress' ? '<svg class="state prog" aria-label="In progress"><use href="#i-prog"/></svg>' : '';
+  const metaOf = (it, withArea = true) => [it.minutes ? it.minutes + ' min' : null, it.steps && it.type === 'simulation' ? it.steps + ' steps' : null, Array.isArray(it.steps) ? it.steps.length + ' steps' : null, it.checks ? it.checks.length + ' items' : null, withArea ? areaLabel(it.area) : null].filter(Boolean).join(' · ');
+  const areaLabel = id => (CFG.areas.find(a => a.id === id) || {}).label || '';
+  function card(it, opts = {}) {
+    const done = isDone(it.id);
+    return `<a class="card ${done ? 'done' : ''} ${opts.active ? 'active' : ''}" href="#/item/${it.id}">
+      <div class="type ${opts.amber ? 'amber' : ''}">${esc(opts.prefix ? opts.prefix + ' · ' : '')}${TYPE[it.type]} <span class="dot">·</span> ${esc(metaOf(it, false))}${it.demo ? ' <span class="demo">Demo</span>' : ''}</div>
+      <h4>${esc(it.title)}</h4>
+      ${opts.blurb !== false ? `<div class="blurb">${esc(it.blurb)}</div>` : ''}
+      ${opts.progress != null ? `<div class="prog"><i style="width:${opts.progress}%"></i></div>` : ''}
+      ${stateIcon(it.id)}
+    </a>`;
+  }
+  function rowCard(it, n) {
+    return `<a class="card ${isDone(it.id) ? 'done' : ''}" href="#/item/${it.id}"><span class="n">${String(n).padStart(2, '0')}</span><span><h4>${esc(it.title)}</h4><div class="meta">${TYPE[it.type]} · ${esc(it.minutes ? it.minutes + ' min' : '')}</div></span>${stateIcon(it.id) || '<span></span>'}</a>`;
+  }
+  const itemPct = it => {
+    if (isDone(it.id)) return 100;
+    const c = S.checks[it.id]; const total = Array.isArray(it.steps) ? it.steps.length : it.checks ? it.checks.length : 0;
+    if (c && total) return Math.round(c.filter(Boolean).length / total * 100);
+    if (S.items[it.id] && S.items[it.id].stepsDone && it.steps) return Math.round(S.items[it.id].stepsDone / it.steps * 100);
+    return 0;
+  };
+
+  // ---- views ------------------------------------------------------------
+  function viewHome() {
+    const a = aud(); const p = pathFor(a.id);
+    const name = S.name ? ', ' + S.name : '';
+    let html = `<div class="hero"><h1>Welcome to <span class="g">${esc(CFG.client.name)}</span>${esc(name)}.</h1><p>${esc(a.intro)}</p></div>`;
+    if (p) {
+      const pr = pathProgress(p);
+      const pending = p.items.filter(id => !isDone(id));
+      const cont = (S.lastOpened && pending.includes(S.lastOpened)) ? S.lastOpened : pending[0];
+      if (cont) {
+        const it = byId[cont];
+        html += `<div class="section"><div class="label">${pending.includes(S.lastOpened) && S.lastOpened === cont && status(cont) === 'in-progress' ? 'Continue' : 'Up next'}</div>${card(it, { active: true, amber: true, progress: itemPct(it), blurb: true })}</div>`;
+      } else {
+        html += `<div class="section"><div class="done-banner"><svg><use href="#i-check"/></svg><span><b>${esc(p.title)} complete.</b> Export your progress card from the Me page and hand it to your manager.</span></div></div>`;
+      }
+      html += `<div class="section"><div class="section-head"><h3>${esc(p.title)}</h3><a href="#/learn">All content</a></div>
+        <div class="bignum">${pr.done}<small>of ${pr.total} complete</small></div>
+        <div class="prog green"><i style="width:${pr.pct}%"></i></div>
+        <p class="muted" style="font-size:14px;margin:10px 0 14px">${esc(p.blurb)}</p>
+        <div class="row-list">${p.items.map((id, i) => rowCard(byId[id], i + 1)).join('')}</div></div>`;
+    }
+    if (S.audience !== 'employee') {
+      const ep = pathFor('employee'); const pr = pathProgress(ep);
+      html += `<div class="section"><div class="section-head"><h3>${esc(ep.title)}</h3><a href="#/learn">Open</a></div><p class="muted" style="font-size:14px">The employee path, as your team sees it. ${pr.done} of ${pr.total} complete on this device.</p></div>`;
+    }
+    html += `<div class="section grid2">
+      <a class="card" href="#/support"><div class="type">Support</div><h4>Who to ask, and the answers to the usual questions</h4></a>
+      <a class="card" href="#/me"><div class="type">Me</div><h4>Your progress, your name and your progress card</h4></a></div>`;
+    return html;
+  }
+
+  function viewLearn(r) {
+    const q = (r.q.get('q') || '').toLowerCase(); const t = r.q.get('type') || 'all';
+    const types = [['all', 'All'], ['simulation', 'Simulations'], ['video', 'Videos'], ['guide', 'Guides'], ['checklist', 'Checklists'], ['article', 'Articles'], ['link', 'Links']];
+    const items = visible().filter(i => (t === 'all' || i.type === t) && (!q || (i.title + ' ' + i.blurb + ' ' + areaLabel(i.area)).toLowerCase().includes(q)));
+    const present = new Set(visible().map(i => i.type));
+    let html = `<div class="hero"><h1>Learn</h1><p>${visible().length} items for ${esc(aud().label.toLowerCase())}s${S.audience !== 'employee' ? ', including everything the team sees' : ''}.</p></div>
+      <label class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search titles and descriptions" value="${esc(r.q.get('q') || '')}" aria-label="Search"></label>
+      <div class="chips">${types.filter(([k]) => k === 'all' || present.has(k)).map(([k, l]) => `<button type="button" data-type="${k}" class="${t === k ? 'on' : ''}">${l}</button>`).join('')}</div>`;
+    if (!items.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another type.</div>`;
+    CFG.areas.forEach(ar => {
+      const list = items.filter(i => i.area === ar.id); if (!list.length) return;
+      html += `<div class="section"><div class="section-head"><h3>${esc(ar.label)}</h3><span class="muted" style="font-size:13px">${list.filter(i => isDone(i.id)).length} of ${list.length} done</span></div><div class="grid2">${list.map(i => card(i)).join('')}</div></div>`;
+    });
+    return html;
+  }
+  function wireLearn() {
+    const input = $('#q'); if (!input) return;
+    const setQ = () => { const r = route(); const p = new URLSearchParams(r.q); if (input.value) p.set('q', input.value); else p.delete('q'); history.replaceState(null, '', '#/learn' + (p.toString() ? '?' + p : '')); renderBody(); const i2 = $('#q'); if (i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); } };
+    let tm; input.addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(setQ, 180); });
+    document.querySelectorAll('[data-type]').forEach(b => b.addEventListener('click', () => { const p = new URLSearchParams(route().q); if (b.dataset.type === 'all') p.delete('type'); else p.set('type', b.dataset.type); go('/learn' + (p.toString() ? '?' + p : '')); }));
+  }
+
+  let currentSim = null;
+  function viewItem(r) {
+    const it = byId[r.id]; if (!it) return `<div class="empty" style="margin-top:24px">That item does not exist. <a href="#/learn">Back to Learn</a></div>`;
+    if (!isDone(it.id)) start(it.id); else { S.lastOpened = it.id; save(); }
+    currentSim = it.type === 'simulation' ? it.id : null;
+    const rec = S.items[it.id] || {};
+    let html = `<a class="back" href="#/learn"><svg><use href="#i-back"/></svg>Learn</a>
+      <div class="item-head"><div class="type">${TYPE[it.type]}${it.demo ? ' <span class="demo">Demo</span>' : ''}</div><h1>${esc(it.title)}</h1><div class="meta">${esc(metaOf(it))}</div><p class="blurb">${esc(it.blurb)}</p></div>`;
+    if (isDone(it.id)) {
+      const score = rec.score != null ? ` Score ${rec.score}${rec.passed === false ? ', not yet a pass' : ''}.` : '';
+      html += `<div class="done-banner"><svg><use href="#i-check"/></svg><span><b>Completed</b> ${esc(fmtDate(rec.completedAt))}.${esc(score)}</span></div>`;
+    }
+    if (it.type === 'simulation') {
+      html += `<div class="frame"><iframe id="sim" src="${esc(it.src)}" title="${esc(it.title)}" allow="fullscreen" allowfullscreen loading="eager"></iframe></div>
+        <div class="frame-actions"><button class="btn outline small" id="sim-full" type="button"><svg><use href="#i-full"/></svg>Full screen</button><a class="btn ghost small" href="${esc(it.src)}" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Open on its own</a>
+        <span class="note">Completion is recorded here the moment the simulation finishes. Nothing to tick.</span></div>`;
+    } else if (it.type === 'video') {
+      if (it.src) html += `<video id="vid" controls playsinline preload="metadata" src="${esc(it.src)}"${it.poster ? ` poster="${esc(it.poster)}"` : ''}></video><div class="actions"><span class="note">Marked as watched when the video ends.</span></div>`;
+      else html += `<div class="video-ph"><svg><use href="#i-play"/></svg><div><b style="color:var(--text)">Video to come.</b><br>${esc(it.minutes)} minutes, filmed at ${esc(CFG.client.site)}. The frame is ready; the file drops in.</div></div>
+        <div class="actions">${isDone(it.id) ? '' : `<button class="btn small" id="mark" type="button">Mark as watched</button>`}<span class="note">Placeholder until the video is supplied. Marking it watched keeps the path moving.</span></div>`;
+    } else if (it.type === 'guide' || it.type === 'checklist') {
+      const list = it.type === 'guide' ? it.steps : it.checks; const c = S.checks[it.id] || [];
+      const done = c.filter(Boolean).length;
+      html += `<ol class="steps" id="steps">${list.map((s, i) => `<li class="${c[i] ? 'done' : ''}" data-i="${i}"><span class="n"></span><p>${esc(s)}</p><button type="button" class="tick" aria-pressed="${!!c[i]}" aria-label="Step ${i + 1} ${c[i] ? 'done' : 'not done'}"><svg><use href="#i-tick"/></svg></button></li>`).join('')}</ol>
+        <div class="prog green" style="margin-top:18px"><i style="width:${Math.round(done / list.length * 100)}%"></i></div>
+        <div class="actions"><span class="muted" style="font-size:14px;flex:1">${done} of ${list.length} ${it.type === 'guide' ? 'steps' : 'items'} ticked</span>
+        ${isDone(it.id) ? `<button class="btn ghost small" id="reset-steps" type="button">Reset</button>` : `<button class="btn small" id="mark" type="button" ${done === list.length ? '' : 'disabled'}>Mark complete</button>`}</div>`;
+    } else if (it.type === 'article') {
+      html += `<div class="article">${it.body.map(p => `<p>${esc(p)}</p>`).join('')}</div><div class="actions">${isDone(it.id) ? '' : `<button class="btn small" id="mark" type="button">Mark as read</button>`}</div>`;
+    } else if (it.type === 'link') {
+      html += `<div class="actions"><a class="btn" id="open-link" href="${esc(it.href)}" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Open</a><span class="note">Opens in a new tab and is marked as visited.</span></div>`;
+    }
+    const p = pathFor(it.audience) || pathFor('employee'); const idx = p ? p.items.indexOf(it.id) : -1;
+    if (idx >= 0) {
+      const prev = p.items[idx - 1], next = p.items[idx + 1];
+      html += `<div class="pager">${prev ? `<a href="#/item/${prev}"><span class="k">Previous</span><span class="t">${esc(byId[prev].title)}</span></a>` : '<span></span>'}${next ? `<a class="next" href="#/item/${next}"><span class="k">Next</span><span class="t">${esc(byId[next].title)}</span></a>` : `<a class="next" href="#/me"><span class="k">Path end</span><span class="t">See your progress</span></a>`}</div>`;
+    }
+    return html;
+  }
+  function wireItem(r) {
+    const it = byId[r.id]; if (!it) return;
+    const mark = $('#mark'); if (mark) mark.addEventListener('click', () => complete(it.id, { selfMarked: true }));
+    const full = $('#sim-full'); if (full) full.addEventListener('click', () => { const f = $('#sim'); if (f.requestFullscreen) f.requestFullscreen().catch(() => {}); else if (f.webkitRequestFullscreen) f.webkitRequestFullscreen(); });
+    const vid = $('#vid'); if (vid) vid.addEventListener('ended', () => complete(it.id));
+    const link = $('#open-link'); if (link) link.addEventListener('click', () => setTimeout(() => complete(it.id), 300));
+    const steps = $('#steps'); if (steps) steps.addEventListener('click', e => {
+      const li = e.target.closest('li'); if (!li) return;
+      const i = +li.dataset.i; const list = it.type === 'guide' ? it.steps : it.checks;
+      const c = S.checks[it.id] || Array(list.length).fill(false); c[i] = !c[i]; S.checks[it.id] = c;
+      if (!isDone(it.id)) S.items[it.id] = Object.assign({ status: 'in-progress', startedAt: new Date().toISOString() }, S.items[it.id]);
+      save();
+      if (c.every(Boolean) && !isDone(it.id)) complete(it.id, { selfMarked: true }); else renderBody();
+    });
+    const reset = $('#reset-steps'); if (reset) reset.addEventListener('click', () => { delete S.checks[it.id]; delete S.items[it.id]; save(); renderBody(); });
+  }
+
+  function viewSupport() {
+    const s = CFG.support;
+    return `<div class="hero"><h1>Support</h1><p>Who to ask, in order, and the answers to the questions that come up every week.</p></div>
+      <div class="section"><div class="label">Who to ask</div><div class="grid2">${s.contacts.map(c => `<div class="card contact"><span class="name">${esc(c.name)}</span><span class="role">${esc(c.role)}</span><span class="detail">${esc(c.detail)}</span><span class="how">${esc(c.how)}</span></div>`).join('')}</div></div>
+      <div class="section"><div class="label">The usual questions</div>${s.faq.map(f => `<details><summary>${esc(f.q)}</summary><div class="ans">${esc(f.a)}</div></details>`).join('')}</div>
+      <div class="section"><div class="card"><div class="type">${esc(s.reportIssue.label)}</div><p style="margin-top:8px;font-size:15px" class="muted">${esc(s.reportIssue.text)}</p></div></div>
+      <div class="section"><a class="btn outline" href="${esc(CFG.client.memberLogin)}" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Member login</a></div>`;
+  }
+
+  function viewMe() {
+    const p = pathFor(S.audience) || pathFor('employee'); const pr = pathProgress(p);
+    const doneList = Object.entries(S.items).filter(([, v]) => v.status === 'complete').sort((a, b) => (b[1].completedAt || '').localeCompare(a[1].completedAt || ''));
+    return `<div class="hero"><h1>${esc(S.name || 'You')}</h1><p>Your record lives on this device. Export it whenever your manager asks.</p></div>
+      <div class="section"><div class="label">Name</div><div class="field"><input class="input" id="me-name" value="${esc(S.name)}" placeholder="First name" aria-label="Your name"><button class="btn small" id="me-save" type="button">Save</button></div></div>
+      <div class="section"><div class="label">${esc(p.title)}</div><div class="bignum">${pr.done}<small>of ${pr.total} complete</small></div><div class="prog green"><i style="width:${pr.pct}%"></i></div></div>
+      <div class="section"><div class="label">Access</div><div class="kv">${CFG.audiences.map(a => `<span class="k">${esc(a.label)}</span><span>${a.key ? (S.unlocked[a.id] ? 'Unlocked on this device' : 'Locked') : 'Open to everyone'}</span>`).join('')}</div>
+        ${CFG.audiences.some(a => a.key && S.unlocked[a.id]) ? `<div class="actions"><button class="btn ghost small" id="lock-all" type="button">Lock the manager and owner areas on this device</button></div>` : ''}</div>
+      <div class="section"><div class="label">Completed</div>${doneList.length ? `<ul class="hist">${doneList.map(([id, v]) => `<li><span>${esc((byId[id] || {}).title || id)}${v.score != null ? ` <span class="muted">· ${esc(v.score)}</span>` : ''}</span><span>${esc(fmtDate(v.completedAt))}</span></li>`).join('')}</ul>` : `<div class="empty">Nothing yet. Start with the Week 1 path on Home.</div>`}</div>
+      <div class="section"><div class="label">Progress card</div><p class="muted" style="font-size:14px">A file with every item, its status, dates and simulation scores. Send it to your manager; it is the record of your onboarding.</p>
+        <div class="actions"><button class="btn" id="export" type="button"><svg><use href="#i-down"/></svg>Export progress card</button><button class="btn outline" id="copy" type="button">Copy summary</button></div></div>
+      <div class="section"><div class="label">Reset</div><div class="actions"><button class="btn ghost small" id="reset-all" type="button">Clear all progress on this device</button></div></div>`;
+  }
+  function wireMe() {
+    $('#me-save').addEventListener('click', () => { S.name = $('#me-name').value.trim(); save(); toast('Name saved'); render(); });
+    $('#export').addEventListener('click', exportCard);
+    $('#copy').addEventListener('click', async () => { try { await navigator.clipboard.writeText(summaryText()); toast('Summary copied'); } catch (e) { toast('Copy is blocked here. Use Export instead.'); } });
+    const lock = $('#lock-all'); if (lock) lock.addEventListener('click', () => { S.unlocked = { employee: true }; S.audience = 'employee'; save(); render(); toast('Locked'); });
+    $('#reset-all').addEventListener('click', () => confirm('Clear all progress?', 'Every completion, tick and score on this device is removed. Your name stays. This cannot be undone.', () => { const n = S.name; S = fresh(); S.name = n; S.nameSkipped = !n; save(); render(); toast('Progress cleared'); }));
+  }
+
+  // ---- progress card ----------------------------------------------------
+  function cardData() {
+    return {
+      portal: CFG.client.portalTitle, client: CFG.client.tradingName, site: CFG.client.site, person: S.name || '(no name)', audience: S.audience,
+      generatedAt: new Date().toISOString(), device: navigator.userAgent,
+      paths: CFG.paths.filter(p => S.unlocked[p.audience]).map(p => Object.assign({ id: p.id, title: p.title }, pathProgress(p))),
+      items: CFG.items.filter(i => S.unlocked[i.audience]).map(i => { const r = S.items[i.id] || {}; const c = S.checks[i.id]; return { id: i.id, type: i.type, title: i.title, status: r.status || 'new', startedAt: r.startedAt || null, completedAt: r.completedAt || null, score: r.score ?? null, passed: r.passed ?? null, steps: r.steps ?? null, selfMarked: !!r.selfMarked, ticked: c ? c.filter(Boolean).length : null }; })
+    };
+  }
+  function summaryText() {
+    const d = cardData();
+    return [`${d.portal} · progress card`, `${d.person} · ${d.audience} · ${new Date().toLocaleDateString('en-AU')}`, ...d.paths.map(p => `${p.title}: ${p.done} of ${p.total} complete`), '', ...d.items.filter(i => i.status === 'complete').map(i => `✓ ${i.title}${i.score != null ? ` (${i.score})` : ''}`), ...d.items.filter(i => i.status === 'in-progress').map(i => `… ${i.title}`)].join('\n');
+  }
+  function exportCard() {
+    const d = cardData(); const blob = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `${CFG.client.slug}-progress-${(S.name || 'unnamed').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    toast('Progress card exported');
+  }
+  function fmtDate(iso) { if (!iso) return ''; try { return new Date(iso).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return iso; } }
+
+  // ---- completion from simulations ------------------------------------
+  window.addEventListener('message', e => {
+    const d = e.data; if (!d || typeof d !== 'object' || d.type !== 'simulation:complete') return;
+    const f = $('#sim'); if (!f || e.source !== f.contentWindow || !currentSim) return;
+    complete(currentSim, { score: d.score ?? null, passed: d.passed ?? null, steps: d.steps ?? null });
+  });
+  // SCORM 1.2 and 2004 shims so an export that looks for an LMS in the parent frame finds one.
+  const scormData = {};
+  const record = (k, v) => {
+    scormData[k] = v; if (!currentSim) return;
+    if (/lesson_status|completion_status|success_status/.test(k) && /completed|passed/.test(String(v))) complete(currentSim, { scorm: true });
+    if (/score\.raw/.test(k)) { S.items[currentSim] = Object.assign({}, S.items[currentSim], { score: Number(v) }); save(); }
+    if (/score\.scaled/.test(k)) { S.items[currentSim] = Object.assign({}, S.items[currentSim], { score: Math.round(Number(v) * 100) }); save(); }
+  };
+  window.API = { LMSInitialize: () => 'true', LMSFinish: () => 'true', LMSGetValue: k => scormData[k] || (k === 'cmi.core.student_name' ? S.name : ''), LMSSetValue: (k, v) => { record(k, v); return 'true'; }, LMSCommit: () => 'true', LMSGetLastError: () => '0', LMSGetErrorString: () => '', LMSGetDiagnostic: () => '' };
+  window.API_1484_11 = { Initialize: () => 'true', Terminate: () => 'true', GetValue: k => scormData[k] || (k === 'cmi.learner_name' ? S.name : ''), SetValue: (k, v) => { record(k, v); return 'true'; }, Commit: () => 'true', GetLastError: () => '0', GetErrorString: () => '', GetDiagnostic: () => '' };
+
+  // ---- render -----------------------------------------------------------
+  function renderBody() {
+    const r = route(); const v = $('#view');
+    if (r.view === 'home') v.innerHTML = viewHome();
+    else if (r.view === 'learn') { v.innerHTML = viewLearn(r); wireLearn(); }
+    else if (r.view === 'item') { v.innerHTML = viewItem(r); wireItem(r); }
+    else if (r.view === 'support') v.innerHTML = viewSupport();
+    else if (r.view === 'me') { v.innerHTML = viewMe(); wireMe(); }
+    else { location.hash = '#/home'; return; }
+    if (r.view !== 'item') currentSim = null;
+  }
+  let lastKey = '';
+  function render() {
+    const r = route(); const key = r.view + '/' + (r.id || '') + '?' + r.q.toString();
+    renderNav(); renderBody();
+    if (key !== lastKey && !/^learn/.test(key) ) window.scrollTo(0, 0);
+    lastKey = key;
+  }
+  render();
+  if (!S.name && !S.nameSkipped) setTimeout(askName, 400);
+})();
+</script>
+</body>
+</html>
