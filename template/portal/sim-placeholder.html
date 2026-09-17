@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulation placeholder</title>
+<!-- @fonts -->
+<style>
+/* @tokens */
+/* @/tokens */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
+.stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px 20px; gap: 14px; }
+.mark { width: 64px; color: var(--primary); }
+.k { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--cta); font-weight: 600; }
+h1 { margin: 0; font-size: clamp(20px, 4.5vw, 30px); line-height: 1.15; font-weight: 600; max-width: 22ch; }
+p { margin: 0; color: var(--text-muted); font-size: 14px; max-width: 46ch; line-height: 1.55; }
+.step { display: none; }
+.step.on { display: contents; }
+.card { background: var(--sim-callout-paper); color: var(--sim-callout-ink); border: 1px solid var(--border-quiet); padding: 16px 18px; max-width: 420px; width: 100%; text-align: left; margin-top: 8px; }
+.card h2 { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
+.card h2 em { font-weight: 400; }
+.card p { font-size: 13px; color: var(--sim-callout-ink); opacity: .85; }
+.row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; gap: 10px; }
+.row span { font-size: 12px; opacity: .7; }
+button { font: inherit; cursor: pointer; border: 0; border-radius: 0; background: var(--sim-player-accent); color: #0A0A0A; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 10px 18px; }
+button.ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border-quiet); }
+.foot { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--border-quiet); font-size: 12px; color: var(--text-muted); }
+.bar { flex: 1; height: 3px; background: var(--surface-raised); }
+.bar i { display: block; height: 100%; background: var(--sim-player-accent); transition: width .3s; }
+.target { display: inline-block; padding: 6px 14px; border: var(--sim-border) solid var(--sim-highlight); font-size: 13px; color: var(--text); margin-top: 4px; }
+.done .mark { color: var(--primary); }
+@media (max-height: 460px) { .mark { width: 40px; } #intro { display: none; } .stage { gap: 10px; padding: 16px; } .card { padding: 12px 14px; } }
+@media (max-height: 300px) { .mark, .k { display: none; } h1 { font-size: 16px; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><!-- @symbols --></defs></svg>
+<div class="stage" id="stage">
+  <svg class="mark" viewBox="0 0 100 78"><use href="#mark"/></svg>
+  <div class="k">Simulation placeholder</div>
+  <h1 id="title">Simulation</h1>
+  <p id="intro">This frame is where the SimStudio export for this step lands. Until then, walk the steps below to see completion flow back into the portal.</p>
+  <div class="card" id="card">
+    <h2><em>Step</em> <span id="n">1</span> of <span id="total">3</span></h2>
+    <p id="text">Each real step will show a captured screen with a highlighted target and this callout beside it.</p>
+    <div class="target" id="target">Click here to continue</div>
+    <div class="row"><span id="pos"></span><button id="next" type="button">Next</button></div>
+  </div>
+</div>
+<div class="foot"><span id="counter">1 / 3</span><div class="bar"><i id="bar" style="width:0%"></i></div><span>Placeholder</span></div>
+<script>
+(function () {
+  const q = new URLSearchParams(location.search);
+  const title = q.get('title') || 'Simulation';
+  const total = Math.max(2, Math.min(30, parseInt(q.get('steps') || '3', 10) || 3));
+  document.getElementById('title').textContent = title; document.title = title + ' · placeholder';
+  document.getElementById('total').textContent = total;
+  let n = 1, misses = 0; const t0 = Date.now();
+  const paint = () => { document.getElementById('n').textContent = n; document.getElementById('counter').textContent = n + ' / ' + total; document.getElementById('bar').style.width = Math.round((n - 1) / total * 100) + '%'; document.getElementById('next').textContent = n === total ? 'Finish' : 'Next'; document.getElementById('pos').textContent = n === total ? 'Last step' : ''; };
+  const finish = () => {
+    const payload = { type: 'simulation:complete', score: 100, passed: true, steps: total, misses: misses, seconds: Math.round((Date.now() - t0) / 1000) };
+    try { window.parent.postMessage(payload, '*'); } catch (e) {}
+    try { const api = window.parent.API; if (api) { api.LMSInitialize(''); api.LMSSetValue('cmi.core.score.raw', '100'); api.LMSSetValue('cmi.core.lesson_status', 'passed'); api.LMSCommit(''); api.LMSFinish(''); } } catch (e) {}
+    document.body.classList.add('done');
+    document.getElementById('card').innerHTML = '<h2>Completed.</h2><p>The completion message has been handed back to the portal, which has recorded it. A real export does exactly this on its closing screen.</p>';
+    document.getElementById('bar').style.width = '100%'; document.getElementById('counter').textContent = total + ' / ' + total;
+  };
+  document.getElementById('next').addEventListener('click', () => { if (n >= total) { finish(); return; } n++; paint(); });
+  document.getElementById('stage').addEventListener('click', e => { if (!e.target.closest('.card') && !e.target.closest('.mark')) misses++; });
+  paint();
+})();
+</script>
+</body>
+</html>
