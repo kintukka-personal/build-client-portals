@@ -521,39 +521,6 @@
     }
   ],
   "support": {
-    "contacts": [
-      {
-        "name": "Reception, Alexandria",
-        "role": "Your first call on shift",
-        "detail": "20 Bowden Street, Alexandria NSW",
-        "how": "In person or the reception phone"
-      },
-      {
-        "name": "Manager on duty",
-        "role": "Rostered per shift",
-        "detail": "Named on the shift log",
-        "how": "Reception first, then their number on the roster"
-      },
-      {
-        "name": "Katie King",
-        "role": "Co Founder",
-        "detail": "Brand, marketing, the business",
-        "how": "Via the manager on duty"
-      },
-      {
-        "name": "Joey",
-        "role": "Co Founder",
-        "detail": "Training, the floor, the coaches",
-        "how": "Via the manager on duty"
-      },
-      {
-        "name": "Mick Abboud",
-        "role": "Head of Excellence",
-        "detail": "Coaching standards and member experience",
-        "how": "Via the manager on duty"
-      }
-    ],
-    "_contactsNote": "No phone numbers or emails are invented here. ONYX supplies them and they go straight into this block.",
     "faq": [
       {
         "q": "A member's fob or card will not scan.",
@@ -576,6 +543,61 @@
         "a": "The manager on duty for the day is on the shift log. Anything urgent about safety is 000 first, then the manager."
       }
     ],
+    "assistance": [
+      {
+        "queries": [
+          "Anything on shift you are unsure about",
+          "A member's fob, card or check-in",
+          "A booking, a class list or the till",
+          "Where something is kept"
+        ],
+        "name": "Reception, Alexandria",
+        "role": "Your first call",
+        "how": "In person or on the reception phone. 20 Bowden Street, Alexandria NSW."
+      },
+      {
+        "queries": [
+          "An incident, injury or safety concern",
+          "A refund, cancellation or complaint",
+          "Roster and shift changes",
+          "Anything reception could not solve"
+        ],
+        "name": "Manager on duty",
+        "role": "Rostered per shift, named on the shift log",
+        "how": "Reception first, then their number on the roster. Safety is 000 first."
+      },
+      {
+        "queries": [
+          "Brand, marketing and social media",
+          "Membership and pricing decisions",
+          "Partnerships and Fitness Passport"
+        ],
+        "name": "Katie King",
+        "role": "Co Founder",
+        "how": "Via the manager on duty"
+      },
+      {
+        "queries": [
+          "Training programs and the gym floor",
+          "Coaches and the class schedule",
+          "Equipment faults and orders"
+        ],
+        "name": "Joey",
+        "role": "Co Founder",
+        "how": "Via the manager on duty"
+      },
+      {
+        "queries": [
+          "Coaching standards",
+          "Member experience and feedback",
+          "Personal training enquiries"
+        ],
+        "name": "Mick Abboud",
+        "role": "Head of Excellence",
+        "how": "Via the manager on duty"
+      }
+    ],
+    "_assistanceNote": "Each card leads with the problems it covers, then the person. No phone numbers or emails are invented here; ONYX supplies them and they go into 'how'.",
     "reportIssue": {
       "label": "Something wrong in this portal?",
       "text": "Tell the manager on duty what page you were on and what you expected. Corrections go to whoever maintains the portal and are updated for everyone."
