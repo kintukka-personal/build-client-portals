@@ -22,7 +22,9 @@ clients/<slug>/portal/
 2. **Write the first path.** Ten to fifteen items for the first audience, in the order a
    new starter meets them. Videos first, the opening shift, then the systems simulations.
 3. **Fill items.** Each item has a type: `simulation`, `video`, `guide`, `checklist`,
-   `article` or `link`. Guides carry `steps`, checklists carry `checks`, articles carry
+   `article` or `link`, and each type carries its own icon in the interface. Areas are the
+   Learn page's sections; three is usually right (Onboarding, Guides, Checklists) and an
+   area's `blurb` prints under its heading. Guides carry `steps`, checklists carry `checks`, articles carry
    `body`, links carry `href`, simulations and videos carry `src`. Mark anything the client
    has not confirmed `"demo": true`; the portal shows a Demo chip until it is cleared.
 4. **Simulations.** Until an export exists, point `src` at the placeholder with a title and
@@ -35,7 +37,8 @@ clients/<slug>/portal/
 
 ## Roles
 
-Client-side keys hide areas from casual browsing on a shared device. They are not security.
+Client-side keys keep the portal off a random phone and hide areas from casual browsing on a
+shared device. They are not security.
 Content that must be genuinely restricted, and a manager's view of the team, need a hosted
 backend; that is the next phase and is not in this build.
 
