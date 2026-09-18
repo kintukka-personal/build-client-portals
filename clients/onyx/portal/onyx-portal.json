@@ -549,22 +549,18 @@
           "Anything on shift you are unsure about",
           "A member's fob, card or check-in",
           "A booking, a class list or the till",
-          "Where something is kept"
-        ],
-        "name": "Reception, Alexandria",
-        "role": "Your first call",
-        "how": "In person or on the reception phone. 20 Bowden Street, Alexandria NSW."
-      },
-      {
-        "queries": [
+          "Where something is kept",
           "An incident, injury or safety concern",
           "A refund, cancellation or complaint",
-          "Roster and shift changes",
-          "Anything reception could not solve"
+          "Roster and shift changes"
         ],
         "name": "Manager on duty",
         "role": "Rostered per shift, named on the shift log",
-        "how": "Reception first, then their number on the roster. Safety is 000 first."
+        "how": "Find them on the floor first. Safety emergencies are 000 before anyone else.",
+        "email": "duty.manager@onyxgym.com.au",
+        "phone": "+61255500118",
+        "phoneLabel": "(02) 5550 0118",
+        "demo": true
       },
       {
         "queries": [
@@ -574,7 +570,11 @@
         ],
         "name": "Katie King",
         "role": "Co Founder",
-        "how": "Via the manager on duty"
+        "how": "Via the manager on duty for anything urgent.",
+        "email": "katie@onyxgym.com.au",
+        "phone": "+61491570156",
+        "phoneLabel": "0491 570 156",
+        "demo": true
       },
       {
         "queries": [
@@ -584,7 +584,11 @@
         ],
         "name": "Joey",
         "role": "Co Founder",
-        "how": "Via the manager on duty"
+        "how": "Via the manager on duty for anything urgent.",
+        "email": "joey@onyxgym.com.au",
+        "phone": "+61491570157",
+        "phoneLabel": "0491 570 157",
+        "demo": true
       },
       {
         "queries": [
@@ -594,10 +598,14 @@
         ],
         "name": "Mick Abboud",
         "role": "Head of Excellence",
-        "how": "Via the manager on duty"
+        "how": "Via the manager on duty for anything urgent.",
+        "email": "mick@onyxgym.com.au",
+        "phone": "+61491570158",
+        "phoneLabel": "0491 570 158",
+        "demo": true
       }
     ],
-    "_assistanceNote": "Each card leads with the problems it covers, then the person. No phone numbers or emails are invented here; ONYX supplies them and they go into 'how'.",
+    "_assistanceNote": "Each card leads with the problems it covers, then the person. Email and phone are placeholders on ONYX's own domain and on Australia's reserved fictitious number ranges; replace with the real details and drop the demo flag. phone is what tel: dials, phoneLabel is what a person reads.",
     "reportIssue": {
       "label": "Something wrong in this portal?",
       "text": "Tell the manager on duty what page you were on and what you expected. Corrections go to whoever maintains the portal and are updated for everyone."
