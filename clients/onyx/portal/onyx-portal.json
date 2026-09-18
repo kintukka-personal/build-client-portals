@@ -11,13 +11,13 @@
     "portalTitle": "ONYX Learning Hub",
     "tagline": "Not only a gym, but also a community."
   },
-  "storageKey": "onyx-portal:v1",
+  "storageKey": "onyx-portal:v2",
   "audiences": [
     {
       "id": "employee",
       "label": "Employee",
       "colour": "primary",
-      "key": null,
+      "key": "employee",
       "intro": "Everything you need for your first weeks at ONYX."
     },
     {
@@ -35,7 +35,7 @@
       "intro": "The brand, the numbers and the next site."
     }
   ],
-  "_keysNote": "Keys are a curtain, not security. They hide areas from casual browsing on a shared device. Content that must be genuinely restricted needs a hosted backend.",
+  "_keysNote": "Keys are a curtain, not security. They keep the portal off a random phone and hide the manager and owner areas on a shared device. Content that must be genuinely restricted needs a hosted backend.",
   "nav": [
     {
       "id": "home",
@@ -106,31 +106,18 @@
   "areas": [
     {
       "id": "onboarding",
-      "label": "Onboarding"
+      "label": "Onboarding",
+      "blurb": "Your first week. Start here."
     },
     {
-      "id": "systems",
-      "label": "Systems"
+      "id": "guides",
+      "label": "Guides",
+      "blurb": "How to do the job, step by step."
     },
     {
-      "id": "recover",
-      "label": "RECOVER"
-    },
-    {
-      "id": "operations",
-      "label": "Operations"
-    },
-    {
-      "id": "policies",
-      "label": "Policies"
-    },
-    {
-      "id": "management",
-      "label": "Management"
-    },
-    {
-      "id": "ownership",
-      "label": "Ownership"
+      "id": "checklists",
+      "label": "Checklists",
+      "blurb": "Run these on shift."
     }
   ],
   "items": [
@@ -160,7 +147,7 @@
       "id": "vid-recover",
       "type": "video",
       "audience": "employee",
-      "area": "recover",
+      "area": "onboarding",
       "title": "A walk through the RECOVER rooms",
       "minutes": 2,
       "demo": true,
@@ -171,7 +158,7 @@
       "id": "sim-checkin",
       "type": "simulation",
       "audience": "employee",
-      "area": "systems",
+      "area": "guides",
       "title": "Check a member in at reception",
       "minutes": 6,
       "steps": 9,
@@ -183,7 +170,7 @@
       "id": "sim-sell-membership",
       "type": "simulation",
       "audience": "employee",
-      "area": "systems",
+      "area": "guides",
       "title": "Sell a membership and take the joining fee",
       "minutes": 8,
       "steps": 12,
@@ -195,7 +182,7 @@
       "id": "sim-book-recover",
       "type": "simulation",
       "audience": "employee",
-      "area": "recover",
+      "area": "guides",
       "title": "Book a RECOVER Together or Solo session",
       "minutes": 5,
       "steps": 7,
@@ -207,7 +194,7 @@
       "id": "sim-fitness-passport",
       "type": "simulation",
       "audience": "employee",
-      "area": "systems",
+      "area": "guides",
       "title": "Process a Fitness Passport visit",
       "minutes": 4,
       "steps": 6,
@@ -219,7 +206,7 @@
       "id": "gd-opening",
       "type": "guide",
       "audience": "employee",
-      "area": "operations",
+      "area": "guides",
       "title": "Opening the gym at 5am",
       "minutes": 6,
       "demo": true,
@@ -243,7 +230,7 @@
       "id": "chk-opening",
       "type": "checklist",
       "audience": "employee",
-      "area": "operations",
+      "area": "checklists",
       "title": "Opening checklist",
       "minutes": 3,
       "demo": true,
@@ -267,7 +254,7 @@
       "id": "gd-closing",
       "type": "guide",
       "audience": "employee",
-      "area": "operations",
+      "area": "guides",
       "title": "Closing and lock-up",
       "minutes": 5,
       "demo": true,
@@ -288,7 +275,7 @@
       "id": "chk-closing",
       "type": "checklist",
       "audience": "employee",
-      "area": "operations",
+      "area": "checklists",
       "title": "Closing up checklist",
       "minutes": 3,
       "demo": true,
@@ -311,7 +298,7 @@
       "id": "gd-recover-turnaround",
       "type": "guide",
       "audience": "employee",
-      "area": "recover",
+      "area": "guides",
       "title": "Turning a RECOVER room around between sessions",
       "minutes": 4,
       "demo": true,
@@ -330,7 +317,7 @@
       "id": "chk-recover-room",
       "type": "checklist",
       "audience": "employee",
-      "area": "recover",
+      "area": "checklists",
       "title": "Recovery Room checklist",
       "minutes": 2,
       "demo": true,
@@ -352,7 +339,7 @@
       "id": "gd-fitness-passport",
       "type": "guide",
       "audience": "employee",
-      "area": "systems",
+      "area": "guides",
       "title": "Handling a Fitness Passport member",
       "minutes": 3,
       "demo": true,
@@ -369,7 +356,7 @@
       "id": "gd-class-checkin",
       "type": "guide",
       "audience": "employee",
-      "area": "operations",
+      "area": "guides",
       "title": "Class check-in and no-shows",
       "minutes": 3,
       "demo": true,
@@ -386,7 +373,7 @@
       "id": "gd-incident",
       "type": "guide",
       "audience": "employee",
-      "area": "policies",
+      "area": "guides",
       "title": "Incidents and first aid basics",
       "minutes": 5,
       "demo": true,
@@ -427,7 +414,7 @@
       "id": "gd-mgr-onboard-starter",
       "type": "guide",
       "audience": "manager",
-      "area": "management",
+      "area": "guides",
       "title": "Onboarding a new starter with this portal",
       "minutes": 4,
       "demo": true,
@@ -445,7 +432,7 @@
       "id": "gd-mgr-progress-card",
       "type": "guide",
       "audience": "manager",
-      "area": "management",
+      "area": "guides",
       "title": "Reading a progress card",
       "minutes": 2,
       "demo": true,
@@ -462,7 +449,7 @@
       "id": "chk-mgr-handover",
       "type": "checklist",
       "audience": "manager",
-      "area": "management",
+      "area": "checklists",
       "title": "Shift handover",
       "minutes": 2,
       "demo": true,
@@ -479,7 +466,7 @@
       "id": "lnk-brand-sheet",
       "type": "link",
       "audience": "owner",
-      "area": "ownership",
+      "area": "guides",
       "title": "The ONYX brand portfolio",
       "minutes": 5,
       "href": "../brand/onyx-brand-sheet.html",
@@ -489,7 +476,7 @@
       "id": "art-pricing-snapshot",
       "type": "article",
       "audience": "owner",
-      "area": "ownership",
+      "area": "guides",
       "title": "Membership snapshot, September 2026",
       "minutes": 3,
       "demo": true,
@@ -506,7 +493,7 @@
       "id": "gd-owner-artarmon",
       "type": "guide",
       "audience": "owner",
-      "area": "ownership",
+      "area": "guides",
       "title": "Opening Artarmon: what the portal needs",
       "minutes": 3,
       "demo": true,
