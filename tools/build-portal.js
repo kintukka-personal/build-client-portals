@@ -85,6 +85,11 @@ const ids = new Set(config.items.map(i => i.id));
 for (const p of config.paths) for (const id of p.items) if (!ids.has(id)) throw new Error(`path ${p.id} references unknown item ${id}`);
 for (const i of config.items) if (!config.audiences.some(a => a.id === i.audience)) throw new Error(`item ${i.id} has unknown audience ${i.audience}`);
 for (const i of config.items) if (!config.areas.some(a => a.id === i.area)) throw new Error(`item ${i.id} has unknown area ${i.area}`);
+if (config.groups) {
+  for (const g of config.groups) if (!config.areas.some(a => a.id === g.area)) throw new Error(`group ${g.id} has unknown area ${g.area}`);
+  for (const i of config.items) if (i.group && !config.groups.some(g => g.id === i.group)) throw new Error(`item ${i.id} has unknown group ${i.group}`);
+  for (const i of config.items) if (i.group) { const g = config.groups.find(x => x.id === i.group); if (g.area !== i.area) throw new Error(`item ${i.id} is in area ${i.area} but group ${i.group} belongs to ${g.area}`); }
+}
 for (const i of config.items) if (i.src && !/^https?:/.test(i.src) && !fs.existsSync(path.join(portalDir, i.src.split('?')[0]))) {
   if (!/sim-placeholder\.html/.test(i.src)) console.warn(`warning: ${i.id} points at missing file ${i.src}`);
 }

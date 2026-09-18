@@ -508,8 +508,11 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   // ---- pieces -----------------------------------------------------------
   const stateIcon = id => isDone(id) ? '<svg class="state" aria-label="Complete"><use href="#i-check"/></svg>' : status(id) === 'in-progress' ? '<svg class="state prog" aria-label="In progress"><use href="#i-prog"/></svg>' : '';
-  const metaOf = (it, withArea = true) => [it.minutes ? it.minutes + ' min' : null, it.steps && it.type === 'simulation' ? it.steps + ' steps' : null, Array.isArray(it.steps) ? it.steps.length + ' steps' : null, it.checks ? it.checks.length + ' items' : null, withArea ? areaLabel(it.area) : null].filter(Boolean).join(' · ');
+  const metaOf = (it, withArea = true) => [it.minutes ? it.minutes + ' min' : null, it.steps && it.type === 'simulation' ? it.steps + ' steps' : null, Array.isArray(it.steps) ? it.steps.length + ' steps' : null, it.checks ? it.checks.length + ' items' : null, withArea ? groupLabel(groupOf(it)) : null].filter(Boolean).join(' · ');
   const areaLabel = id => (CFG.areas.find(a => a.id === id) || {}).label || '';
+  const groups = () => CFG.groups || CFG.areas.map(a => ({ id: a.id, area: a.id, label: a.label, blurb: a.blurb }));
+  const groupOf = it => it.group || it.area;
+  const groupLabel = id => (groups().find(g => g.id === id) || {}).label || '';
   function card(it, opts = {}) {
     const done = isDone(it.id);
     return `<a class="card ${done ? 'done' : ''} ${opts.active ? 'active' : ''}" href="#/item/${it.id}">
@@ -563,17 +566,19 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
 
   function viewLearn(r) {
-    const q = (r.q.get('q') || '').toLowerCase(); const t = r.q.get('type') || 'all';
-    const types = [['all', 'All'], ['simulation', 'Simulations'], ['video', 'Videos'], ['guide', 'Guides'], ['checklist', 'Checklists'], ['article', 'Articles'], ['link', 'Links']];
-    const items = visible().filter(i => (t === 'all' || i.type === t) && (!q || (i.title + ' ' + i.blurb + ' ' + areaLabel(i.area)).toLowerCase().includes(q)));
-    const present = new Set(visible().map(i => i.type));
-    let html = `<div class="hero"><h1>Learn</h1><p>${visible().length} items for ${esc(aud().label.toLowerCase())}s${S.audience !== 'employee' ? ', including everything the team sees' : ''}.</p></div>
+    const q = (r.q.get('q') || '').toLowerCase(); const sel = r.q.get('area') || 'all';
+    const items = visible().filter(i => (sel === 'all' || i.area === sel) && (!q || (i.title + ' ' + i.blurb + ' ' + groupLabel(groupOf(i))).toLowerCase().includes(q)));
+    const present = new Set(visible().map(i => i.area));
+    const areas = CFG.areas.filter(a => present.has(a.id));
+    const chips = [['all', 'All']].concat(areas.map(a => [a.id, a.label]));
+    const selArea = CFG.areas.find(a => a.id === sel);
+    let html = `<div class="hero"><h1>Learn</h1><p>${visible().length} items for ${esc(aud().label.toLowerCase())}s${S.audience !== 'employee' ? ', including everything the team sees' : ''}.${selArea && selArea.blurb ? ' ' + esc(selArea.blurb) : ''}</p></div>
       <label class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search titles and descriptions" value="${esc(r.q.get('q') || '')}" aria-label="Search"></label>
-      <div class="chips">${types.filter(([k]) => k === 'all' || present.has(k)).map(([k, l]) => `<button type="button" data-type="${k}" class="${t === k ? 'on' : ''}">${l}</button>`).join('')}</div>`;
-    if (!items.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another type.</div>`;
-    CFG.areas.forEach(ar => {
-      const list = items.filter(i => i.area === ar.id); if (!list.length) return;
-      html += `<div class="section"><div class="section-head"><h3>${esc(ar.label)}</h3><span class="muted" style="font-size:13px">${list.filter(i => isDone(i.id)).length} of ${list.length} done</span></div>${ar.blurb ? `<p class="muted" style="font-size:14px;margin:-4px 0 12px">${esc(ar.blurb)}</p>` : ''}<div class="grid2">${list.map(i => card(i)).join('')}</div></div>`;
+      <div class="chips">${chips.map(([k, l]) => `<button type="button" data-area="${k}" class="${sel === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>`;
+    if (!items.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another filter.</div>`;
+    groups().forEach(g => {
+      const list = items.filter(i => groupOf(i) === g.id); if (!list.length) return;
+      html += `<div class="section"><div class="section-head"><h3>${esc(g.label)}</h3><span class="muted" style="font-size:13px">${list.filter(i => isDone(i.id)).length} of ${list.length} done</span></div>${g.blurb ? `<p class="muted" style="font-size:14px;margin:-4px 0 12px">${esc(g.blurb)}</p>` : ''}<div class="grid2">${list.map(i => card(i)).join('')}</div></div>`;
     });
     return html;
   }
@@ -581,7 +586,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const input = $('#q'); if (!input) return;
     const setQ = () => { const r = route(); const p = new URLSearchParams(r.q); if (input.value) p.set('q', input.value); else p.delete('q'); history.replaceState(null, '', '#/learn' + (p.toString() ? '?' + p : '')); renderBody(); const i2 = $('#q'); if (i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); } };
     let tm; input.addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(setQ, 180); });
-    document.querySelectorAll('[data-type]').forEach(b => b.addEventListener('click', () => { const p = new URLSearchParams(route().q); if (b.dataset.type === 'all') p.delete('type'); else p.set('type', b.dataset.type); go('/learn' + (p.toString() ? '?' + p : '')); }));
+    document.querySelectorAll('[data-area]').forEach(b => b.addEventListener('click', () => { const p = new URLSearchParams(route().q); if (b.dataset.area === 'all') p.delete('area'); else p.set('area', b.dataset.area); go('/learn' + (p.toString() ? '?' + p : '')); }));
   }
 
   let currentSim = null;
