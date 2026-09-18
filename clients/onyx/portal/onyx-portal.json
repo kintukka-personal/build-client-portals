@@ -32,7 +32,12 @@
       "label": "Owner",
       "colour": "white",
       "key": "owner",
-      "intro": "The numbers, the brand, the people and the next site."
+      "intro": "The numbers, the brand, the people and the next site.",
+      "homeLink": {
+        "to": "reports",
+        "label": "Reports and analytics",
+        "blurb": "Members, revenue, RECOVER and classes, month to date."
+      }
     }
   ],
   "_keysNote": "Keys are a curtain, not security. They keep the portal off a random phone and hide the manager and owner areas on a shared device. Content that must be genuinely restricted needs a hosted backend.",
@@ -43,7 +48,18 @@
     },
     {
       "id": "learn",
-      "label": "Learn"
+      "label": "Learn",
+      "audiences": [
+        "employee",
+        "manager"
+      ]
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "audiences": [
+        "owner"
+      ]
     },
     {
       "id": "support",
@@ -1126,5 +1142,261 @@
       "label": "BAU",
       "blurb": "Business as usual. The tick lists you run on shift."
     }
-  ]
+  ],
+  "reports": {
+    "audiences": [
+      "owner"
+    ],
+    "title": "Reports",
+    "asOf": "September 2026, month to date",
+    "note": "Demo figures. The gym system is the source of truth; these show the shape of the page, not ONYX's numbers.",
+    "demo": true,
+    "tiles": [
+      {
+        "id": "active",
+        "label": "Active members",
+        "value": "1,284",
+        "delta": "+38",
+        "deltaLabel": "vs August",
+        "upIsGood": true,
+        "trend": [
+          1052,
+          1068,
+          1041,
+          1120,
+          1163,
+          1181,
+          1198,
+          1215,
+          1224,
+          1240,
+          1246,
+          1284
+        ]
+      },
+      {
+        "id": "net",
+        "label": "Net movement",
+        "value": "+38",
+        "sub": "71 joined · 33 cancelled",
+        "delta": "+12",
+        "deltaLabel": "vs August",
+        "upIsGood": true,
+        "trend": [
+          14,
+          16,
+          -27,
+          79,
+          43,
+          18,
+          17,
+          17,
+          9,
+          16,
+          6,
+          38
+        ]
+      },
+      {
+        "id": "visits",
+        "label": "Visits per member per week",
+        "value": "1.9",
+        "delta": "−0.1",
+        "deltaLabel": "vs August",
+        "upIsGood": true,
+        "trend": [
+          2.1,
+          2.0,
+          1.7,
+          2.2,
+          2.2,
+          2.1,
+          2.0,
+          2.0,
+          1.9,
+          2.0,
+          2.0,
+          1.9
+        ]
+      },
+      {
+        "id": "rpm",
+        "label": "Revenue per member",
+        "value": "$146",
+        "sub": "per month, all products",
+        "delta": "+$4",
+        "deltaLabel": "vs August",
+        "upIsGood": true,
+        "trend": [
+          131,
+          132,
+          130,
+          136,
+          138,
+          139,
+          141,
+          142,
+          142,
+          143,
+          142,
+          146
+        ]
+      },
+      {
+        "id": "recover",
+        "label": "RECOVER utilisation",
+        "value": "58%",
+        "delta": "+6 pts",
+        "deltaLabel": "vs August",
+        "upIsGood": true,
+        "trend": [
+          38,
+          40,
+          36,
+          44,
+          47,
+          49,
+          50,
+          52,
+          51,
+          53,
+          52,
+          58
+        ]
+      },
+      {
+        "id": "classes",
+        "label": "Class attendance vs capacity",
+        "value": "71%",
+        "delta": "+3 pts",
+        "deltaLabel": "vs August",
+        "upIsGood": true,
+        "trend": [
+          64,
+          63,
+          58,
+          67,
+          69,
+          70,
+          70,
+          71,
+          68,
+          69,
+          68,
+          71
+        ]
+      }
+    ],
+    "members": {
+      "title": "Active members, twelve months",
+      "months": [
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep"
+      ],
+      "values": [
+        1052,
+        1068,
+        1041,
+        1120,
+        1163,
+        1181,
+        1198,
+        1215,
+        1224,
+        1240,
+        1246,
+        1284
+      ]
+    },
+    "cancellations": {
+      "title": "Cancellation reasons, September",
+      "unit": "members",
+      "rows": [
+        [
+          "Moving away",
+          9
+        ],
+        [
+          "Cost",
+          8
+        ],
+        [
+          "Injury or illness",
+          6
+        ],
+        [
+          "Not using it",
+          5
+        ],
+        [
+          "Switched gyms",
+          3
+        ],
+        [
+          "Other",
+          2
+        ]
+      ]
+    },
+    "recoverBlocks": {
+      "title": "RECOVER utilisation by block",
+      "unit": "%",
+      "max": 100,
+      "rows": [
+        [
+          "Weekday 5–9am",
+          82
+        ],
+        [
+          "Weekday 9am–4pm",
+          31
+        ],
+        [
+          "Weekday 4–9pm",
+          76
+        ],
+        [
+          "Saturday",
+          64
+        ],
+        [
+          "Sunday",
+          47
+        ]
+      ]
+    },
+    "classes": {
+      "title": "Class attendance vs capacity, by type",
+      "unit": "%",
+      "max": 100,
+      "rows": [
+        [
+          "Strength",
+          84
+        ],
+        [
+          "HIIT",
+          78
+        ],
+        [
+          "Boxing",
+          66
+        ],
+        [
+          "Mobility",
+          52
+        ]
+      ]
+    }
+  }
 }

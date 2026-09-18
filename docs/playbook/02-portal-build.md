@@ -43,6 +43,16 @@ clients/<slug>/portal/
    a wrong key then the right one, an export from Me. Check the desktop rail.
 8. **Hand it over** as a link or a folder. Keys go to the client separately.
 
+## Reports
+
+An optional `reports` block turns on a Reports page: `audiences` says who sees it, `tiles`
+is the KPI row (label, value, optional sub, signed delta with its label, `upIsGood`, a
+twelve-point `trend`), then `members` (a twelve-month line), and any number of horizontal
+bar charts (`title`, `unit`, optional `max`, `rows` of label and value). Every chart carries
+a hover tooltip and a table view. Give the audience a `homeLink` to put a button to it on
+their Home, and list `reports` in `nav` with `audiences` so it replaces Learn in their tab
+bar. Figures are whatever the config says; mark the block `demo` until they are real.
+
 ## Roles
 
 Client-side keys keep the portal off a random phone and hide areas from casual browsing on a
