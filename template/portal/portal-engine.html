@@ -174,10 +174,14 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .pager a.next { text-align: right; }
 
 /* ---- support ---- */
-.contact { display: grid; grid-template-columns: 1fr; gap: 2px; }
-.contact .name { font-weight: var(--w-semibold); }
-.contact .role { color: var(--primary); font-size: 13px; }
-.contact .detail, .contact .how { font-size: 13px; color: var(--text-muted); }
+.assist .q { list-style: none; margin: 0 0 14px; padding: 0; }
+.assist .q li { display: flex; gap: 10px; align-items: flex-start; padding: 4px 0; font-size: 15px; line-height: 1.45; }
+.assist .q li::before { content: ""; flex: none; width: 12px; height: 2px; background: var(--primary); margin-top: 10px; }
+.assist .goto { border-top: 1px solid var(--border-quiet); padding-top: 12px; display: grid; gap: 2px; }
+.assist .goto .k { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--cta); font-weight: var(--w-semibold); margin-bottom: 4px; }
+.assist .goto .name { font-weight: var(--w-semibold); font-size: 17px; }
+.assist .goto .role { color: var(--primary); font-size: 13px; }
+.assist .goto .how { font-size: 13px; color: var(--text-muted); }
 details { border-top: 1px solid var(--border-quiet); }
 details:last-of-type { border-bottom: 1px solid var(--border-quiet); }
 summary { list-style: none; cursor: pointer; padding: 14px 32px 14px 0; position: relative; font-weight: var(--w-medium); }
@@ -585,9 +589,9 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   function viewSupport() {
     const s = CFG.support;
-    return `<div class="hero"><h1>Support</h1><p>Who to ask, in order, and the answers to the questions that come up every week.</p></div>
-      <div class="section"><div class="label">Who to ask</div><div class="grid2">${s.contacts.map(c => `<div class="card contact"><span class="name">${esc(c.name)}</span><span class="role">${esc(c.role)}</span><span class="detail">${esc(c.detail)}</span><span class="how">${esc(c.how)}</span></div>`).join('')}</div></div>
+    return `<div class="hero"><h1>Support</h1><p>The answers to the questions that come up every week, then who to go to when it is not one of them.</p></div>
       <div class="section"><div class="label">The usual questions</div>${s.faq.map(f => `<details><summary>${esc(f.q)}</summary><div class="ans">${esc(f.a)}</div></details>`).join('')}</div>
+      <div class="section"><div class="label">Direct assistance</div><p class="muted" style="font-size:14px;margin:-2px 0 14px">Find your problem, then go to the person under it.</p><div class="grid2">${s.assistance.map(c => `<div class="card assist"><ul class="q">${c.queries.map(q => `<li>${esc(q)}</li>`).join('')}</ul><div class="goto"><span class="k">Go to</span><span class="name">${esc(c.name)}</span><span class="role">${esc(c.role)}</span><span class="how">${esc(c.how)}</span></div></div>`).join('')}</div></div>
       <div class="section"><div class="card"><div class="type">${esc(s.reportIssue.label)}</div><p style="margin-top:8px;font-size:15px" class="muted">${esc(s.reportIssue.text)}</p></div></div>
       <div class="section"><a class="btn outline" href="${esc(CFG.client.memberLogin)}" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Member login</a></div>`;
   }
