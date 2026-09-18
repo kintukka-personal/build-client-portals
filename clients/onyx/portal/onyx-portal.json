@@ -25,14 +25,14 @@
       "label": "Manager",
       "colour": "cta",
       "key": "ONYX-MGR-2026",
-      "intro": "Running a shift, onboarding a starter, reading progress."
+      "intro": "Running a shift, running the roster, running the team."
     },
     {
       "id": "owner",
       "label": "Owner",
       "colour": "white",
       "key": "ONYX-OWN-2026",
-      "intro": "The brand, the numbers and the next site."
+      "intro": "The numbers, the brand, the people and the next site."
     }
   ],
   "_keysNote": "Keys are a curtain, not security. They keep the portal off a random phone and hide the manager and owner areas on a shared device. Content that must be genuinely restricted needs a hosted backend.",
@@ -83,22 +83,36 @@
     {
       "id": "manager-essentials",
       "audience": "manager",
-      "title": "Manager essentials",
-      "blurb": "Three items for anyone running a shift.",
+      "title": "Running the floor",
+      "blurb": "Everything a manager owns: the roster, the team, the awkward conversations and the weekly rhythm.",
       "items": [
+        "vid-mgr-welcome",
         "gd-mgr-onboard-starter",
         "gd-mgr-progress-card",
-        "chk-mgr-handover"
+        "chk-mgr-handover",
+        "gd-mgr-roster",
+        "gd-mgr-cancellation",
+        "sim-mgr-refund",
+        "gd-mgr-incident-followup",
+        "art-mgr-kpis",
+        "chk-mgr-week",
+        "chk-mgr-monthly"
       ]
     },
     {
       "id": "owner-desk",
       "audience": "owner",
       "title": "Owner's desk",
-      "blurb": "The brand, the pricing snapshot and what Artarmon needs from this portal.",
+      "blurb": "The numbers, the brand, the people and the next site.",
       "items": [
-        "lnk-brand-sheet",
+        "art-owner-scorecard",
         "art-pricing-snapshot",
+        "lnk-owner-site",
+        "art-owner-recover",
+        "gd-owner-hiring",
+        "lnk-brand-sheet",
+        "gd-owner-portal",
+        "chk-owner-monthly",
         "gd-owner-artarmon"
       ]
     }
@@ -463,6 +477,150 @@
       ]
     },
     {
+      "id": "vid-mgr-welcome",
+      "type": "video",
+      "audience": "manager",
+      "area": "onboarding",
+      "title": "What we expect of a manager at ONYX",
+      "minutes": 4,
+      "demo": true,
+      "src": null,
+      "blurb": "Katie and Joey on the standard: how the floor should feel, how the team should be spoken to, and what you decide without asking."
+    },
+    {
+      "id": "gd-mgr-roster",
+      "type": "guide",
+      "audience": "manager",
+      "area": "guides",
+      "title": "Building the weekly roster",
+      "minutes": 6,
+      "demo": true,
+      "blurb": "Published Thursday for the week starting Monday. Cover first, preferences second.",
+      "steps": [
+        "Open the roster for the coming week by Wednesday morning. Anything published later than Thursday afternoon is late.",
+        "Block the fixed points first: every group fitness class with its coach, and the staffed desk hours at each end of the day.",
+        "Fill the opening and closing shifts next. These are the two that cannot be left uncovered, and they need someone signed off on the opening and closing checklists.",
+        "Layer in RECOVER cover for the busy blocks: weekday mornings before 9, and weekday evenings after 5.",
+        "Now apply leave and availability. Anything requested more than two weeks out is honoured unless it leaves a shift uncovered.",
+        "Check nobody is rostered to close then open the next morning. It is legal and it is still a bad shift pattern.",
+        "Sanity-check the hours against budget before publishing. Flag to Joey if the week is over.",
+        "Publish, then message the team. Swaps go through you, not between staff directly."
+      ]
+    },
+    {
+      "id": "gd-mgr-incident-followup",
+      "type": "guide",
+      "audience": "manager",
+      "area": "guides",
+      "title": "Following up an incident report",
+      "minutes": 5,
+      "demo": true,
+      "blurb": "The staff member wrote the report. What you do with it in the next 48 hours.",
+      "steps": [
+        "Read the report the same shift it was written. If anything is vague, ask the person while they still remember it.",
+        "Call the member within 24 hours. Ask how they are, not whether they intend to complain. Write down what they say.",
+        "Photograph anything involved: the equipment, the floor, the spill, the sign that was or was not there.",
+        "If equipment was involved, take it out of service with a tag until it has been checked. A tag is cheaper than a second incident.",
+        "Decide whether it is reportable. Anything involving an ambulance, a head injury or a member who cannot continue goes to Joey and Katie the same day.",
+        "Write your follow-up under the original report: what you found, who you spoke to, what changed.",
+        "Close the loop with the staff member. They will handle the next one better if they hear what happened."
+      ]
+    },
+    {
+      "id": "gd-mgr-cancellation",
+      "type": "guide",
+      "audience": "manager",
+      "area": "guides",
+      "title": "Cancellations, freezes and difficult conversations",
+      "minutes": 6,
+      "demo": true,
+      "blurb": "Most cancellations are a life change, not a complaint about the gym. Find out which one you are in.",
+      "steps": [
+        "Take the conversation off the desk. A member cancelling in front of a queue will not tell you the real reason.",
+        "Ask what has changed. Moving, money, injury, or unhappy with something here. The answer decides everything that follows.",
+        "Injury or illness: offer a freeze first. A frozen membership comes back; a cancelled one usually does not.",
+        "Money: name the cheaper plan honestly rather than defending the current one.",
+        "Unhappy: let them finish, write it down, and say what you will do. Do not discount your way out of a service problem.",
+        "Moving or genuinely done: process it cleanly and thank them. A graceful exit is how you get the referral.",
+        "Check the terms and conditions for notice and any remaining commitment before you agree to anything.",
+        "Log the reason in the gym system. The pattern across a month is worth more than any single conversation."
+      ]
+    },
+    {
+      "id": "sim-mgr-refund",
+      "type": "simulation",
+      "audience": "manager",
+      "area": "guides",
+      "title": "Process a freeze and a partial refund",
+      "minutes": 7,
+      "steps": 10,
+      "demo": true,
+      "src": "content/sims/onyx-sim-placeholder.html?title=Process+a+freeze+and+a+partial+refund&steps=10",
+      "blurb": "Freeze a membership with an end date, then refund a part month and record the reason against the account."
+    },
+    {
+      "id": "art-mgr-kpis",
+      "type": "article",
+      "audience": "manager",
+      "area": "guides",
+      "title": "What we look at each week",
+      "minutes": 3,
+      "demo": true,
+      "blurb": "Five numbers, read every Monday. Reference only; the gym system is the source of truth.",
+      "body": [
+        "Five numbers tell you how the week went. Read them every Monday morning before the team arrives.",
+        "Visits per active member. The single best predictor of whether someone stays. Under one visit a week across a month and that member is drifting.",
+        "Class attendance against capacity. A class under half full twice in a row is a timetable problem, not a coach problem.",
+        "RECOVER utilisation by room and by block. Empty weekday middays are normal; empty weekday evenings are not.",
+        "New joins against cancellations. The net number matters less than the two lines moving in the same direction.",
+        "Cancellation reasons, grouped. Three of the same reason in a month is a thing to fix, not a run of bad luck."
+      ]
+    },
+    {
+      "id": "chk-mgr-week",
+      "type": "checklist",
+      "audience": "manager",
+      "area": "checklists",
+      "title": "Weekly manager checklist",
+      "minutes": 3,
+      "demo": true,
+      "blurb": "Run through it once a week, same day each week.",
+      "checks": [
+        "Roster for next week published by Thursday",
+        "Class cover confirmed for every session",
+        "Shift logs from the week read and anything open actioned",
+        "Incident reports followed up and closed",
+        "New starters' progress cards reviewed",
+        "RECOVER room faults and consumables checked",
+        "Equipment fault list reviewed with Joey",
+        "Cancellation reasons from the week logged",
+        "Till and end-of-day reports reconciled for all seven days",
+        "One thing worth fixing raised with Katie or Joey"
+      ]
+    },
+    {
+      "id": "chk-mgr-monthly",
+      "type": "checklist",
+      "audience": "manager",
+      "area": "checklists",
+      "title": "Monthly compliance checklist",
+      "minutes": 4,
+      "demo": true,
+      "blurb": "The dull one that matters when something goes wrong.",
+      "checks": [
+        "First aid kits checked and restocked at reception and in RECOVER",
+        "Defibrillator pads and battery in date",
+        "Fire exits clear, signage lit, evacuation plan visible",
+        "Emergency lighting tested",
+        "Cleaning schedule signed off for every week of the month",
+        "RECOVER water quality logs complete",
+        "Staff certifications current: first aid, CPR, coaching accreditation",
+        "Incident register reviewed for patterns",
+        "Chemical and cleaning products stored and labelled correctly",
+        "Anything outstanding escalated with a date against it"
+      ]
+    },
+    {
       "id": "lnk-brand-sheet",
       "type": "link",
       "audience": "owner",
@@ -505,6 +663,114 @@
         "A site switcher on the Me page so a person who works both sites sees the right guides.",
         "The same brand, the same portal, the same progress card. Nothing is rebuilt."
       ]
+    },
+    {
+      "id": "art-owner-scorecard",
+      "type": "article",
+      "audience": "owner",
+      "area": "guides",
+      "title": "The monthly scorecard",
+      "minutes": 4,
+      "demo": true,
+      "blurb": "What to read on the first Monday of the month, and in what order.",
+      "body": [
+        "Read it in this order. The order is the point: members before money, because the money follows.",
+        "Active members, and the split between month-to-month and committed terms. A base tilting toward month-to-month is a base that can leave quickly.",
+        "Net movement. Joins minus cancellations, plotted across twelve months rather than compared to last month.",
+        "Visit frequency across the whole base. This is the leading indicator. It falls a month or two before cancellations rise.",
+        "Revenue per active member, including RECOVER, personal training and the Evolt360 scans. A flat membership price with rising revenue per member means the extras are working.",
+        "RECOVER utilisation and its share of revenue. The rooms have fixed running costs, so utilisation is the number that decides whether they earn their floor space.",
+        "Personal training hours sold, by coach. It is both a revenue line and a read on which coaches members trust.",
+        "Cancellation reasons, grouped and ranked. Then pick one to fix this month. One, properly, beats five noted."
+      ]
+    },
+    {
+      "id": "art-owner-recover",
+      "type": "article",
+      "audience": "owner",
+      "area": "guides",
+      "title": "RECOVER: how the rooms earn their space",
+      "minutes": 4,
+      "demo": true,
+      "blurb": "The commercial case for contrast therapy, in plain terms. Reference only; the accountant has the real numbers.",
+      "body": [
+        "A RECOVER room costs the same whether it runs empty or full: the heat, the water, the space it takes on the floor plan. Everything therefore turns on utilisation.",
+        "Two products serve two motivations. Together is social and fills weekends and evenings. Solo is a premium private slot and fills weekday mornings.",
+        "The free Solo session bundled into the ONYX Black memberships is an acquisition cost, not a giveaway. It exists so a member experiences the room once; conversion after that first session is what to measure.",
+        "Memberships beat casual sessions for a recovery product, because the habit is weekly and a package makes the member plan around it.",
+        "The room is also a retention tool for the gym membership itself. A member who books RECOVER weekly has a second reason to keep coming, and second reasons are what stop cancellations.",
+        "Watch three things: utilisation by block, the split between Together and Solo, and how many RECOVER members are also gym members. The third one tells you whether the room is growing the business or just moving revenue around inside it."
+      ]
+    },
+    {
+      "id": "gd-owner-hiring",
+      "type": "guide",
+      "audience": "owner",
+      "area": "guides",
+      "title": "Hiring a coach",
+      "minutes": 6,
+      "demo": true,
+      "blurb": "Qualifications get them in the room. Temperament decides the hire.",
+      "steps": [
+        "Write the role around the gap, not the person. A powerlifting coach and a group fitness coach are different hires with different weeks.",
+        "Screen for the non-negotiables on paper: current certification, first aid and CPR, insurance and a working with children check where relevant.",
+        "Phone screen for fifteen minutes. You are only checking whether they can hold a warm conversation with a stranger, which is most of the job.",
+        "Run a floor trial, paid, during a busy block. Watch whether they approach members unprompted or wait to be approached.",
+        "Give them one coaching scenario: a member doing something unsafe who did not ask for help. The way they interrupt tells you how they will treat the floor.",
+        "Ask what they do when they do not know the answer. The good answer involves finding out and coming back.",
+        "Reference-check the last two employers, and ask specifically whether members asked for that person by name.",
+        "Onboard through this portal from day one. Same path, same checklists, same standard as everyone else."
+      ]
+    },
+    {
+      "id": "gd-owner-portal",
+      "type": "guide",
+      "audience": "owner",
+      "area": "guides",
+      "title": "Keeping this portal current",
+      "minutes": 4,
+      "demo": true,
+      "blurb": "A portal nobody updates is worse than no portal. Five habits keep it true.",
+      "steps": [
+        "One owner. Somebody's name is against this portal, and everyone knows whose.",
+        "Corrections come from the floor. The staff who use it find the errors first, and the Support page tells them where to send them.",
+        "When the gym system changes, the screenshots change. Reopen the SimStudio project, use Replace image on the affected steps, export again. The overlays stay where they are.",
+        "When a procedure changes, the guide changes the same week. A guide that contradicts the floor teaches the team to ignore the portal.",
+        "Review the whole thing quarterly against what actually happens on shift. Delete anything nobody uses; dead content makes the rest look stale.",
+        "Roll a new site in by reusing everything. Only the opening and closing guides and the site photos differ."
+      ]
+    },
+    {
+      "id": "chk-owner-monthly",
+      "type": "checklist",
+      "audience": "owner",
+      "area": "checklists",
+      "title": "Owner's monthly review",
+      "minutes": 3,
+      "demo": true,
+      "blurb": "First Monday of the month. Thirty minutes, done properly.",
+      "checks": [
+        "Scorecard read in order and last month's numbers compared",
+        "Cancellation reasons reviewed and one chosen to fix",
+        "RECOVER utilisation checked by room and block",
+        "Personal training hours reviewed by coach",
+        "Roster hours against budget for the month",
+        "Incident register reviewed",
+        "Compliance checklist confirmed complete by the manager",
+        "Team: anyone thriving, anyone struggling, anyone owed a conversation",
+        "Marketing spend against joins for the month",
+        "Artarmon progress reviewed against its plan"
+      ]
+    },
+    {
+      "id": "lnk-owner-site",
+      "type": "link",
+      "audience": "owner",
+      "area": "guides",
+      "title": "Live memberships page",
+      "minutes": 1,
+      "href": "https://onyxgym.com.au/gym/memberships-pricing/",
+      "blurb": "What a prospective member sees today. Check it against the snapshot in this portal whenever pricing moves."
     }
   ],
   "support": {
