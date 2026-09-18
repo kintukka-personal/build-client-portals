@@ -119,14 +119,14 @@
   ],
   "areas": [
     {
-      "id": "onboarding",
-      "label": "Onboarding",
-      "blurb": "Your first week. Start here."
+      "id": "getting-started",
+      "label": "Getting Started",
+      "blurb": "Your first week at ONYX. Start here and work down."
     },
     {
       "id": "guides",
       "label": "Guides",
-      "blurb": "How to do the job, step by step."
+      "blurb": "How to do the job, step by step. Simulations sit with the guide they belong to."
     },
     {
       "id": "checklists",
@@ -139,34 +139,37 @@
       "id": "vid-welcome",
       "type": "video",
       "audience": "employee",
-      "area": "onboarding",
+      "area": "getting-started",
       "title": "Welcome from Katie and Joey",
       "minutes": 2,
       "demo": true,
       "src": null,
-      "blurb": "Why ONYX exists, what the community means here, and what your first week looks like."
+      "blurb": "Why ONYX exists, what the community means here, and what your first week looks like.",
+      "group": "getting-started"
     },
     {
       "id": "vid-floor-tour",
       "type": "video",
       "audience": "employee",
-      "area": "onboarding",
+      "area": "getting-started",
       "title": "The gym floor and where things live",
       "minutes": 3,
       "demo": true,
       "src": null,
-      "blurb": "Reception, the floor, the class studio, the RECOVER rooms, the back of house and the fire exits."
+      "blurb": "Reception, the floor, the class studio, the RECOVER rooms, the back of house and the fire exits.",
+      "group": "getting-started"
     },
     {
       "id": "vid-recover",
       "type": "video",
       "audience": "employee",
-      "area": "onboarding",
+      "area": "getting-started",
       "title": "A walk through the RECOVER rooms",
       "minutes": 2,
       "demo": true,
       "src": null,
-      "blurb": "Infrared sauna, ice bath, the Together room and the Solo room. What members book and what they expect when they arrive."
+      "blurb": "Infrared sauna, ice bath, the Together room and the Solo room. What members book and what they expect when they arrive.",
+      "group": "getting-started"
     },
     {
       "id": "sim-checkin",
@@ -178,7 +181,8 @@
       "steps": 9,
       "demo": true,
       "src": "content/sims/onyx-sim-placeholder.html?title=Check+a+member+in+at+reception&steps=9",
-      "blurb": "Find the member, confirm their membership is active, and check them in. What to do when the scan fails."
+      "blurb": "Find the member, confirm their membership is active, and check them in. What to do when the scan fails.",
+      "group": "members"
     },
     {
       "id": "sim-sell-membership",
@@ -190,7 +194,8 @@
       "steps": 12,
       "demo": true,
       "src": "content/sims/onyx-sim-placeholder.html?title=Sell+a+membership&steps=12",
-      "blurb": "Set up ONYX Black or Platinum, take the $59 joining fee, and book the free Evolt360 scan and RECOVER Solo session that come with it."
+      "blurb": "Set up ONYX Black or Platinum, take the $59 joining fee, and book the free Evolt360 scan and RECOVER Solo session that come with it.",
+      "group": "members"
     },
     {
       "id": "sim-book-recover",
@@ -202,7 +207,8 @@
       "steps": 7,
       "demo": true,
       "src": "content/sims/onyx-sim-placeholder.html?title=Book+a+RECOVER+session&steps=7",
-      "blurb": "Check room availability, book the right room type, and take payment or apply a membership inclusion."
+      "blurb": "Check room availability, book the right room type, and take payment or apply a membership inclusion.",
+      "group": "recover"
     },
     {
       "id": "sim-fitness-passport",
@@ -214,7 +220,8 @@
       "steps": 6,
       "demo": true,
       "src": "content/sims/onyx-sim-placeholder.html?title=Process+a+Fitness+Passport+visit&steps=6",
-      "blurb": "Scan the Fitness Passport, record the visit, and handle a card that will not validate."
+      "blurb": "Scan the Fitness Passport, record the visit, and handle a card that will not validate.",
+      "group": "members"
     },
     {
       "id": "gd-opening",
@@ -238,7 +245,8 @@
         "Set the front door to member access at 5:00am sharp. 24/7 members already have fob access; this opens the staffed entrance.",
         "Greet the first members by name where you know it. Ask how their training is going.",
         "Write the opening entry in the shift log: time, anything found, anything reported."
-      ]
+      ],
+      "group": "open-close"
     },
     {
       "id": "chk-opening",
@@ -262,7 +270,8 @@
         "Bathrooms and change rooms checked and stocked",
         "Front door set to member access at 5:00am",
         "Opening entry written in the shift log"
-      ]
+      ],
+      "group": "bau"
     },
     {
       "id": "gd-closing",
@@ -283,7 +292,8 @@
         "Set the front door back to fob-only access. Confirm the after-hours signage and the emergency number are visible.",
         "Turn off reception screens and music. Leave the safety lighting on.",
         "Write the closing entry in the shift log, arm the alarm zones that cover the back of house, and leave through the staff door."
-      ]
+      ],
+      "group": "open-close"
     },
     {
       "id": "chk-closing",
@@ -306,7 +316,8 @@
         "Front door set to fob-only access; after-hours signage and emergency number visible",
         "Reception screens and music off; safety lighting on",
         "Closing entry written; back-of-house alarm zones armed; left via the staff door"
-      ]
+      ],
+      "group": "bau"
     },
     {
       "id": "gd-recover-turnaround",
@@ -325,7 +336,8 @@
         "Check the room card: lighting scene, music level, sauna set temperature for the next booking type.",
         "Mark the room as ready in the gym system so the next member can be checked in.",
         "Meet the next booking at reception. Walk them in if it is their first RECOVER session and explain the timer and the call button."
-      ]
+      ],
+      "group": "recover"
     },
     {
       "id": "chk-recover-room",
@@ -347,7 +359,8 @@
         "Room card applied for the next booking type: lighting, music, sauna temperature",
         "Call button tested",
         "Room marked ready in the gym system"
-      ]
+      ],
+      "group": "bau"
     },
     {
       "id": "gd-fitness-passport",
@@ -364,7 +377,8 @@
         "It covers gym access and group fitness classes. It does not cover RECOVER sessions, personal training or the Evolt360 scan. Those are paid at the desk like any casual purchase.",
         "If the card or app will not validate, take the member's name and Fitness Passport number, let them train, and log it for the manager to follow up.",
         "A Fitness Passport member who wants RECOVER on a regular basis is a lead for a RECOVER membership. Mention it once, warmly, and leave it there."
-      ]
+      ],
+      "group": "members"
     },
     {
       "id": "gd-class-checkin",
@@ -381,7 +395,8 @@
         "Five minutes after the start, mark the unarrived as no-shows.",
         "A member with repeat no-shows gets a friendly word from the coach or manager, not from the desk.",
         "Close the class list once it has started so the numbers reported are what actually trained."
-      ]
+      ],
+      "group": "members"
     },
     {
       "id": "gd-incident",
@@ -400,13 +415,14 @@
         "Once the person is safe, write the incident report the same day: who, what, where, when, who was present, what was done. Facts only.",
         "Tell the manager on duty before you leave the shift. They decide on any follow-up with the member.",
         "Restock whatever you used from the kit and note it in the shift log."
-      ]
+      ],
+      "group": "safety"
     },
     {
       "id": "chk-week1",
       "type": "checklist",
       "audience": "employee",
-      "area": "onboarding",
+      "area": "getting-started",
       "title": "Week 1 checklist",
       "minutes": 2,
       "demo": true,
@@ -422,7 +438,8 @@
         "Watched the three welcome videos",
         "Read the incident guide and know where the first aid kit and defibrillator are",
         "Know who the manager on duty is for each of my shifts"
-      ]
+      ],
+      "group": "getting-started"
     },
     {
       "id": "gd-mgr-onboard-starter",
@@ -440,7 +457,8 @@
         "Pair each simulation with a shadowed real shift the same week. The simulation teaches the clicks; the shift teaches the people.",
         "At the end of week one, ask for their progress card. Read it against the checklist and sign them off, or agree what week two covers.",
         "Anything the portal got wrong or missing goes to the person maintaining it. It is updated for everyone, not just for the next starter."
-      ]
+      ],
+      "group": "team"
     },
     {
       "id": "gd-mgr-progress-card",
@@ -457,7 +475,8 @@
         "Guides and checklists are self-marked. Treat them as a conversation starter, not proof.",
         "The card is only as complete as the device it came from. Progress does not sync between phones in this version; the person's own phone is their record.",
         "Keep the card with your onboarding notes. When the portal gains a hosted team view, these cards import into it."
-      ]
+      ],
+      "group": "team"
     },
     {
       "id": "chk-mgr-handover",
@@ -474,18 +493,20 @@
         "Class cover confirmed for the next shift",
         "Any incident reports written and handed over",
         "Till reconciled and end-of-day report filed"
-      ]
+      ],
+      "group": "bau"
     },
     {
       "id": "vid-mgr-welcome",
       "type": "video",
       "audience": "manager",
-      "area": "onboarding",
+      "area": "getting-started",
       "title": "What we expect of a manager at ONYX",
       "minutes": 4,
       "demo": true,
       "src": null,
-      "blurb": "Katie and Joey on the standard: how the floor should feel, how the team should be spoken to, and what you decide without asking."
+      "blurb": "Katie and Joey on the standard: how the floor should feel, how the team should be spoken to, and what you decide without asking.",
+      "group": "getting-started"
     },
     {
       "id": "gd-mgr-roster",
@@ -505,7 +526,8 @@
         "Check nobody is rostered to close then open the next morning. It is legal and it is still a bad shift pattern.",
         "Sanity-check the hours against budget before publishing. Flag to Joey if the week is over.",
         "Publish, then message the team. Swaps go through you, not between staff directly."
-      ]
+      ],
+      "group": "team"
     },
     {
       "id": "gd-mgr-incident-followup",
@@ -524,7 +546,8 @@
         "Decide whether it is reportable. Anything involving an ambulance, a head injury or a member who cannot continue goes to Joey and Katie the same day.",
         "Write your follow-up under the original report: what you found, who you spoke to, what changed.",
         "Close the loop with the staff member. They will handle the next one better if they hear what happened."
-      ]
+      ],
+      "group": "safety"
     },
     {
       "id": "gd-mgr-cancellation",
@@ -544,7 +567,8 @@
         "Moving or genuinely done: process it cleanly and thank them. A graceful exit is how you get the referral.",
         "Check the terms and conditions for notice and any remaining commitment before you agree to anything.",
         "Log the reason in the gym system. The pattern across a month is worth more than any single conversation."
-      ]
+      ],
+      "group": "members"
     },
     {
       "id": "sim-mgr-refund",
@@ -556,7 +580,8 @@
       "steps": 10,
       "demo": true,
       "src": "content/sims/onyx-sim-placeholder.html?title=Process+a+freeze+and+a+partial+refund&steps=10",
-      "blurb": "Freeze a membership with an end date, then refund a part month and record the reason against the account."
+      "blurb": "Freeze a membership with an end date, then refund a part month and record the reason against the account.",
+      "group": "members"
     },
     {
       "id": "art-mgr-kpis",
@@ -574,7 +599,8 @@
         "RECOVER utilisation by room and by block. Empty weekday middays are normal; empty weekday evenings are not.",
         "New joins against cancellations. The net number matters less than the two lines moving in the same direction.",
         "Cancellation reasons, grouped. Three of the same reason in a month is a thing to fix, not a run of bad luck."
-      ]
+      ],
+      "group": "business"
     },
     {
       "id": "chk-mgr-week",
@@ -596,7 +622,8 @@
         "Cancellation reasons from the week logged",
         "Till and end-of-day reports reconciled for all seven days",
         "One thing worth fixing raised with Katie or Joey"
-      ]
+      ],
+      "group": "bau"
     },
     {
       "id": "chk-mgr-monthly",
@@ -618,7 +645,8 @@
         "Incident register reviewed for patterns",
         "Chemical and cleaning products stored and labelled correctly",
         "Anything outstanding escalated with a date against it"
-      ]
+      ],
+      "group": "bau"
     },
     {
       "id": "lnk-brand-sheet",
@@ -628,7 +656,8 @@
       "title": "The ONYX brand portfolio",
       "minutes": 5,
       "href": "../brand/onyx-brand-sheet.html",
-      "blurb": "Colours, type, logo rules, components and the SimStudio kit, as captured from onyxgym.com.au. Every simulation and this portal follow it."
+      "blurb": "Colours, type, logo rules, components and the SimStudio kit, as captured from onyxgym.com.au. Every simulation and this portal follow it.",
+      "group": "brand"
     },
     {
       "id": "art-pricing-snapshot",
@@ -645,7 +674,8 @@
         "ONYX Black, 12 months: $28.99 per week, billed fortnightly at $57.98. Includes a free Evolt360 body scan and report valued at $50, and a free RECOVER Solo session valued at $45.",
         "ONYX Black, paid in full: $1299 once for 12 months, the equivalent of $24.98 per week. Same inclusions as the 12-month plan.",
         "RECOVER by ONYX is sold separately as monthly memberships and session packages, in Together and Solo rooms."
-      ]
+      ],
+      "group": "business"
     },
     {
       "id": "gd-owner-artarmon",
@@ -662,7 +692,8 @@
         "The site's own photos for the onboarding videos and the floor tour.",
         "A site switcher on the Me page so a person who works both sites sees the right guides.",
         "The same brand, the same portal, the same progress card. Nothing is rebuilt."
-      ]
+      ],
+      "group": "business"
     },
     {
       "id": "art-owner-scorecard",
@@ -682,7 +713,8 @@
         "RECOVER utilisation and its share of revenue. The rooms have fixed running costs, so utilisation is the number that decides whether they earn their floor space.",
         "Personal training hours sold, by coach. It is both a revenue line and a read on which coaches members trust.",
         "Cancellation reasons, grouped and ranked. Then pick one to fix this month. One, properly, beats five noted."
-      ]
+      ],
+      "group": "business"
     },
     {
       "id": "art-owner-recover",
@@ -700,7 +732,8 @@
         "Memberships beat casual sessions for a recovery product, because the habit is weekly and a package makes the member plan around it.",
         "The room is also a retention tool for the gym membership itself. A member who books RECOVER weekly has a second reason to keep coming, and second reasons are what stop cancellations.",
         "Watch three things: utilisation by block, the split between Together and Solo, and how many RECOVER members are also gym members. The third one tells you whether the room is growing the business or just moving revenue around inside it."
-      ]
+      ],
+      "group": "recover"
     },
     {
       "id": "gd-owner-hiring",
@@ -720,7 +753,8 @@
         "Ask what they do when they do not know the answer. The good answer involves finding out and coming back.",
         "Reference-check the last two employers, and ask specifically whether members asked for that person by name.",
         "Onboard through this portal from day one. Same path, same checklists, same standard as everyone else."
-      ]
+      ],
+      "group": "team"
     },
     {
       "id": "gd-owner-portal",
@@ -738,7 +772,8 @@
         "When a procedure changes, the guide changes the same week. A guide that contradicts the floor teaches the team to ignore the portal.",
         "Review the whole thing quarterly against what actually happens on shift. Delete anything nobody uses; dead content makes the rest look stale.",
         "Roll a new site in by reusing everything. Only the opening and closing guides and the site photos differ."
-      ]
+      ],
+      "group": "brand"
     },
     {
       "id": "chk-owner-monthly",
@@ -760,7 +795,8 @@
         "Team: anyone thriving, anyone struggling, anyone owed a conversation",
         "Marketing spend against joins for the month",
         "Artarmon progress reviewed against its plan"
-      ]
+      ],
+      "group": "bau"
     },
     {
       "id": "lnk-owner-site",
@@ -770,7 +806,8 @@
       "title": "Live memberships page",
       "minutes": 1,
       "href": "https://onyxgym.com.au/gym/memberships-pricing/",
-      "blurb": "What a prospective member sees today. Check it against the snapshot in this portal whenever pricing moves."
+      "blurb": "What a prospective member sees today. Check it against the snapshot in this portal whenever pricing moves.",
+      "group": "business"
     }
   ],
   "support": {
@@ -864,5 +901,62 @@
       "text": "Tell the manager on duty what page you were on and what you expected. Corrections go to whoever maintains the portal and are updated for everyone."
     }
   },
-  "footer": "ONYX Learning Hub · Built beside SimStudio · Content marked Demo is for ONYX to confirm."
+  "footer": "ONYX Learning Hub · Built beside SimStudio · Content marked Demo is for ONYX to confirm.",
+  "_areasNote": "Areas are the Learn filters. Groups are the subheadings inside them, in this order.",
+  "groups": [
+    {
+      "id": "getting-started",
+      "area": "getting-started",
+      "label": "Getting Started",
+      "blurb": "Your first week. Start here."
+    },
+    {
+      "id": "open-close",
+      "area": "guides",
+      "label": "Opening and closing",
+      "blurb": "The two shifts that cannot be left uncovered."
+    },
+    {
+      "id": "members",
+      "area": "guides",
+      "label": "Helping members",
+      "blurb": "The desk, the system and the conversations."
+    },
+    {
+      "id": "recover",
+      "area": "guides",
+      "label": "RECOVER",
+      "blurb": "The sauna and ice bath rooms."
+    },
+    {
+      "id": "safety",
+      "area": "guides",
+      "label": "Safety and incidents",
+      "blurb": "What to do, and what happens next."
+    },
+    {
+      "id": "team",
+      "area": "guides",
+      "label": "Team and roster",
+      "blurb": "Hiring, onboarding and covering the week."
+    },
+    {
+      "id": "business",
+      "area": "guides",
+      "label": "The business",
+      "blurb": "The numbers, the pricing and the next site."
+    },
+    {
+      "id": "brand",
+      "area": "guides",
+      "label": "Brand and this portal",
+      "blurb": "How ONYX looks, and how this portal stays true."
+    },
+    {
+      "id": "bau",
+      "area": "checklists",
+      "label": "BAU",
+      "blurb": "Business as usual. The tick lists you run on shift."
+    }
+  ]
 }
