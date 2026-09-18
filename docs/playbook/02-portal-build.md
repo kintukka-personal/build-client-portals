@@ -22,22 +22,23 @@ clients/<slug>/portal/
 2. **Write the first path.** Ten to fifteen items for the first audience, in the order a
    new starter meets them. Videos first, the opening shift, then the systems simulations.
 3. **Fill items.** Each item has a type: `simulation`, `video`, `guide`, `checklist`,
-   `article` or `link`, and each type carries its own icon in the interface.
+   `article` or `link`, and each type carries its own icon in the interface. Guides carry
+   `steps`, checklists carry `checks`, articles carry `body`, links carry `href`,
+   simulations and videos carry `src`. Mark anything the client has not confirmed
+   `"demo": true`; the portal shows a Demo chip until it is cleared.
 4. **Areas and groups.** `areas` are the Learn filter chips; three is usually right
    (Getting Started, Guides, Checklists), and the selected area's `blurb` prints under the
-   page title. `groups` are the subheadings inside them, rendered in the order they are
-   listed, each with its own `blurb`. Every item names a `group`, and its `area` must match
-   that group's; the build refuses a mismatch. One group per area is fine — Getting Started
-   and Checklists each have one — and a busy area earns several, as Guides does with
-   Opening and closing, Helping members, RECOVER, Safety and incidents, and so on. Name a
-   group after the job, not the content type: a simulation belongs beside the guide it
-   teaches. Guides carry `steps`, checklists carry `checks`, articles carry
-   `body`, links carry `href`, simulations and videos carry `src`. Mark anything the client
-   has not confirmed `"demo": true`; the portal shows a Demo chip until it is cleared.
-4. **Simulations.** Until an export exists, point `src` at the placeholder with a title and
+   page title. `groups` are the subheadings inside them, rendered in config order, each
+   with its own `blurb`. Every item names a `group`, and its `area` must match that
+   group's; the build refuses a mismatch. One group per area is fine, as Getting Started
+   and Checklists have, and a busy area earns several, as Guides does with Opening and
+   closing, Helping members, RECOVER, Safety and incidents and the rest. Name a group after
+   the job, not the content type: a simulation belongs beside the guide it teaches.
+5. **Simulations.** Until an export exists, point `src` at the placeholder with a title and
    step count. When it lands, point at the file and set `demo` to false.
 6. **Build.** `node tools/build-portal.js <slug>`. The build refuses a path that names an
-   unknown item, an item with an unknown audience or area, and warns on a missing file.
+   unknown item, an item with an unknown audience, area or group, a group in an unknown
+   area, an item whose area contradicts its group, and warns on a missing file.
 7. **Walk it** on a phone: the landing pick, name prompt, a simulation to completion, a guide ticked through,
    a wrong key then the right one, an export from Me. Check the desktop rail.
 8. **Hand it over** as a link or a folder. Keys go to the client separately.
