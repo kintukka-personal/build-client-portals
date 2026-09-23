@@ -102,6 +102,41 @@ procedure, and exports as JSON for whoever maintains the portal. That keeps capt
 to the person who knows the process without pretending a static file can be a shared
 database.
 
+## Members
+
+A client-facing audience alongside the staff ones. It carries no key — a member is not
+being kept out of anything — and it is first in `audiences`, so it is the first door on
+the landing page.
+
+**Who sees whose content** is now declared rather than inferred. Each audience carries
+`sees`, a list of the audiences whose items it can open; leaving it off keeps the old
+rule (an employee sees employee content, everyone above sees their own and the
+employee's). Members carry `"sees": ["member"]`, so no staff item reaches them — not in
+Learn, not from a typed hash, which the item view now refuses the same way Reports and
+the process library do.
+
+`learnTitle` and `learnIntro` rename the Learn page per audience; for members it is
+**Helpful tips**. Give them an `area` and `groups` of their own so the filter chips are
+theirs, and a tab bar of five at most — a two-word uppercase label wraps at six.
+
+### The floorplan
+
+A `floorplan` block turns on **Look around**: `viewBox`, `zones` (`id`, `label`, `x`, `y`,
+`w`, `h`, `blurb` — plain rectangles in the viewBox's own units), and `equipment`
+(`name`, `zone`, `tags`, optional `note`). A search matches an equipment name, one of its
+tags or a zone label, and every zone holding a match lights up while the rest step back.
+The tags double as chips under the search box, so the body parts are browsable without
+anyone having to guess the words. Tapping a zone picks it instead and lists what is in
+it — the other way people read a plan: not "where is the leg press" but "what is over
+there". Keep zones from overlapping; the labels sit in the middle of each one, so short
+ones read best at phone width.
+
+### What's new
+
+A `news` block gives a spotlight post and a swipeable carousel of the rest. Posts carry
+`id`, `title`, `date`, `tag`, `lead` and `body`. The first post is the spotlight — order
+the list, and the page follows.
+
 ## Roles
 
 Client-side keys keep the portal off a random phone and hide areas from casual browsing on a
