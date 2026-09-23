@@ -17,7 +17,11 @@ const fs = require('fs');
 const path = require('path');
 
 const slug = process.argv[2];
-if (!slug) { console.error('usage: node tools/build-portal.js <client-slug>'); process.exit(1); }
+if (!slug) { console.error('usage: node tools/build-portal.js <client-slug> [--no-embed]'); process.exit(1); }
+// Sent as a single file, the portal cannot reach a sibling content/ folder, so every
+// local simulation is inlined and the engine hands it to the frame as srcdoc. Pass
+// --no-embed for a hosted build, where separate files load only when they are opened.
+const embed = !process.argv.includes('--no-embed');
 
 const root = path.join(__dirname, '..');
 const brandDir = path.join(root, 'clients', slug, 'brand');
@@ -64,6 +68,7 @@ const favSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vx - vw * 0.1
 const favicon = `<link rel="icon" href="data:image/svg+xml,${encodeURIComponent(favSvg).replace(/'/g, '%27')}">`;
 
 // ---- assemble ---------------------------------------------------------------
+const jsonScript = (id, value) => `\n<script id="${id}" type="application/json">${JSON.stringify(value).replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--')}</script>`;
 const inject = (html, extra) => {
   const cfgJson = JSON.stringify(config).replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--');
   let out = html
@@ -72,7 +77,7 @@ const inject = (html, extra) => {
     .replace('<!-- @favicon -->', favicon)
     .replace('<!-- @fonts -->', fontsHtml)
     .replace('<!-- @symbols -->', symbols)
-    .replace('<!-- @config -->', `<script id="portal-config" type="application/json">${cfgJson}</script>`);
+    .replace('<!-- @config -->', `<script id="portal-config" type="application/json">${cfgJson}</script>${extra || ''}`);
   const a = out.indexOf('/* @tokens */'), b = out.indexOf('/* @/tokens */');
   if (a === -1 || b === -1) throw new Error('template has no @tokens markers');
   out = out.slice(0, a) + tokens.trim() + '\n' + out.slice(b + '/* @/tokens */'.length);
@@ -95,11 +100,27 @@ for (const i of config.items) if (i.src && !/^https?:/.test(i.src) && !fs.exists
 }
 
 fs.mkdirSync(path.join(portalDir, 'content', 'sims'), { recursive: true });
-const outPortal = path.join(portalDir, `${slug}-portal.html`);
-fs.writeFileSync(outPortal, inject(engine));
+// The placeholder is written first: it is one of the files the portal then inlines.
 const outPh = path.join(portalDir, 'content', 'sims', `${slug}-sim-placeholder.html`);
 fs.writeFileSync(outPh, inject(placeholder));
 
+let sims = null, simBytes = 0;
+if (embed) {
+  sims = {};
+  for (const i of config.items) {
+    if (!i.src || /^https?:/.test(i.src)) continue;
+    const rel = i.src.split('?')[0];          // one copy however many items point at it
+    if (sims[rel] !== undefined) continue;
+    const f = path.join(portalDir, rel);
+    if (!fs.existsSync(f)) continue;
+    sims[rel] = read(f);
+    simBytes += Buffer.byteLength(sims[rel]);
+  }
+  if (!Object.keys(sims).length) sims = null;
+}
+const outPortal = path.join(portalDir, `${slug}-portal.html`);
+fs.writeFileSync(outPortal, inject(engine, sims ? jsonScript('portal-sims', sims) : ''));
+
 const kb = f => (fs.statSync(f).size / 1024).toFixed(0) + ' KB';
-console.log(`wrote ${path.relative(process.cwd(), outPortal)} (${kb(outPortal)}, ${config.items.length} items, ${config.paths.length} paths, fonts ${local.length ? 'embedded' : 'from Google Fonts'})`);
+console.log(`wrote ${path.relative(process.cwd(), outPortal)} (${kb(outPortal)}, ${config.items.length} items, ${config.paths.length} paths, fonts ${local.length ? 'embedded' : 'from Google Fonts'}, ${sims ? `${Object.keys(sims).length} simulations inlined, ${(simBytes / 1024).toFixed(0)} KB` : 'simulations linked'})`);
 console.log(`wrote ${path.relative(process.cwd(), outPh)} (${kb(outPh)})`);
