@@ -39,6 +39,11 @@ main { flex: 1; padding: 0 16px calc(84px + env(safe-area-inset-bottom)); max-wi
 .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(0,0,0,.96); border-top: 1px solid var(--border-quiet); padding-bottom: env(safe-area-inset-bottom); }
 .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 10px; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--text-muted); }
 .tabbar a svg { width: 22px; height: 22px; }
+/* five tabs leaves each one ~78px, and an uppercase two-word label wraps there and
+   makes the whole bar taller than it is for every other audience. The tracking and
+   a point of size come back so it sits on one line. */
+.tabbar[data-n="5"] a { font-size: 9.5px; letter-spacing: .03em; }
+.tabbar[data-n="5"] a span { white-space: nowrap; }
 .tabbar a[aria-current] { color: var(--primary); }
 
 @media (min-width: 960px) {
@@ -190,6 +195,58 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .pager a .t { font-size: 14px; display: block; }
 .pager a.next { text-align: right; }
 
+/* ---- look around: the floorplan ---- */
+.plan { margin-top: 18px; border: 1px solid var(--border); background: var(--surface); padding: 10px; }
+.plan svg { display: block; width: 100%; height: auto; }
+.zone rect { fill: var(--surface-raised); stroke: var(--border); stroke-width: .5; transition: fill .18s, stroke .18s; }
+.zone text { fill: var(--text-muted); font-size: 3.4px; font-weight: var(--w-semibold); letter-spacing: .04em;
+  text-anchor: middle; dominant-baseline: middle; transition: fill .18s; text-transform: uppercase; }
+.zone { cursor: pointer; }
+.zone:hover rect { stroke: var(--text-muted); }
+/* a hit: the area the search found. Fill and stroke both move, because a stroke alone
+   is easy to miss on a plan this size and on a phone in a bright room. */
+.zone.hit rect { fill: color-mix(in srgb, var(--primary) 26%, var(--surface-raised)); stroke: var(--primary); stroke-width: 1; }
+.zone.hit text { fill: var(--text); }
+.zone.sel rect { fill: color-mix(in srgb, var(--cta) 30%, var(--surface-raised)); stroke: var(--cta); stroke-width: 1.2; }
+.zone.sel text { fill: var(--text); }
+/* searching with no match here: everything else steps back so the hits read */
+.plan.filtering .zone:not(.hit):not(.sel) rect { opacity: .45; }
+.plan.filtering .zone:not(.hit):not(.sel) text { opacity: .5; }
+.plan-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.taglist { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.taglist button { background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 13px;
+  padding: 6px 12px; font-weight: var(--w-medium); text-transform: capitalize; }
+.taglist button.on { border-color: var(--primary); color: var(--primary); }
+.found { margin-top: 20px; }
+.found .row { display: grid; grid-template-columns: 1fr auto; gap: 10px 14px; align-items: baseline;
+  padding: 12px 0; border-top: 1px solid var(--border-quiet); }
+.found .row:first-child { border-top: 0; }
+.found .row b { font-weight: var(--w-semibold); }
+.found .row .where { font-size: 13px; color: var(--primary); white-space: nowrap; }
+.found .row .tg { grid-column: 1 / -1; font-size: 12px; color: var(--text-muted); text-transform: capitalize; margin-top: -4px; }
+.found .row .nt { grid-column: 1 / -1; font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+/* ---- what's new ---- */
+.post-hero { margin-top: 18px; border: 1px solid var(--border); background: var(--surface); padding: 20px; }
+.post-hero .tag, .post .tag { display: inline-block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--primary); font-weight: var(--w-semibold); }
+.post-hero h2 { font-size: 26px; line-height: 1.15; margin: 8px 0 6px; }
+@media (min-width: 720px) { .post-hero h2 { font-size: 32px; } }
+.post-hero .when, .post .when { font-size: 13px; color: var(--text-muted); }
+.post-hero .lead { margin-top: 12px; font-size: 16px; }
+.carousel { display: grid; grid-auto-flow: column; grid-auto-columns: 78%; gap: 12px; margin-top: 14px;
+  overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-width: thin; }
+@media (min-width: 720px) { .carousel { grid-auto-columns: 42%; } }
+@media (min-width: 1100px) { .carousel { grid-auto-columns: 30%; } }
+.carousel > * { scroll-snap-align: start; }
+.post { border: 1px solid var(--border); background: var(--surface); padding: 16px; display: block; color: inherit; }
+.post:hover { border-color: var(--text-muted); }
+.post h3 { font-size: 17px; line-height: 1.25; margin: 8px 0 6px; }
+.post p { font-size: 14px; color: var(--text-muted); }
+.article-head { margin-top: 6px; }
+.article-head h1 { font-size: 28px; line-height: 1.15; margin: 10px 0 8px; }
+@media (min-width: 960px) { .article-head h1 { font-size: 36px; } }
+
 /* ---- home tiles ---- */
 .tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 24px; }
 @media (min-width: 900px) { .tiles { grid-template-columns: repeat(3, 1fr); } }
@@ -211,6 +268,11 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .tl .nx svg { width: 14px; height: 14px; flex: none; }
 .tl .nt { font-size: 16px; font-weight: var(--w-semibold); line-height: 1.25; }
 .tl .mk { width: 54px; color: var(--primary); }
+/* the plan at tile size: the shape of the room, no labels, nothing to read */
+.tl .mini-plan { display: block; width: 62px; flex: none; }
+.tl .mini-plan svg { display: block; width: 100%; height: auto; }
+.tl .mini-plan rect { fill: var(--surface-raised); stroke: var(--primary); stroke-width: .6; }
+.tl:hover .mini-plan rect { fill: color-mix(in srgb, var(--primary) 22%, var(--surface-raised)); }
 .tl .mini { display: flex; height: 6px; gap: 2px; }
 .tl .mini i { display: block; }
 .tl .mini i.ok { background: var(--primary); } .tl .mini i.dr { background: var(--cta); } .tl .mini i.gp { background: var(--border); }
@@ -404,6 +466,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     <symbol id="i-full" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
     <symbol id="i-ext" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></symbol>
     <symbol id="t-simulation" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="1.5"/><path d="m10 9.5 5.5 3.2-5.5 3.2z" fill="currentColor" stroke="none"/><path d="M8 20.5h8"/></g></symbol>
+    <symbol id="i-plan" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 10h7V3M10 10h11M10 15h11M14 21v-6"/></g></symbol>
+    <symbol id="i-news" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M16 9h4v10a2 2 0 0 1-2 2M7 9h6M7 13h6M7 17h4"/></g></symbol>
     <symbol id="i-import" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M12 14V4M12 14l-3.2-3.2M12 14l3.2-3.2"/></g></symbol>
     <symbol id="t-hotspot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M21 12.5V5H3v14h10"/><path d="m3 16 4.5-4.5 3.5 3.5"/><circle cx="8.5" cy="9" r="1.4"/><path d="M18.5 14c1.9 0 3.5 1.5 3.5 3.4 0 2.4-3.5 5.1-3.5 5.1S15 19.8 15 17.4c0-1.9 1.6-3.4 3.5-3.4z"/><circle cx="18.5" cy="17.4" r="1.2"/></g></symbol>
     <symbol id="t-video" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="5" width="13" height="14" rx="1.5"/><path d="m15.5 12 6-3.5v11l-6-3.5z"/></g></symbol>
@@ -525,7 +589,11 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   const aud = () => CFG.audiences.find(a => a.id === S.audience) || CFG.audiences[0];
   const unlocked = id => { const a = CFG.audiences.find(x => x.id === id); return !a || !a.key || !!S.unlocked[id]; };
-  const visible = () => CFG.items.filter(i => i.audience === S.audience || (S.audience !== 'employee' && i.audience === 'employee'));
+  /* Who sees whose content. It used to be a rule — everyone above an employee sees
+     employee content — which was right until members arrived, who must see none of it.
+     Each audience now says so itself, and the old rule is the default. */
+  const seesOf = a => a.sees || (a.id === 'employee' ? ['employee'] : ['employee', a.id]);
+  const visible = () => { const s = seesOf(aud()); return CFG.items.filter(i => s.includes(i.audience)); };
   const pathFor = a => CFG.paths.find(p => p.audience === a);
   const status = id => (S.items[id] && S.items[id].status) || 'new';
   const isDone = id => status(id) === 'complete';
@@ -555,13 +623,14 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   window.addEventListener('hashchange', render);
 
   // ---- chrome -----------------------------------------------------------
-  const navIcon = { home: 'i-home', learn: 'i-learn', reports: 'i-reports', support: 'i-support', me: 'i-me' };
+  const navIcon = { home: 'i-home', lookaround: 'i-plan', learn: 'i-learn', reports: 'i-reports', news: 'i-news', support: 'i-support', me: 'i-me' };
   const navItems = () => CFG.nav.filter(n => !n.audiences || n.audiences.includes(S.audience));
   function renderNav() {
     const r = route(); const cur = r.view === 'item' ? 'learn' : (r.view === 'process' ? 'processes' : r.view); const nav = navItems();
     const link = n => `<a href="#/${n.id}" ${cur === n.id ? 'aria-current="page"' : ''}><svg><use href="#${navIcon[n.id]}"/></svg><span>${esc(n.label)}</span></a>`;
     $('#tabbar').innerHTML = nav.map(link).join('');
     $('#tabbar').style.gridTemplateColumns = `repeat(${nav.length}, 1fr)`;
+    $('#tabbar').dataset.n = nav.length;
     $('#rail-nav').innerHTML = nav.map(link).join('');
     $('#menu-nav').innerHTML = nav.map(n => `<a href="#/${n.id}" data-close>${esc(n.label)}</a>`).join('');
     const audHtml = CFG.audiences.map(a => `<button type="button" data-aud="${a.id}" data-c="${a.colour}" class="${a.id === S.audience ? 'on' : ''}" aria-pressed="${a.id === S.audience}">${a.key && !S.unlocked[a.id] ? '<svg><use href="#i-lock"/></svg>' : ''}${esc(a.label)}</button>`).join('');
@@ -736,7 +805,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const areas = CFG.areas.filter(a => present.has(a.id));
     const chips = [['all', 'All']].concat(areas.map(a => [a.id, a.label]));
     const selArea = CFG.areas.find(a => a.id === sel);
-    let html = `<div class="hero"><h1>Learn</h1><p>${visible().length} items for ${esc(aud().label.toLowerCase())}s${S.audience !== 'employee' ? ', including everything the team sees' : ''}.${selArea && selArea.blurb ? ' ' + esc(selArea.blurb) : ''}</p></div>
+    const A = aud(); const seesTeam = seesOf(A).length > 1;
+    let html = `<div class="hero"><h1>${esc(A.learnTitle || 'Learn')}</h1><p>${A.learnIntro ? esc(A.learnIntro) + ' ' : `${visible().length} items for ${esc(A.label.toLowerCase())}s${seesTeam ? ', including everything the team sees' : ''}. `}${selArea && selArea.blurb ? esc(selArea.blurb) : ''}</p></div>
       <label class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search titles and descriptions" value="${esc(r.q.get('q') || '')}" aria-label="Search"></label>
       <div class="chips">${chips.map(([k, l]) => `<button type="button" data-area="${k}" class="${sel === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>`;
     if (!items.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another filter.</div>`;
@@ -756,6 +826,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   let currentSim = null;
   function viewItem(r) {
     const it = byId[r.id]; if (!it) return `<div class="empty" style="margin-top:24px">That item does not exist. <a href="#/learn">Back to Learn</a></div>`;
+    if (!seesOf(aud()).includes(it.audience)) { go('home'); return ''; }
     if (!isDone(it.id)) start(it.id); else { S.lastOpened = it.id; save(); }
     currentSim = (it.type === 'simulation' || it.type === 'hotspot') ? it.id : null;
     const rec = S.items[it.id] || {};
@@ -895,6 +966,115 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     view.onpointerleave = hide; view.onpointerdown = e => { const el = e.target.closest('[data-tip]'); if (el) { show(el, e.clientX, e.clientY); setTimeout(hide, 1800); } };
   }
 
+  // ---- look around: the floorplan ---------------------------------------
+  /* A search matches an equipment name or one of its tags, and every zone holding a
+     match lights up. Tapping a zone picks it instead, which is the other way people
+     use a plan: not "where is the leg press" but "what is over there". */
+  const planCfg = () => CFG.floorplan || null;
+  const planTags = () => { const seen = []; (planCfg().equipment || []).forEach(e => (e.tags || []).forEach(t => { if (!seen.includes(t)) seen.push(t); })); return seen.sort(); };
+  function planMatches(q) {
+    const F = planCfg(); const t = q.trim().toLowerCase();
+    if (!t) return null;
+    return (F.equipment || []).filter(e =>
+      e.name.toLowerCase().includes(t) ||
+      (e.tags || []).some(g => g.toLowerCase().includes(t) || t.includes(g.toLowerCase())) ||
+      (zoneById(e.zone) || {}).label.toLowerCase().includes(t));
+  }
+  const zoneById = id => (planCfg().zones || []).find(z => z.id === id);
+
+  function viewLook(r) {
+    const F = planCfg(); if (!F) return `<div class="empty" style="margin-top:24px">No floorplan is configured.</div>`;
+    const q = r.q.get('q') || ''; const sel = r.q.get('zone') || '';
+    const hits = planMatches(q);
+    const hitZones = hits ? new Set(hits.map(e => e.zone)) : new Set();
+    const filtering = !!(hits || sel);
+    const shown = sel ? (F.equipment || []).filter(e => e.zone === sel) : (hits || []);
+    const selZone = sel ? zoneById(sel) : null;
+
+    const zones = (F.zones || []).map(z => {
+      const cls = z.id === sel ? 'sel' : (hitZones.has(z.id) ? 'hit' : '');
+      const n = hits ? hits.filter(e => e.zone === z.id).length : 0;
+      return `<g class="zone ${cls}" data-zone="${esc(z.id)}" role="button" tabindex="0"
+        aria-label="${esc(z.label)}${n ? `, ${n} match${n > 1 ? 'es' : ''}` : ''}">
+        <rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}"/>
+        <text x="${z.x + z.w / 2}" y="${z.y + z.h / 2}">${esc(z.label)}</text>
+      </g>`;
+    }).join('');
+
+    let html = `<div class="hero"><h1>${esc(F.title || 'Look around')}</h1><p>${esc(F.intro || '')}${F.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
+      <label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="${esc(F.placeholder || 'Search')}" value="${esc(q)}" aria-label="Search equipment"></label>
+      <div class="taglist">${planTags().map(t => `<button type="button" data-tag="${esc(t)}" class="${q.toLowerCase() === t ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>
+      <div class="plan ${filtering ? 'filtering' : ''}"><svg viewBox="${esc(F.viewBox || '0 0 100 134')}" role="img" aria-label="Floorplan of ${esc(CFG.client.tradingName)}">${zones}</svg></div>`;
+
+    if (selZone) {
+      html += `<div class="section"><div class="section-head"><h3>${esc(selZone.label)}</h3><a href="#/lookaround${q ? '?q=' + encodeURIComponent(q) : ''}">Clear</a></div>
+        ${selZone.blurb ? `<p class="muted" style="font-size:14px;margin:-4px 0 8px">${esc(selZone.blurb)}</p>` : ''}
+        <div class="found">${shown.map(planRow).join('')}</div></div>`;
+    } else if (hits) {
+      html += hits.length
+        ? `<div class="section"><div class="section-head"><h3>${hits.length} match${hits.length > 1 ? 'es' : ''}</h3><span class="muted" style="font-size:13px">in ${hitZones.size} area${hitZones.size > 1 ? 's' : ''}</span></div><div class="found">${hits.map(planRow).join('')}</div></div>`
+        : `<div class="empty" style="margin-top:16px">Nothing matches “${esc(q)}”. Try a body part like legs or back, or ask us at the desk.</div>`;
+    } else {
+      html += `<p class="muted" style="font-size:14px;margin-top:14px">Tap an area to see what is in it, or search above.</p>`;
+    }
+    if (F.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(F.note)}</p>`;
+    return html;
+  }
+  const planRow = e => `<div class="row"><b>${esc(e.name)}</b><span class="where">${esc((zoneById(e.zone) || {}).label || '')}</span>
+    <span class="tg">${esc((e.tags || []).join(' · '))}</span>${e.note ? `<span class="nt">${esc(e.note)}</span>` : ''}</div>`;
+
+  function wireLook() {
+    const input = $('#pq');
+    const setQ = v => {
+      const p = new URLSearchParams(); if (v) p.set('q', v);
+      history.replaceState(null, '', '#/lookaround' + (p.toString() ? '?' + p : ''));
+      renderBody();
+      const i2 = $('#pq'); if (i2 && document.activeElement !== i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }
+    };
+    if (input) { let tm; input.addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(() => setQ(input.value), 180); }); }
+    document.querySelectorAll('[data-tag]').forEach(b => b.addEventListener('click', () => {
+      const r = route(); setQ(r.q.get('q') === b.dataset.tag ? '' : b.dataset.tag);
+    }));
+    const pick = z => { const r = route(); const p = new URLSearchParams();
+      const qv = r.q.get('q'); if (qv) p.set('q', qv);
+      if (r.q.get('zone') !== z) p.set('zone', z);
+      go('/lookaround' + (p.toString() ? '?' + p : '')); };
+    document.querySelectorAll('[data-zone]').forEach(g => {
+      g.addEventListener('click', () => pick(g.dataset.zone));
+      g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(g.dataset.zone); } });
+    });
+  }
+
+  // ---- what's new -------------------------------------------------------
+  const newsCfg = () => CFG.news || null;
+  const postById = id => ((newsCfg() || {}).posts || []).find(p => p.id === id);
+  const fmtPost = s => { const d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' }); };
+
+  function viewNews() {
+    const N = newsCfg(); if (!N || !(N.posts || []).length) return `<div class="empty" style="margin-top:24px">Nothing posted yet.</div>`;
+    const [lead, ...rest] = N.posts;
+    let html = `<div class="hero"><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
+      <a class="post-hero" href="#/post/${esc(lead.id)}" style="display:block;color:inherit">
+        <span class="tag">${esc(lead.tag || '')}</span>
+        <h2>${esc(lead.title)}</h2>
+        <div class="when">${esc(fmtPost(lead.date))}</div>
+        <p class="lead">${esc(lead.lead)}</p>
+        <div class="frame-actions" style="margin-top:14px"><span class="btn outline small">Read it<svg style="margin-left:2px"><use href="#i-arrow-r"/></svg></span></div>
+      </a>`;
+    if (rest.length) html += `<div class="section"><div class="section-head"><h3>Earlier</h3><span class="muted" style="font-size:13px">${rest.length} post${rest.length > 1 ? 's' : ''}</span></div>
+      <div class="carousel">${rest.map(p => `<a class="post" href="#/post/${esc(p.id)}"><span class="tag">${esc(p.tag || '')}</span><h3>${esc(p.title)}</h3><div class="when">${esc(fmtPost(p.date))}</div><p style="margin-top:8px">${esc(p.lead)}</p></a>`).join('')}</div></div>`;
+    if (N.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(N.note)}</p>`;
+    return html;
+  }
+  function viewPost(r) {
+    const p = postById(r.id); if (!p) return `<div class="empty" style="margin-top:24px">That post does not exist. <a href="#/news">Back to What's new</a></div>`;
+    return `<a class="back" href="#/news"><svg><use href="#i-back"/></svg>What's new</a>
+      <div class="article-head"><span class="tag" style="color:var(--primary);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--w-semibold)">${esc(p.tag || '')}</span>
+      <h1>${esc(p.title)}</h1><div class="meta" style="font-size:14px;color:var(--text-muted)">${esc(fmtPost(p.date))}</div>
+      <p class="blurb">${esc(p.lead)}</p></div>
+      <div class="article">${(p.body || []).map(x => `<p>${esc(x)}</p>`).join('')}</div>`;
+  }
+
   // ---- home tiles ------------------------------------------------------
   function tileFigure(t) {
     const R = CFG.reports || {};
@@ -921,12 +1101,25 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
         <span class="mini">${[['ok', c('documented')], ['dr', c('draft')], ['gp', c('gap')]].map(([k, n]) => n ? `<i class="${k}" style="flex:${n}"></i>` : '').join('')}</span>
         <span class="d">${c('documented')} documented \u00B7 ${c('draft') + c('gap')} to write</span>`;
     }
+    if (t.kind === 'floorplan') {
+      const F = planCfg(); if (!F) return '';
+      // the plan itself, at tile size and without its labels — a shape you recognise
+      return `<span class="mini-plan"><svg viewBox="${esc(F.viewBox || '0 0 100 134')}" aria-hidden="true">${(F.zones || [])
+        .map(z => `<rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}"/>`).join('')}</svg></span>
+        <span class="nt">${(F.equipment || []).length} things, ${(F.zones || []).length} areas</span>`;
+    }
+    if (t.kind === 'news') {
+      const N = newsCfg(); const lead = N && (N.posts || [])[0];
+      if (!lead) return `<span class="nt">Nothing posted yet.</span>`;
+      return `<span class="nx">${esc(lead.tag || '')} \u00B7 ${esc(fmtPost(lead.date))}</span><span class="nt">${esc(lead.title)}</span>`;
+    }
     if (t.kind === 'count') return `<span class="big">${visible().length}<small>items</small></span>`;
     if (t.kind === 'mark') return `<svg class="mk" viewBox="4 2 96 74"><use href="#mark"/></svg>`;
     return '';
   }
   function tileHref(t) {
     if (t.external) return t.to;
+    if (/^(https?:|\.\.?\/)/.test(t.to)) return t.to;
     if (t.to === 'upnext') {
       const p = pathFor(S.audience); const pend = p ? p.items.filter(id => !isDone(id)) : [];
       const id = (S.lastOpened && pend.includes(S.lastOpened)) ? S.lastOpened : pend[0];
@@ -935,7 +1128,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     return '#/' + t.to;
   }
   function homeTile(t) {
-    const wide = t.kind === 'mark';
+    const wide = t.kind === 'mark' || t.kind === 'floorplan';
     return `<a class="tl ${t.span === 2 ? 'tile-l' : ''} ${wide ? 'wide' : ''}" data-a="${esc(t.accent || 'primary')}" href="${esc(tileHref(t))}"${t.external ? ' target="_blank" rel="noopener"' : ''}>
       <svg class="go"><use href="#${t.external ? 'i-ext' : 'i-arrow-r'}"/></svg>
       ${wide ? `<span class="fig">${tileFigure(t)}</span><span class="txt"><span class="eb">${esc(t.eyebrow)}</span><span class="bl">${esc(t.blurb || '')}</span></span>`
@@ -1140,6 +1333,9 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     else if (r.view === 'path') v.innerHTML = viewPath();
     else if (r.view === 'processes') { v.innerHTML = viewProcesses(r); wireProcesses(); }
     else if (r.view === 'process') { v.innerHTML = viewProcess(r); if (r.id === 'new') wireProcessNew(); else wireProcess(r); }
+    else if (r.view === 'lookaround') { v.innerHTML = viewLook(r); wireLook(); }
+    else if (r.view === 'news') v.innerHTML = viewNews();
+    else if (r.view === 'post') v.innerHTML = viewPost(r);
     else if (r.view === 'reports') { v.innerHTML = viewReports(); wireTips(); const b = $('#imp-open'); if (b) b.addEventListener('click', importPanel); }
     else if (r.view === 'support') v.innerHTML = viewSupport();
     else if (r.view === 'me') { v.innerHTML = viewMe(); wireMe(); }
