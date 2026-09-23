@@ -788,7 +788,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const a = aud(); const p = pathFor(a.id);
     const name = S.name ? ', ' + S.name : '';
     let html = `<div class="hero"><h1>Welcome to <span class="g">${esc(CFG.client.name)}</span>${esc(name)}.</h1><p>${esc(a.intro)}</p></div>`;
-    if (a.homeTiles) return html + `<div class="tiles">${a.homeTiles.map(tile).join('')}</div>`;
+    if (a.homeTiles) return html + `<div class="tiles">${a.homeTiles.map(homeTile).join('')}</div>`;
     if (a.homeLink) html += `<a class="homelink" href="#/${esc(a.homeLink.to)}"><span><span class="t">${esc(a.homeLink.label)}</span><span class="b">${esc(a.homeLink.blurb || '')}</span></span><svg><use href="#i-arrow-r"/></svg></a>`;
     if (p) {
       const pr = pathProgress(p);
@@ -922,7 +922,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const [lx, ly] = pts[pts.length - 1];
     return `<div class="sparkwrap"><svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="var(--text-muted)" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/></svg><span class="dot" style="left:${(lx / W * 100).toFixed(2)}%;top:${(ly / H * 100).toFixed(2)}%"></span></div>`;
   }
-  function tile(t) {
+  function kpiTile(t) {
     const neg = /^[−-]/.test(String(t.delta || '')); const dir = t.delta ? ((neg ? !t.upIsGood : t.upIsGood) ? 'up' : 'down') : '';
     return `<div class="tile"><span class="k">${esc(t.label)}</span><span class="v">${esc(t.value)}</span>${t.sub ? `<span class="sub">${esc(t.sub)}</span>` : ''}${t.delta ? `<span class="d ${dir}"><b>${neg ? '▼' : '▲'} ${esc(t.delta)}</b> ${esc(t.deltaLabel || '')}</span>` : ''}${Array.isArray(t.trend) && t.trend.length > 1 ? spark(t.trend) : ''}</div>`;
   }
@@ -953,7 +953,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (R.audiences && !R.audiences.includes(S.audience)) { go('home'); return ''; }
     const ep = pathFor('employee'); const pr = pathProgress(ep);
     return `<div class="hero"><h1>${esc(R.title || 'Reports')}</h1><p>${esc(R.asOf || '')}${R.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
-      <div class="kpi">${(R.tiles || []).map(tile).join('')}</div>
+      <div class="kpi">${(R.tiles || []).map(kpiTile).join('')}</div>
       <div class="section">${R.members ? lineChart(R.members) : ''}${R.cancellations ? barChart(R.cancellations) : ''}${R.recoverBlocks ? barChart(R.recoverBlocks) : ''}${R.classes ? barChart(R.classes) : ''}</div>
       <div class="section"><div class="label">Team onboarding</div><div class="card"><div class="type">${esc(ep.title)}</div><div class="bignum" style="margin-top:6px">${pr.done}<small>of ${pr.total} on this device</small></div><p class="muted" style="font-size:14px;margin-top:10px">Progress lives on each person's own device. A team view across devices is the first thing that needs hosting; until then, managers read the progress cards their starters export from Me.</p></div></div>
       ${R.note ? `<p class="muted" style="font-size:13px;margin-top:22px">${esc(R.note)}</p>` : ''}`;
@@ -1006,7 +1006,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     }
     return '#/' + t.to;
   }
-  function tile(t) {
+  function homeTile(t) {
     const wide = t.kind === 'mark';
     return `<a class="tl ${t.span === 2 ? 'tile-l' : ''} ${wide ? 'wide' : ''}" data-a="${esc(t.accent || 'primary')}" href="${esc(tileHref(t))}"${t.external ? ' target="_blank" rel="noopener"' : ''}>
       <svg class="go"><use href="#${t.external ? 'i-ext' : 'i-arrow-r'}"/></svg>
