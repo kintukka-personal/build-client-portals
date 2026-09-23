@@ -29,6 +29,41 @@ the portal exposes; both mark the item complete with the score.
 Until an export lands, `onyx-sim-placeholder.html` sits in the frame. It is generated from
 `template/portal/sim-placeholder.html` by the build and takes `?title=` and `?steps=`.
 
+## Interactive photos
+
+A SimStudio export can be one still — a real photo with markers on it — rather than a
+click-through. Those go in as `"type": "hotspot"` and live in the same folder:
+
+```json
+{
+  "id": "hot-lockers", "type": "hotspot", "hotspots": 3,
+  "src": "content/sims/onyx-sim-lockers.html",
+  "ratio": "818 / 1220"
+}
+```
+
+`ratio` is the capture's own pixel size. The frame takes that shape at every width, so a
+portrait photo is not letterboxed into a 16/9 box. Leave it off and the frame behaves as
+it always has. `hotspots` is the marker count and shows in the item's metadata.
+
+A marker is content, not a target: it never advances a step and never scores, so an export
+made only of markers never reaches its closing screen and never reports a completion. The
+portal still listens for one, and gives the item a **Mark as read** button that does the
+work. Nothing else in the frame changes.
+
+### Two fixes applied by hand to onyx-sim-lockers.html
+
+Both are in one commented `<style>` block before `</head>`. **They are lost on re-export**
+— re-apply them, or fix them at source in SimStudio, which is the better answer:
+
+1. Below 720px the export caps the capture at `min(52vh, 100dvh - 300px)`, reserving room
+   for the title and foot bars. With **Bars: never** those bars are not there, so inside a
+   345px frame the capture was squashed to 215px tall and stretched out of shape. The rule
+   wants `:not(.bare)` on it.
+2. A callout docks under the capture below 760px; a marker's card does not, so it opened
+   beside its marker at `min(70vw, 280px)` and ran off the right of the frame. The patch
+   docks it the same way a callout docks.
+
 ## Video
 
 ```

@@ -125,6 +125,7 @@
         "vid-welcome",
         "chk-week1",
         "vid-floor-tour",
+        "hot-lockers",
         "gd-opening",
         "chk-opening",
         "sim-checkin",
@@ -231,6 +232,20 @@
       "src": null,
       "blurb": "Infrared sauna, ice bath, the Together room and the Solo room. What members book and what they expect when they arrive.",
       "group": "getting-started"
+    },
+    {
+      "id": "hot-lockers",
+      "type": "hotspot",
+      "audience": "employee",
+      "area": "guides",
+      "title": "The member lockers: locking and unlocking",
+      "minutes": 2,
+      "hotspots": 3,
+      "demo": false,
+      "src": "content/sims/onyx-sim-lockers.html",
+      "ratio": "818 / 1220",
+      "blurb": "A photo of the lockers with the keypad steps on it. Tap a marker for how a member locks one, how they unlock it, and what to do when they have forgotten the code.",
+      "group": "members"
     },
     {
       "id": "sim-checkin",
@@ -1048,6 +1063,10 @@
       {
         "q": "Two RECOVER bookings clash for the same room.",
         "a": "The system booking wins. Offer the other member the other room type at the same price, or the next free slot with a complimentary extension. Log it so the manager can see how it happened."
+      },
+      {
+        "q": "A member has forgotten their locker code.",
+        "a": "The lockers are keypad locks the member sets themselves, so there is no code at the desk to look up. Check they are at the right locker first — most of these turn out to be the wrong door rather than a forgotten code. If it really is their locker, get the manager on duty; opening it is theirs to decide, not yours. The photo guide in Learn shows how the lock is set."
       },
       {
         "q": "The Fitness Passport app will not load.",
