@@ -157,6 +157,22 @@ Two things to get right when drawing: give every stroke inside the plan
 pixel and a stroke-width of 1 comes out ten pixels wide; and lay pins out clear of the
 label band, since a pin hangs *above* the point it marks.
 
+### Favourites
+
+Every item card carries a star, and so does the item page. Starring puts an item in a
+**Favourites** group at the top of that audience's Learn page, most recent first. It costs
+nothing to configure — it is on for every audience — and it earns its place wherever
+someone comes back for the same thing over and over: the sauna speaker, the locker code,
+the one form they can never remember.
+
+Favourites live in the device's own storage beside progress, so they are a shortcut, not
+an account. The list is filtered by what the audience can see, so a starred item stays
+out of the way of anyone it was not meant for.
+
+Note the markup: a card is wrapped in `.cw` so the star can sit over it, because a button
+cannot live inside an `<a>` and the star has to be a real control for anyone on a keyboard
+or a screen reader. If you restyle a card, keep the wrapper.
+
 ### A support page of their own
 
 `support.audience.<id>` replaces the Support page for that audience: an `intro`, a `faq`,
