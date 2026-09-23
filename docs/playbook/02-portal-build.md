@@ -121,15 +121,41 @@ theirs, and a tab bar of five at most — a two-word uppercase label wraps at si
 
 ### The floorplan
 
-A `floorplan` block turns on **Look around**: `viewBox`, `zones` (`id`, `label`, `x`, `y`,
-`w`, `h`, `blurb` — plain rectangles in the viewBox's own units), and `equipment`
-(`name`, `zone`, `tags`, optional `note`). A search matches an equipment name, one of its
-tags or a zone label, and every zone holding a match lights up while the rest step back.
-The tags double as chips under the search box, so the body parts are browsable without
-anyone having to guess the words. Tapping a zone picks it instead and lists what is in
-it — the other way people read a plan: not "where is the leg press" but "what is over
-there". Keep zones from overlapping; the labels sit in the middle of each one, so short
-ones read best at phone width.
+A `floorplans` block turns on **Look around**. It holds one `sites` entry per gym, so a
+second location is data rather than code:
+
+```json
+"floorplans": {
+  "title": "Look around", "intro": "…", "placeholder": "…",
+  "sites": [{ "id": "alexandria", "label": "Alexandria", "viewBox": "0 0 100 134",
+              "zones": [...], "equipment": [...] }]
+}
+```
+
+The heading reads **Look around ONYX (Alexandria)** — the client's name and the site's
+label, composed by the engine. With two or more sites a switcher appears above the search
+box and the choice rides in `?site=`; with one, there is nothing to switch and it stays
+hidden. A single legacy `floorplan` block still works and is treated as one site.
+
+A zone is a plain rectangle in the viewBox's own units: `id`, `label`, `x`, `y`, `w`, `h`,
+`blurb`. Keep them from overlapping, and keep labels short — they sit centred, and move to
+the top of the zone once pins are on it.
+
+Equipment carries `name`, `zone`, `tags`, an optional `note`, and `x`/`y` — the point on
+the plan where that machine actually stands. A search matches a name, a tag or a zone
+label; every zone holding a match lights up while the rest step back, and **a pin drops on
+each machine that matched**. Hovering or tapping a pin gives its name, area, tags and note,
+and highlights its row in the list below. Pins only ever draw for what was asked for:
+fifty-one at once is a plan nobody can read. Tapping a zone picks it instead and pins
+everything in it.
+
+The tags double as chips under the search box — one row that scrolls sideways, so the body
+parts are browsable without anyone guessing the words.
+
+Two things to get right when drawing: give every stroke inside the plan
+`vector-effect: non-scaling-stroke`, because the plan draws several viewBox units to the
+pixel and a stroke-width of 1 comes out ten pixels wide; and lay pins out clear of the
+label band, since a pin hangs *above* the point it marks.
 
 ### What's new
 

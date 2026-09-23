@@ -35,7 +35,7 @@ svg { display: block; }
 .hamb { width: 36px; height: 24px; display: flex; flex-direction: column; justify-content: space-between; }
 .hamb i { display: block; height: 4px; background: var(--primary); }
 .rail { display: none; }
-main { flex: 1; padding: 0 16px calc(84px + env(safe-area-inset-bottom)); max-width: 720px; width: 100%; margin: 0 auto; }
+main { --gutter: 16px; flex: 1; padding: 0 var(--gutter) calc(84px + env(safe-area-inset-bottom)); max-width: 720px; width: 100%; margin: 0 auto; }
 .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(0,0,0,.96); border-top: 1px solid var(--border-quiet); padding-bottom: env(safe-area-inset-bottom); }
 .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 10px; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--text-muted); }
 .tabbar a svg { width: 22px; height: 22px; }
@@ -58,7 +58,7 @@ main { flex: 1; padding: 0 16px calc(84px + env(safe-area-inset-bottom)); max-wi
   .rail .aud button { justify-content: flex-start; padding: 11px 12px; }
   .rail .foot { margin-top: auto; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
   .rail .foot .btn { width: 100%; margin-bottom: 14px; }
-  main { padding: 36px 40px 60px; max-width: 980px; margin: 0; }
+  main { --gutter: 40px; padding: 36px var(--gutter) 60px; max-width: 980px; margin: 0; }
 }
 
 /* ---- audience switch ---- */
@@ -198,29 +198,64 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 /* ---- look around: the floorplan ---- */
 .plan { margin-top: 18px; border: 1px solid var(--border); background: var(--surface); padding: 10px; }
 .plan svg { display: block; width: 100%; height: auto; }
-.zone rect { fill: var(--surface-raised); stroke: var(--border); stroke-width: .5; transition: fill .18s, stroke .18s; }
+.zone rect { fill: var(--surface-raised); stroke: var(--border); stroke-width: 1px; vector-effect: non-scaling-stroke; transition: fill .18s, stroke .18s; }
 .zone text { fill: var(--text-muted); font-size: 3.4px; font-weight: var(--w-semibold); letter-spacing: .04em;
   text-anchor: middle; dominant-baseline: middle; transition: fill .18s; text-transform: uppercase; }
 .zone { cursor: pointer; }
 .zone:hover rect { stroke: var(--text-muted); }
 /* a hit: the area the search found. Fill and stroke both move, because a stroke alone
    is easy to miss on a plan this size and on a phone in a bright room. */
-.zone.hit rect { fill: color-mix(in srgb, var(--primary) 26%, var(--surface-raised)); stroke: var(--primary); stroke-width: 1; }
+.zone.hit rect { fill: color-mix(in srgb, var(--primary) 26%, var(--surface-raised)); stroke: var(--primary); stroke-width: 2px; }
 .zone.hit text { fill: var(--text); }
-.zone.sel rect { fill: color-mix(in srgb, var(--cta) 30%, var(--surface-raised)); stroke: var(--cta); stroke-width: 1.2; }
+.zone.sel rect { fill: color-mix(in srgb, var(--cta) 30%, var(--surface-raised)); stroke: var(--cta); stroke-width: 2px; }
 .zone.sel text { fill: var(--text); }
 /* searching with no match here: everything else steps back so the hits read */
 .plan.filtering .zone:not(.hit):not(.sel) rect { opacity: .45; }
 .plan.filtering .zone:not(.hit):not(.sel) text { opacity: .5; }
 .plan-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.taglist { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.taglist { display: flex; flex-wrap: nowrap; gap: 8px; margin-top: 14px; overflow-x: auto; scrollbar-width: none;
+  /* one row that scrolls, rather than three rows of pills pushing the plan off screen.
+     The gutter padding is negative-margined back so the row can run to both edges. */
+  margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1);
+  padding: 2px var(--gutter); }
+.taglist::-webkit-scrollbar { display: none; }
 .taglist button { background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 13px;
-  padding: 6px 12px; font-weight: var(--w-medium); text-transform: capitalize; }
+  padding: 6px 12px; font-weight: var(--w-medium); text-transform: capitalize; flex: none; white-space: nowrap; }
 .taglist button.on { border-color: var(--primary); color: var(--primary); }
+
+/* ---- a pin per machine ---- */
+.pin { cursor: pointer; }
+/* Strokes are in viewBox units, and the plan draws ~3.5 units to the pixel — a
+   stroke-width of 1 came out ten pixels wide and swallowed the pin. Every stroke
+   on a pin is non-scaling, so it is the width it says whatever the plan is scaled to. */
+.pin path { fill: var(--cta); stroke: var(--bg); stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+.pin circle:not(.hit) { fill: var(--bg); }
+/* the tap target, invisible and much bigger than the pin: a 4-unit teardrop is
+   about 14px on a phone, well under what a thumb can hit */
+.pin .hit { fill: transparent; stroke: none; }
+.pin:hover path, .pin:focus-visible path { fill: var(--primary); }
+.pin.on path { fill: var(--primary); }
+.pin.on circle:not(.hit) { r: 1.4; }
+.pin:focus-visible { outline: none; }
+.pin:focus-visible path { stroke: #fff; stroke-width: 2px; vector-effect: non-scaling-stroke; }
+.eqtip { position: fixed; z-index: 60; max-width: min(78vw, 280px); background: var(--surface-raised);
+  border: 1px solid var(--primary); padding: 10px 12px; pointer-events: none; opacity: 0;
+  transition: opacity .14s; transform: translate(-50%, -100%); }
+.eqtip.show { opacity: 1; }
+.eqtip b { display: block; font-size: 14px; font-weight: var(--w-semibold); }
+.eqtip .w { font-size: 12px; color: var(--primary); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+.eqtip .t { font-size: 12px; color: var(--text-muted); text-transform: capitalize; margin-top: 4px; }
+.eqtip .n { font-size: 12.5px; color: var(--text); margin-top: 6px; line-height: 1.45; }
+.sites { display: flex; gap: 8px; margin-top: 14px; }
+.sites button { background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 13px;
+  padding: 7px 14px; font-weight: var(--w-medium); }
+.sites button.on { border-color: var(--primary); color: var(--primary); }
 .found { margin-top: 20px; }
 .found .row { display: grid; grid-template-columns: 1fr auto; gap: 10px 14px; align-items: baseline;
   padding: 12px 0; border-top: 1px solid var(--border-quiet); }
 .found .row:first-child { border-top: 0; }
+/* the row for the pin under the pointer, so the plan and the list stay tied together */
+.found .row.on { background: var(--primary-tint); box-shadow: -14px 0 0 var(--primary-tint), 14px 0 0 var(--primary-tint); }
 .found .row b { font-weight: var(--w-semibold); }
 .found .row .where { font-size: 13px; color: var(--primary); white-space: nowrap; }
 .found .row .tg { grid-column: 1 / -1; font-size: 12px; color: var(--text-muted); text-transform: capitalize; margin-top: -4px; }
@@ -968,81 +1003,148 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   // ---- look around: the floorplan ---------------------------------------
   /* A search matches an equipment name or one of its tags, and every zone holding a
-     match lights up. Tapping a zone picks it instead, which is the other way people
-     use a plan: not "where is the leg press" but "what is over there". */
-  const planCfg = () => CFG.floorplan || null;
-  const planTags = () => { const seen = []; (planCfg().equipment || []).forEach(e => (e.tags || []).forEach(t => { if (!seen.includes(t)) seen.push(t); })); return seen.sort(); };
+     match lights up, with a pin on each machine that matched. Tapping a zone picks it
+     instead and pins everything in it — the other way people use a plan: not "where is
+     the leg press" but "what is over there". Pins only ever show for what was asked
+     for; fifty-one at once is a plan nobody can read. */
+  const planRoot = () => CFG.floorplans || (CFG.floorplan ? { title: CFG.floorplan.title, intro: CFG.floorplan.intro, placeholder: CFG.floorplan.placeholder, sites: [CFG.floorplan] } : null);
+  const planSites = () => (planRoot() || {}).sites || [];
+  const planSite = id => planSites().find(x => x.id === id) || planSites()[0] || null;
+  let SITE = null;   // the site the view is currently drawing
+  const planTags = () => { const seen = []; (SITE.equipment || []).forEach(e => (e.tags || []).forEach(t => { if (!seen.includes(t)) seen.push(t); })); return seen.sort(); };
+  const zoneById = id => (SITE.zones || []).find(z => z.id === id);
   function planMatches(q) {
-    const F = planCfg(); const t = q.trim().toLowerCase();
-    if (!t) return null;
-    return (F.equipment || []).filter(e =>
+    const t = q.trim().toLowerCase(); if (!t) return null;
+    return (SITE.equipment || []).filter(e =>
       e.name.toLowerCase().includes(t) ||
       (e.tags || []).some(g => g.toLowerCase().includes(t) || t.includes(g.toLowerCase())) ||
-      (zoneById(e.zone) || {}).label.toLowerCase().includes(t));
+      ((zoneById(e.zone) || {}).label || '').toLowerCase().includes(t));
   }
-  const zoneById = id => (planCfg().zones || []).find(z => z.id === id);
+  const planTitle = R => {
+    const base = R.title || 'Look around';
+    const site = planSites().length && SITE ? ` ${CFG.client.name} (${SITE.label})` : '';
+    return base + site;
+  };
 
   function viewLook(r) {
-    const F = planCfg(); if (!F) return `<div class="empty" style="margin-top:24px">No floorplan is configured.</div>`;
+    const R = planRoot(); if (!R) return `<div class="empty" style="margin-top:24px">No floorplan is configured.</div>`;
+    SITE = planSite(r.q.get('site')); if (!SITE) return `<div class="empty" style="margin-top:24px">No floorplan is configured.</div>`;
     const q = r.q.get('q') || ''; const sel = r.q.get('zone') || '';
     const hits = planMatches(q);
     const hitZones = hits ? new Set(hits.map(e => e.zone)) : new Set();
     const filtering = !!(hits || sel);
-    const shown = sel ? (F.equipment || []).filter(e => e.zone === sel) : (hits || []);
+    const shown = sel ? (SITE.equipment || []).filter(e => e.zone === sel) : (hits || []);
     const selZone = sel ? zoneById(sel) : null;
+    const idx = e => (SITE.equipment || []).indexOf(e);
 
-    const zones = (F.zones || []).map(z => {
+    const zones = (SITE.zones || []).map(z => {
       const cls = z.id === sel ? 'sel' : (hitZones.has(z.id) ? 'hit' : '');
       const n = hits ? hits.filter(e => e.zone === z.id).length : 0;
+      // with pins on it the label gets out of the middle and sits along the top
+      const ly = filtering ? z.y + 4 : z.y + z.h / 2;
       return `<g class="zone ${cls}" data-zone="${esc(z.id)}" role="button" tabindex="0"
         aria-label="${esc(z.label)}${n ? `, ${n} match${n > 1 ? 'es' : ''}` : ''}">
         <rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}"/>
-        <text x="${z.x + z.w / 2}" y="${z.y + z.h / 2}">${esc(z.label)}</text>
+        <text x="${z.x + z.w / 2}" y="${ly}">${esc(z.label)}</text>
       </g>`;
     }).join('');
 
-    let html = `<div class="hero"><h1>${esc(F.title || 'Look around')}</h1><p>${esc(F.intro || '')}${F.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
-      <label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="${esc(F.placeholder || 'Search')}" value="${esc(q)}" aria-label="Search equipment"></label>
+    const pins = shown.filter(e => e.x != null && e.y != null).map(e => `<g class="pin" data-eq="${idx(e)}" role="button" tabindex="0" aria-label="${esc(e.name)}, ${esc((zoneById(e.zone) || {}).label || '')}">
+      <circle class="hit" cx="${e.x}" cy="${e.y - 2}" r="5"/>
+      <path d="M${e.x} ${e.y} l-2.1 -3.2 a2.55 2.55 0 1 1 4.2 0 z"/>
+      <circle cx="${e.x}" cy="${e.y - 4}" r="0.95"/>
+    </g>`).join('');
+
+    let html = `<div class="hero"><h1>${esc(planTitle(R))}</h1><p>${esc(R.intro || '')}${SITE.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>`;
+    if (planSites().length > 1) html += `<div class="sites">${planSites().map(x => `<button type="button" data-site="${esc(x.id)}" class="${x.id === SITE.id ? 'on' : ''}">${esc(x.label)}</button>`).join('')}</div>`;
+    html += `<label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="${esc(R.placeholder || 'Search')}" value="${esc(q)}" aria-label="Search equipment"></label>
       <div class="taglist">${planTags().map(t => `<button type="button" data-tag="${esc(t)}" class="${q.toLowerCase() === t ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>
-      <div class="plan ${filtering ? 'filtering' : ''}"><svg viewBox="${esc(F.viewBox || '0 0 100 134')}" role="img" aria-label="Floorplan of ${esc(CFG.client.tradingName)}">${zones}</svg></div>`;
+      <div class="plan ${filtering ? 'filtering' : ''}"><svg viewBox="${esc(SITE.viewBox || '0 0 100 134')}" role="img" aria-label="Floorplan of ${esc(CFG.client.tradingName)}, ${esc(SITE.label)}">${zones}${pins}</svg></div>`;
 
     if (selZone) {
       html += `<div class="section"><div class="section-head"><h3>${esc(selZone.label)}</h3><a href="#/lookaround${q ? '?q=' + encodeURIComponent(q) : ''}">Clear</a></div>
         ${selZone.blurb ? `<p class="muted" style="font-size:14px;margin:-4px 0 8px">${esc(selZone.blurb)}</p>` : ''}
-        <div class="found">${shown.map(planRow).join('')}</div></div>`;
+        <div class="found">${shown.map(e => planRow(e, idx(e))).join('')}</div></div>`;
     } else if (hits) {
       html += hits.length
-        ? `<div class="section"><div class="section-head"><h3>${hits.length} match${hits.length > 1 ? 'es' : ''}</h3><span class="muted" style="font-size:13px">in ${hitZones.size} area${hitZones.size > 1 ? 's' : ''}</span></div><div class="found">${hits.map(planRow).join('')}</div></div>`
+        ? `<div class="section"><div class="section-head"><h3>${hits.length} match${hits.length > 1 ? 'es' : ''}</h3><span class="muted" style="font-size:13px">in ${hitZones.size} area${hitZones.size > 1 ? 's' : ''}</span></div><div class="found">${hits.map(e => planRow(e, idx(e))).join('')}</div></div>`
         : `<div class="empty" style="margin-top:16px">Nothing matches “${esc(q)}”. Try a body part like legs or back, or ask us at the desk.</div>`;
     } else {
       html += `<p class="muted" style="font-size:14px;margin-top:14px">Tap an area to see what is in it, or search above.</p>`;
     }
-    if (F.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(F.note)}</p>`;
+    if (SITE.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(SITE.note)}</p>`;
     return html;
   }
-  const planRow = e => `<div class="row"><b>${esc(e.name)}</b><span class="where">${esc((zoneById(e.zone) || {}).label || '')}</span>
+  const planRow = (e, i) => `<div class="row" data-row="${i}"><b>${esc(e.name)}</b><span class="where">${esc((zoneById(e.zone) || {}).label || '')}</span>
     <span class="tg">${esc((e.tags || []).join(' · '))}</span>${e.note ? `<span class="nt">${esc(e.note)}</span>` : ''}</div>`;
 
   function wireLook() {
-    const input = $('#pq');
     const setQ = v => {
-      const p = new URLSearchParams(); if (v) p.set('q', v);
+      const r = route(); const p = new URLSearchParams();
+      const sv = r.q.get('site'); if (sv) p.set('site', sv);
+      if (v) p.set('q', v);
       history.replaceState(null, '', '#/lookaround' + (p.toString() ? '?' + p : ''));
       renderBody();
       const i2 = $('#pq'); if (i2 && document.activeElement !== i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }
     };
+    const input = $('#pq');
     if (input) { let tm; input.addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(() => setQ(input.value), 180); }); }
     document.querySelectorAll('[data-tag]').forEach(b => b.addEventListener('click', () => {
-      const r = route(); setQ(r.q.get('q') === b.dataset.tag ? '' : b.dataset.tag);
+      setQ(route().q.get('q') === b.dataset.tag ? '' : b.dataset.tag);
     }));
+    document.querySelectorAll('[data-site]').forEach(b => b.addEventListener('click', () => go('/lookaround?site=' + b.dataset.site)));
     const pick = z => { const r = route(); const p = new URLSearchParams();
+      const sv = r.q.get('site'); if (sv) p.set('site', sv);
       const qv = r.q.get('q'); if (qv) p.set('q', qv);
       if (r.q.get('zone') !== z) p.set('zone', z);
       go('/lookaround' + (p.toString() ? '?' + p : '')); };
     document.querySelectorAll('[data-zone]').forEach(g => {
-      g.addEventListener('click', () => pick(g.dataset.zone));
+      g.addEventListener('click', e => { if (e.target.closest('.pin')) return; pick(g.dataset.zone); });
       g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(g.dataset.zone); } });
     });
+    wirePins();
+  }
+
+  /* The pin tooltip. Hover shows it and moving away hides it, which is the desktop
+     behaviour; a tap makes it stick, because a phone has no hover and a tooltip that
+     vanishes on lift is a tooltip nobody gets to read. */
+  function wirePins() {
+    const pins = [...document.querySelectorAll('.pin')]; if (!pins.length) return;
+    let tip = $('#eqtip');
+    if (!tip) { tip = document.createElement('div'); tip.id = 'eqtip'; tip.className = 'eqtip'; tip.setAttribute('role', 'tooltip'); document.body.appendChild(tip); }
+    let stuck = null;
+    const eqOf = g => (SITE.equipment || [])[+g.dataset.eq];
+    const show = g => {
+      const e = eqOf(g); if (!e) return;
+      tip.innerHTML = `<b>${esc(e.name)}</b><span class="w">${esc((zoneById(e.zone) || {}).label || '')}</span>
+        <span class="t">${esc((e.tags || []).join(' · '))}</span>${e.note ? `<span class="n">${esc(e.note)}</span>` : ''}`;
+      const r = g.getBoundingClientRect();
+      tip.classList.add('show');
+      // clamped to the viewport, so a pin at either edge still shows a whole card
+      const w = tip.offsetWidth; const half = w / 2 + 8;
+      tip.style.left = Math.min(Math.max(r.left + r.width / 2, half), window.innerWidth - half) + 'px';
+      tip.style.top = (r.top - 8) + 'px';
+      const hl = $(`.found .row[data-row="${g.dataset.eq}"]`);
+      document.querySelectorAll('.found .row.on').forEach(x => x.classList.remove('on'));
+      if (hl) hl.classList.add('on');
+    };
+    const hide = () => { tip.classList.remove('show'); document.querySelectorAll('.found .row.on').forEach(x => x.classList.remove('on')); };
+    pins.forEach(g => {
+      g.addEventListener('pointerenter', () => { if (!stuck) show(g); });
+      g.addEventListener('pointerleave', () => { if (!stuck) hide(); });
+      g.addEventListener('focus', () => show(g));
+      g.addEventListener('blur', () => { if (!stuck) hide(); });
+      g.addEventListener('click', ev => {
+        ev.stopPropagation();
+        if (stuck === g) { stuck = null; g.classList.remove('on'); hide(); return; }
+        pins.forEach(x => x.classList.remove('on'));
+        stuck = g; g.classList.add('on'); show(g);
+      });
+      g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); g.click(); } });
+    });
+    const off = ev => { if (ev.target.closest && ev.target.closest('.pin')) return; if (!stuck) return; stuck.classList.remove('on'); stuck = null; hide(); };
+    document.addEventListener('click', off, { once: false });
+    window.addEventListener('scroll', () => { if (stuck) show(stuck); }, { passive: true });
   }
 
   // ---- what's new -------------------------------------------------------
@@ -1102,7 +1204,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
         <span class="d">${c('documented')} documented \u00B7 ${c('draft') + c('gap')} to write</span>`;
     }
     if (t.kind === 'floorplan') {
-      const F = planCfg(); if (!F) return '';
+      const F = planSites()[0]; if (!F) return '';
       // the plan itself, at tile size and without its labels — a shape you recognise
       return `<span class="mini-plan"><svg viewBox="${esc(F.viewBox || '0 0 100 134')}" aria-hidden="true">${(F.zones || [])
         .map(z => `<rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}"/>`).join('')}</svg></span>

@@ -2175,543 +2175,6 @@
       }
     ]
   },
-  "floorplan": {
-    "title": "Look around",
-    "intro": "Search a machine by name, or a body part like legs or back, and the areas that have it light up.",
-    "viewBox": "0 0 100 134",
-    "demo": true,
-    "note": "Demo layout. The real plan of Alexandria goes in here once ONYX marks up where everything sits; the search and the equipment list work the same way against it.",
-    "placeholder": "Try legs, chest, treadmill, sauna",
-    "zones": [
-      {
-        "id": "studio",
-        "label": "Studio",
-        "x": 2,
-        "y": 2,
-        "w": 58,
-        "h": 30,
-        "blurb": "Classes run in here. Doors shut while a class is on."
-      },
-      {
-        "id": "recover",
-        "label": "RECOVER",
-        "x": 64,
-        "y": 2,
-        "w": 34,
-        "h": 44,
-        "blurb": "Infrared sauna, ice bath, and the Together and Solo rooms you book."
-      },
-      {
-        "id": "cardio",
-        "label": "Cardio",
-        "x": 2,
-        "y": 34,
-        "w": 58,
-        "h": 26,
-        "blurb": "Treadmills, bikes, rowers, stair climber and the ski erg."
-      },
-      {
-        "id": "turf",
-        "label": "Turf",
-        "x": 2,
-        "y": 62,
-        "w": 40,
-        "h": 26,
-        "blurb": "Sled track, ropes, med balls and open space to work in."
-      },
-      {
-        "id": "rig",
-        "label": "Rig",
-        "x": 44,
-        "y": 48,
-        "w": 54,
-        "h": 22,
-        "blurb": "Squat racks, bench press, pull-up bars and the platforms."
-      },
-      {
-        "id": "free",
-        "label": "Free weights",
-        "x": 44,
-        "y": 72,
-        "w": 54,
-        "h": 22,
-        "blurb": "Dumbbells, barbells, kettlebells and the adjustable benches."
-      },
-      {
-        "id": "machines",
-        "label": "Machines",
-        "x": 2,
-        "y": 90,
-        "w": 40,
-        "h": 26,
-        "blurb": "Pin-loaded and plate-loaded resistance machines and the cable stacks."
-      },
-      {
-        "id": "stretch",
-        "label": "Stretch",
-        "x": 44,
-        "y": 96,
-        "w": 54,
-        "h": 20,
-        "blurb": "Mats, foam rollers, bands and the stretching frame."
-      },
-      {
-        "id": "change",
-        "label": "Change rooms",
-        "x": 2,
-        "y": 118,
-        "w": 46,
-        "h": 14,
-        "blurb": "Lockers, showers and the toilets."
-      },
-      {
-        "id": "reception",
-        "label": "Reception",
-        "x": 50,
-        "y": 118,
-        "w": 48,
-        "h": 14,
-        "blurb": "Check in here. Ask us anything."
-      }
-    ],
-    "equipment": [
-      {
-        "name": "Treadmill",
-        "zone": "cardio",
-        "tags": [
-          "cardio",
-          "legs",
-          "full body"
-        ]
-      },
-      {
-        "name": "Assault bike",
-        "zone": "cardio",
-        "tags": [
-          "cardio",
-          "legs",
-          "arms",
-          "full body"
-        ]
-      },
-      {
-        "name": "Spin bike",
-        "zone": "cardio",
-        "tags": [
-          "cardio",
-          "legs"
-        ]
-      },
-      {
-        "name": "Rower",
-        "zone": "cardio",
-        "tags": [
-          "cardio",
-          "back",
-          "legs",
-          "full body"
-        ]
-      },
-      {
-        "name": "Ski erg",
-        "zone": "cardio",
-        "tags": [
-          "cardio",
-          "back",
-          "shoulders",
-          "core"
-        ]
-      },
-      {
-        "name": "Stair climber",
-        "zone": "cardio",
-        "tags": [
-          "cardio",
-          "legs",
-          "glutes"
-        ]
-      },
-      {
-        "name": "Leg press",
-        "zone": "machines",
-        "tags": [
-          "legs",
-          "glutes"
-        ]
-      },
-      {
-        "name": "Hack squat",
-        "zone": "machines",
-        "tags": [
-          "legs",
-          "glutes"
-        ]
-      },
-      {
-        "name": "Leg extension",
-        "zone": "machines",
-        "tags": [
-          "legs"
-        ]
-      },
-      {
-        "name": "Leg curl",
-        "zone": "machines",
-        "tags": [
-          "legs"
-        ]
-      },
-      {
-        "name": "Hip thrust machine",
-        "zone": "machines",
-        "tags": [
-          "glutes",
-          "legs"
-        ]
-      },
-      {
-        "name": "Calf raise",
-        "zone": "machines",
-        "tags": [
-          "legs"
-        ]
-      },
-      {
-        "name": "Chest press",
-        "zone": "machines",
-        "tags": [
-          "chest",
-          "shoulders",
-          "arms"
-        ]
-      },
-      {
-        "name": "Pec deck",
-        "zone": "machines",
-        "tags": [
-          "chest"
-        ]
-      },
-      {
-        "name": "Lat pulldown",
-        "zone": "machines",
-        "tags": [
-          "back",
-          "arms"
-        ]
-      },
-      {
-        "name": "Seated row",
-        "zone": "machines",
-        "tags": [
-          "back",
-          "arms"
-        ]
-      },
-      {
-        "name": "Shoulder press machine",
-        "zone": "machines",
-        "tags": [
-          "shoulders",
-          "arms"
-        ]
-      },
-      {
-        "name": "Cable stack",
-        "zone": "machines",
-        "tags": [
-          "back",
-          "chest",
-          "shoulders",
-          "arms",
-          "core"
-        ],
-        "note": "Two stacks, adjustable height. Handles and ropes are on the rack beside them."
-      },
-      {
-        "name": "Assisted pull-up",
-        "zone": "machines",
-        "tags": [
-          "back",
-          "arms"
-        ]
-      },
-      {
-        "name": "Ab crunch machine",
-        "zone": "machines",
-        "tags": [
-          "core"
-        ]
-      },
-      {
-        "name": "Squat rack",
-        "zone": "rig",
-        "tags": [
-          "legs",
-          "glutes",
-          "back",
-          "full body"
-        ]
-      },
-      {
-        "name": "Bench press",
-        "zone": "rig",
-        "tags": [
-          "chest",
-          "shoulders",
-          "arms"
-        ]
-      },
-      {
-        "name": "Incline bench",
-        "zone": "rig",
-        "tags": [
-          "chest",
-          "shoulders"
-        ]
-      },
-      {
-        "name": "Pull-up bar",
-        "zone": "rig",
-        "tags": [
-          "back",
-          "arms",
-          "core"
-        ]
-      },
-      {
-        "name": "Dip station",
-        "zone": "rig",
-        "tags": [
-          "chest",
-          "arms",
-          "shoulders"
-        ]
-      },
-      {
-        "name": "Lifting platform",
-        "zone": "rig",
-        "tags": [
-          "full body",
-          "legs",
-          "back"
-        ]
-      },
-      {
-        "name": "Smith machine",
-        "zone": "rig",
-        "tags": [
-          "legs",
-          "chest",
-          "shoulders"
-        ]
-      },
-      {
-        "name": "Dumbbells",
-        "zone": "free",
-        "tags": [
-          "chest",
-          "back",
-          "shoulders",
-          "arms",
-          "legs",
-          "full body"
-        ],
-        "note": "2.5 kg to 50 kg. Put them back where the number says."
-      },
-      {
-        "name": "Barbells",
-        "zone": "free",
-        "tags": [
-          "full body",
-          "legs",
-          "back",
-          "chest"
-        ]
-      },
-      {
-        "name": "EZ bar",
-        "zone": "free",
-        "tags": [
-          "arms"
-        ]
-      },
-      {
-        "name": "Kettlebells",
-        "zone": "free",
-        "tags": [
-          "full body",
-          "glutes",
-          "core",
-          "legs"
-        ]
-      },
-      {
-        "name": "Adjustable bench",
-        "zone": "free",
-        "tags": [
-          "chest",
-          "shoulders",
-          "arms"
-        ]
-      },
-      {
-        "name": "Preacher curl bench",
-        "zone": "free",
-        "tags": [
-          "arms"
-        ]
-      },
-      {
-        "name": "Sled",
-        "zone": "turf",
-        "tags": [
-          "legs",
-          "glutes",
-          "cardio",
-          "full body"
-        ]
-      },
-      {
-        "name": "Battle ropes",
-        "zone": "turf",
-        "tags": [
-          "arms",
-          "shoulders",
-          "core",
-          "cardio"
-        ]
-      },
-      {
-        "name": "Medicine balls",
-        "zone": "turf",
-        "tags": [
-          "core",
-          "full body"
-        ]
-      },
-      {
-        "name": "Plyo boxes",
-        "zone": "turf",
-        "tags": [
-          "legs",
-          "glutes"
-        ]
-      },
-      {
-        "name": "Slam balls",
-        "zone": "turf",
-        "tags": [
-          "core",
-          "full body"
-        ]
-      },
-      {
-        "name": "TRX straps",
-        "zone": "turf",
-        "tags": [
-          "core",
-          "back",
-          "arms",
-          "full body"
-        ]
-      },
-      {
-        "name": "Mats",
-        "zone": "stretch",
-        "tags": [
-          "mobility",
-          "core"
-        ]
-      },
-      {
-        "name": "Foam rollers",
-        "zone": "stretch",
-        "tags": [
-          "mobility"
-        ]
-      },
-      {
-        "name": "Resistance bands",
-        "zone": "stretch",
-        "tags": [
-          "mobility",
-          "shoulders",
-          "glutes"
-        ]
-      },
-      {
-        "name": "Stretching frame",
-        "zone": "stretch",
-        "tags": [
-          "mobility",
-          "back"
-        ]
-      },
-      {
-        "name": "Infrared sauna",
-        "zone": "recover",
-        "tags": [
-          "recovery"
-        ],
-        "note": "Walk in, no booking. The panel guide is in Helpful tips."
-      },
-      {
-        "name": "Ice bath",
-        "zone": "recover",
-        "tags": [
-          "recovery"
-        ]
-      },
-      {
-        "name": "RECOVER Together room",
-        "zone": "recover",
-        "tags": [
-          "recovery"
-        ],
-        "note": "Booked through GymMaster or at the desk."
-      },
-      {
-        "name": "RECOVER Solo room",
-        "zone": "recover",
-        "tags": [
-          "recovery"
-        ],
-        "note": "Booked through GymMaster or at the desk."
-      },
-      {
-        "name": "Lockers",
-        "zone": "change",
-        "tags": [
-          "facilities"
-        ],
-        "note": "Set your own 4-digit code. The photo guide is in Helpful tips."
-      },
-      {
-        "name": "Showers",
-        "zone": "change",
-        "tags": [
-          "facilities"
-        ]
-      },
-      {
-        "name": "Water station",
-        "zone": "reception",
-        "tags": [
-          "facilities"
-        ]
-      },
-      {
-        "name": "Class studio",
-        "zone": "studio",
-        "tags": [
-          "cardio",
-          "full body"
-        ],
-        "note": "Timetable is on the site and in GymMaster."
-      }
-    ]
-  },
   "news": {
     "title": "What's new",
     "intro": "Timetable changes, new kit, and what is on at Alexandria.",
@@ -2776,6 +2239,651 @@
           "Alexandria takes Fitness Passport. Scan at the desk on the way in, the same as any other visit.",
           "Classes are included for Passport members too — book them in GymMaster like everyone else.",
           "If the app will not load, do not stand at the desk fighting it. Give us your name and Passport number, go and train, and we will record the visit."
+        ]
+      }
+    ]
+  },
+  "floorplans": {
+    "title": "Look around",
+    "intro": "Search a machine by name, or a body part like legs or back, and the areas that have it light up. Tap a pin for what it is.",
+    "placeholder": "Try legs, chest, treadmill, sauna",
+    "sites": [
+      {
+        "id": "alexandria",
+        "label": "Alexandria",
+        "viewBox": "0 0 100 134",
+        "demo": true,
+        "note": "Demo layout. The real plan of Alexandria goes in here once ONYX marks up where everything sits, and each machine's pin moves to where it actually stands; the search and the list work the same way against it.",
+        "zones": [
+          {
+            "id": "studio",
+            "label": "Studio",
+            "x": 2,
+            "y": 2,
+            "w": 58,
+            "h": 30,
+            "blurb": "Classes run in here. Doors shut while a class is on."
+          },
+          {
+            "id": "recover",
+            "label": "RECOVER",
+            "x": 64,
+            "y": 2,
+            "w": 34,
+            "h": 44,
+            "blurb": "Infrared sauna, ice bath, and the Together and Solo rooms you book."
+          },
+          {
+            "id": "cardio",
+            "label": "Cardio",
+            "x": 2,
+            "y": 34,
+            "w": 58,
+            "h": 26,
+            "blurb": "Treadmills, bikes, rowers, stair climber and the ski erg."
+          },
+          {
+            "id": "turf",
+            "label": "Turf",
+            "x": 2,
+            "y": 62,
+            "w": 40,
+            "h": 26,
+            "blurb": "Sled track, ropes, med balls and open space to work in."
+          },
+          {
+            "id": "rig",
+            "label": "Rig",
+            "x": 44,
+            "y": 48,
+            "w": 54,
+            "h": 22,
+            "blurb": "Squat racks, bench press, pull-up bars and the platforms."
+          },
+          {
+            "id": "free",
+            "label": "Free weights",
+            "x": 44,
+            "y": 72,
+            "w": 54,
+            "h": 22,
+            "blurb": "Dumbbells, barbells, kettlebells and the adjustable benches."
+          },
+          {
+            "id": "machines",
+            "label": "Machines",
+            "x": 2,
+            "y": 90,
+            "w": 40,
+            "h": 26,
+            "blurb": "Pin-loaded and plate-loaded resistance machines and the cable stacks."
+          },
+          {
+            "id": "stretch",
+            "label": "Stretch",
+            "x": 44,
+            "y": 96,
+            "w": 54,
+            "h": 20,
+            "blurb": "Mats, foam rollers, bands and the stretching frame."
+          },
+          {
+            "id": "change",
+            "label": "Change rooms",
+            "x": 2,
+            "y": 118,
+            "w": 46,
+            "h": 14,
+            "blurb": "Lockers, showers and the toilets."
+          },
+          {
+            "id": "reception",
+            "label": "Reception",
+            "x": 50,
+            "y": 118,
+            "w": 48,
+            "h": 14,
+            "blurb": "Check in here. Ask us anything."
+          }
+        ],
+        "equipment": [
+          {
+            "name": "Treadmill",
+            "zone": "cardio",
+            "tags": [
+              "cardio",
+              "legs",
+              "full body"
+            ],
+            "x": 11.4,
+            "y": 46.9
+          },
+          {
+            "name": "Assault bike",
+            "zone": "cardio",
+            "tags": [
+              "cardio",
+              "legs",
+              "arms",
+              "full body"
+            ],
+            "x": 21.2,
+            "y": 46.9
+          },
+          {
+            "name": "Spin bike",
+            "zone": "cardio",
+            "tags": [
+              "cardio",
+              "legs"
+            ],
+            "x": 31.0,
+            "y": 46.9
+          },
+          {
+            "name": "Rower",
+            "zone": "cardio",
+            "tags": [
+              "cardio",
+              "back",
+              "legs",
+              "full body"
+            ],
+            "x": 40.8,
+            "y": 46.9
+          },
+          {
+            "name": "Ski erg",
+            "zone": "cardio",
+            "tags": [
+              "cardio",
+              "back",
+              "shoulders",
+              "core"
+            ],
+            "x": 50.6,
+            "y": 46.9
+          },
+          {
+            "name": "Stair climber",
+            "zone": "cardio",
+            "tags": [
+              "cardio",
+              "legs",
+              "glutes"
+            ],
+            "x": 31.0,
+            "y": 52.6
+          },
+          {
+            "name": "Leg press",
+            "zone": "machines",
+            "tags": [
+              "legs",
+              "glutes"
+            ],
+            "x": 9.1,
+            "y": 101.9
+          },
+          {
+            "name": "Hack squat",
+            "zone": "machines",
+            "tags": [
+              "legs",
+              "glutes"
+            ],
+            "x": 14.2,
+            "y": 101.9
+          },
+          {
+            "name": "Leg extension",
+            "zone": "machines",
+            "tags": [
+              "legs"
+            ],
+            "x": 19.4,
+            "y": 101.9
+          },
+          {
+            "name": "Leg curl",
+            "zone": "machines",
+            "tags": [
+              "legs"
+            ],
+            "x": 24.6,
+            "y": 101.9
+          },
+          {
+            "name": "Hip thrust machine",
+            "zone": "machines",
+            "tags": [
+              "glutes",
+              "legs"
+            ],
+            "x": 29.8,
+            "y": 101.9
+          },
+          {
+            "name": "Calf raise",
+            "zone": "machines",
+            "tags": [
+              "legs"
+            ],
+            "x": 34.9,
+            "y": 101.9
+          },
+          {
+            "name": "Chest press",
+            "zone": "machines",
+            "tags": [
+              "chest",
+              "shoulders",
+              "arms"
+            ],
+            "x": 9.1,
+            "y": 105.8
+          },
+          {
+            "name": "Pec deck",
+            "zone": "machines",
+            "tags": [
+              "chest"
+            ],
+            "x": 14.2,
+            "y": 105.8
+          },
+          {
+            "name": "Lat pulldown",
+            "zone": "machines",
+            "tags": [
+              "back",
+              "arms"
+            ],
+            "x": 19.4,
+            "y": 105.8
+          },
+          {
+            "name": "Seated row",
+            "zone": "machines",
+            "tags": [
+              "back",
+              "arms"
+            ],
+            "x": 24.6,
+            "y": 105.8
+          },
+          {
+            "name": "Shoulder press machine",
+            "zone": "machines",
+            "tags": [
+              "shoulders",
+              "arms"
+            ],
+            "x": 29.8,
+            "y": 105.8
+          },
+          {
+            "name": "Cable stack",
+            "zone": "machines",
+            "tags": [
+              "back",
+              "chest",
+              "shoulders",
+              "arms",
+              "core"
+            ],
+            "note": "Two stacks, adjustable height. Handles and ropes are on the rack beside them.",
+            "x": 34.9,
+            "y": 105.8
+          },
+          {
+            "name": "Assisted pull-up",
+            "zone": "machines",
+            "tags": [
+              "back",
+              "arms"
+            ],
+            "x": 14.2,
+            "y": 109.6
+          },
+          {
+            "name": "Ab crunch machine",
+            "zone": "machines",
+            "tags": [
+              "core"
+            ],
+            "x": 29.8,
+            "y": 109.6
+          },
+          {
+            "name": "Squat rack",
+            "zone": "rig",
+            "tags": [
+              "legs",
+              "glutes",
+              "back",
+              "full body"
+            ],
+            "x": 52.2,
+            "y": 59.9
+          },
+          {
+            "name": "Bench press",
+            "zone": "rig",
+            "tags": [
+              "chest",
+              "shoulders",
+              "arms"
+            ],
+            "x": 59.8,
+            "y": 59.9
+          },
+          {
+            "name": "Incline bench",
+            "zone": "rig",
+            "tags": [
+              "chest",
+              "shoulders"
+            ],
+            "x": 67.2,
+            "y": 59.9
+          },
+          {
+            "name": "Pull-up bar",
+            "zone": "rig",
+            "tags": [
+              "back",
+              "arms",
+              "core"
+            ],
+            "x": 74.8,
+            "y": 59.9
+          },
+          {
+            "name": "Dip station",
+            "zone": "rig",
+            "tags": [
+              "chest",
+              "arms",
+              "shoulders"
+            ],
+            "x": 82.2,
+            "y": 59.9
+          },
+          {
+            "name": "Lifting platform",
+            "zone": "rig",
+            "tags": [
+              "full body",
+              "legs",
+              "back"
+            ],
+            "x": 89.8,
+            "y": 59.9
+          },
+          {
+            "name": "Smith machine",
+            "zone": "rig",
+            "tags": [
+              "legs",
+              "chest",
+              "shoulders"
+            ],
+            "x": 71.0,
+            "y": 63.6
+          },
+          {
+            "name": "Dumbbells",
+            "zone": "free",
+            "tags": [
+              "chest",
+              "back",
+              "shoulders",
+              "arms",
+              "legs",
+              "full body"
+            ],
+            "note": "2.5 kg to 50 kg. Put them back where the number says.",
+            "x": 52.2,
+            "y": 85.8
+          },
+          {
+            "name": "Barbells",
+            "zone": "free",
+            "tags": [
+              "full body",
+              "legs",
+              "back",
+              "chest"
+            ],
+            "x": 59.8,
+            "y": 85.8
+          },
+          {
+            "name": "EZ bar",
+            "zone": "free",
+            "tags": [
+              "arms"
+            ],
+            "x": 67.2,
+            "y": 85.8
+          },
+          {
+            "name": "Kettlebells",
+            "zone": "free",
+            "tags": [
+              "full body",
+              "glutes",
+              "core",
+              "legs"
+            ],
+            "x": 74.8,
+            "y": 85.8
+          },
+          {
+            "name": "Adjustable bench",
+            "zone": "free",
+            "tags": [
+              "chest",
+              "shoulders",
+              "arms"
+            ],
+            "x": 82.2,
+            "y": 85.8
+          },
+          {
+            "name": "Preacher curl bench",
+            "zone": "free",
+            "tags": [
+              "arms"
+            ],
+            "x": 89.8,
+            "y": 85.8
+          },
+          {
+            "name": "Sled",
+            "zone": "turf",
+            "tags": [
+              "legs",
+              "glutes",
+              "cardio",
+              "full body"
+            ],
+            "x": 10.4,
+            "y": 74.9
+          },
+          {
+            "name": "Battle ropes",
+            "zone": "turf",
+            "tags": [
+              "arms",
+              "shoulders",
+              "core",
+              "cardio"
+            ],
+            "x": 18.1,
+            "y": 74.9
+          },
+          {
+            "name": "Medicine balls",
+            "zone": "turf",
+            "tags": [
+              "core",
+              "full body"
+            ],
+            "x": 25.9,
+            "y": 74.9
+          },
+          {
+            "name": "Plyo boxes",
+            "zone": "turf",
+            "tags": [
+              "legs",
+              "glutes"
+            ],
+            "x": 33.6,
+            "y": 74.9
+          },
+          {
+            "name": "Slam balls",
+            "zone": "turf",
+            "tags": [
+              "core",
+              "full body"
+            ],
+            "x": 14.2,
+            "y": 80.6
+          },
+          {
+            "name": "TRX straps",
+            "zone": "turf",
+            "tags": [
+              "core",
+              "back",
+              "arms",
+              "full body"
+            ],
+            "x": 29.8,
+            "y": 80.6
+          },
+          {
+            "name": "Mats",
+            "zone": "stretch",
+            "tags": [
+              "mobility",
+              "core"
+            ],
+            "x": 54.1,
+            "y": 108.8
+          },
+          {
+            "name": "Foam rollers",
+            "zone": "stretch",
+            "tags": [
+              "mobility"
+            ],
+            "x": 65.4,
+            "y": 108.8
+          },
+          {
+            "name": "Resistance bands",
+            "zone": "stretch",
+            "tags": [
+              "mobility",
+              "shoulders",
+              "glutes"
+            ],
+            "x": 76.6,
+            "y": 108.8
+          },
+          {
+            "name": "Stretching frame",
+            "zone": "stretch",
+            "tags": [
+              "mobility",
+              "back"
+            ],
+            "x": 87.9,
+            "y": 108.8
+          },
+          {
+            "name": "Infrared sauna",
+            "zone": "recover",
+            "tags": [
+              "recovery"
+            ],
+            "note": "Walk in, no booking. The panel guide is in Helpful tips.",
+            "x": 74.8,
+            "y": 19.4
+          },
+          {
+            "name": "Ice bath",
+            "zone": "recover",
+            "tags": [
+              "recovery"
+            ],
+            "x": 87.2,
+            "y": 19.4
+          },
+          {
+            "name": "RECOVER Together room",
+            "zone": "recover",
+            "tags": [
+              "recovery"
+            ],
+            "note": "Booked through GymMaster or at the desk.",
+            "x": 74.8,
+            "y": 34.1
+          },
+          {
+            "name": "RECOVER Solo room",
+            "zone": "recover",
+            "tags": [
+              "recovery"
+            ],
+            "note": "Booked through GymMaster or at the desk.",
+            "x": 87.2,
+            "y": 34.1
+          },
+          {
+            "name": "Lockers",
+            "zone": "change",
+            "tags": [
+              "facilities"
+            ],
+            "note": "Set your own 4-digit code. The photo guide is in Helpful tips.",
+            "x": 15.8,
+            "y": 126.8
+          },
+          {
+            "name": "Showers",
+            "zone": "change",
+            "tags": [
+              "facilities"
+            ],
+            "x": 34.2,
+            "y": 126.8
+          },
+          {
+            "name": "Water station",
+            "zone": "reception",
+            "tags": [
+              "facilities"
+            ],
+            "x": 74.0,
+            "y": 126.8
+          },
+          {
+            "name": "Class studio",
+            "zone": "studio",
+            "tags": [
+              "cardio",
+              "full body"
+            ],
+            "note": "Timetable is on the site and in GymMaster.",
+            "x": 31.0,
+            "y": 19.8
+          }
         ]
       }
     ]
