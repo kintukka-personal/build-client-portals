@@ -168,6 +168,7 @@
       "blurb": "The numbers, the brand, the people and the next site.",
       "items": [
         "art-owner-scorecard",
+        "gd-owner-reports",
         "art-pricing-snapshot",
         "lnk-owner-site",
         "art-owner-recover",
@@ -1001,6 +1002,26 @@
       "group": "team"
     },
     {
+      "id": "gd-owner-reports",
+      "type": "guide",
+      "audience": "owner",
+      "area": "guides",
+      "title": "Updating the reports with your own numbers",
+      "minutes": 4,
+      "demo": true,
+      "blurb": "What the Reports page will read, where each file comes from, and what happens to the member-level rows. Read this before the first import is set up.",
+      "group": "business",
+      "steps": [
+        "Open Reports and tap Import data. That panel is the short version of this guide and is the one to show anyone asking what the page will do.",
+        "Pull a month of each export you already have: members, bookings, takings. One real file from each source is what the mapping gets built from — a sample or a blank template is not enough, because the shape of the real data is the thing being read.",
+        "Check each file has a date column and something that identifies the member consistently. Where two systems name the same person differently, say so; matching across files is the part that takes the work and guessing it is how numbers go wrong.",
+        "Send the files through once. The mapping gets written against your column names, so nothing has to be renamed or reformatted at your end, this month or any month after.",
+        "Confirm the first month's figures against what you already know. Active members and takings are the two to check hardest; if those are right the rest usually follows.",
+        "From then on it is drop the files in and the page redraws. Same exports, same place, once a month.",
+        "Know what is kept: the totals behind the charts, and the twelve-month history. Member-level rows are read to work out the totals and discarded. Nothing identifying anyone is stored in the portal."
+      ]
+    },
+    {
       "id": "gd-owner-portal",
       "type": "guide",
       "audience": "owner",
@@ -1461,6 +1482,26 @@
           52
         ]
       ]
+    },
+    "import": {
+      "label": "Import data",
+      "title": "Importing your own numbers",
+      "intro": "The figures on this page are demo figures. This is where your own would come in: the exports you already pull, dropped in each month, turned into the charts above.",
+      "takes": [
+        "The member export from your gym system — actives, joins, cancellations with reasons",
+        "The bookings export — classes and RECOVER, booked against capacity",
+        "The takings export from the POS or payment provider",
+        "Anything else you keep in a spreadsheet, as long as the columns are the same shape each month"
+      ],
+      "does": [
+        "Reads each file against a mapping written once for your system, so the column names can be whatever your export calls them",
+        "Matches the same member across files, which is the part that takes the work",
+        "Rolls everything up to the figures on this page and keeps the twelve-month history",
+        "Stores the totals only. Member-level rows are read and discarded, never saved into the portal"
+      ],
+      "status": "Not connected yet. The button is here so you can see where it goes and tell us which exports you actually have; the mapping is built per client once we have a real file from each source.",
+      "cta": "Talk to us about your exports",
+      "demo": true
     }
   },
   "processes": {
