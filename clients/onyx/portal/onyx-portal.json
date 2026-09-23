@@ -33,11 +33,56 @@
       "colour": "white",
       "key": "owner",
       "intro": "The numbers, the brand, the people and the next site.",
-      "homeLink": {
-        "to": "reports",
-        "label": "Reports and analytics",
-        "blurb": "Members, revenue, RECOVER and classes, month to date."
-      }
+      "homeTiles": [
+        {
+          "id": "t-reports",
+          "to": "reports",
+          "eyebrow": "Reports and analytics",
+          "kind": "stat",
+          "statFrom": "active",
+          "blurb": "Members, revenue, RECOVER and classes, month to date.",
+          "span": 2,
+          "accent": "cta"
+        },
+        {
+          "id": "t-upnext",
+          "to": "upnext",
+          "eyebrow": "Up next",
+          "kind": "upnext",
+          "blurb": "Pick up where you left off."
+        },
+        {
+          "id": "t-processes",
+          "to": "processes",
+          "eyebrow": "Process library",
+          "kind": "processes",
+          "blurb": "Every process, and the training it drives."
+        },
+        {
+          "id": "t-desk",
+          "to": "path",
+          "eyebrow": "Owner's desk",
+          "kind": "progress",
+          "blurb": "The nine things worth your time."
+        },
+        {
+          "id": "t-team",
+          "to": "learn",
+          "eyebrow": "Team library",
+          "kind": "count",
+          "countOf": "items",
+          "blurb": "Everything your team can see."
+        },
+        {
+          "id": "t-brand",
+          "to": "../brand/onyx-brand-sheet.html",
+          "external": true,
+          "eyebrow": "Brand and standards",
+          "kind": "mark",
+          "blurb": "Colours, type, logo and tone, as one source of truth.",
+          "span": 2
+        }
+      ]
     }
   ],
   "_keysNote": "Keys are a curtain, not security. They keep the portal off a random phone and hide the manager and owner areas on a shared device. Content that must be genuinely restricted needs a hosted backend.",
@@ -1398,5 +1443,443 @@
         ]
       ]
     }
+  },
+  "processes": {
+    "audiences": [
+      "owner"
+    ],
+    "title": "Process library",
+    "blurb": "One place for how this business works. Every process here drives the guides, checklists and simulations your team sees, so the training and the procedure can never say different things.",
+    "demo": true,
+    "note": "Demo content. Processes, owners and review dates are placeholders for ONYX to confirm.",
+    "statuses": [
+      {
+        "id": "documented",
+        "label": "Documented",
+        "blurb": "Written up and driving live content."
+      },
+      {
+        "id": "draft",
+        "label": "Draft",
+        "blurb": "Captured, not yet turned into training."
+      },
+      {
+        "id": "gap",
+        "label": "Gap",
+        "blurb": "Known to be needed, not yet written."
+      }
+    ],
+    "areas": [
+      {
+        "id": "front-desk",
+        "label": "Front desk"
+      },
+      {
+        "id": "operations",
+        "label": "Operations"
+      },
+      {
+        "id": "recover",
+        "label": "RECOVER"
+      },
+      {
+        "id": "classes",
+        "label": "Classes"
+      },
+      {
+        "id": "people",
+        "label": "People"
+      },
+      {
+        "id": "money",
+        "label": "Money"
+      },
+      {
+        "id": "compliance",
+        "label": "Compliance"
+      }
+    ],
+    "items": [
+      {
+        "id": "pr-checkin",
+        "name": "Checking a member in",
+        "area": "front-desk",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-08-14",
+        "reviewCycle": "6 months",
+        "drives": [
+          "sim-checkin"
+        ],
+        "summary": "Find the member, confirm the membership is active, record the visit, and handle a fob or card that will not scan."
+      },
+      {
+        "id": "pr-sell",
+        "name": "Selling a membership",
+        "area": "front-desk",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-08-14",
+        "reviewCycle": "6 months",
+        "drives": [
+          "sim-sell-membership",
+          "chk-tour"
+        ],
+        "summary": "From the tour to the signed membership: the plan, the joining fee, and the inclusions that come with it."
+      },
+      {
+        "id": "pr-passport",
+        "name": "Fitness Passport visits",
+        "area": "front-desk",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-07-02",
+        "reviewCycle": "12 months",
+        "drives": [
+          "gd-fitness-passport",
+          "sim-fitness-passport"
+        ],
+        "summary": "What Fitness Passport covers here, what it does not, how every visit is scanned, and what to do when the app will not load."
+      },
+      {
+        "id": "pr-newmember",
+        "name": "A new member's first visit",
+        "area": "front-desk",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-08-20",
+        "reviewCycle": "12 months",
+        "drives": [
+          "chk-new-member"
+        ],
+        "summary": "The ten minutes that decide whether a new member is still here in a year."
+      },
+      {
+        "id": "pr-tour",
+        "name": "Showing a prospect around",
+        "area": "front-desk",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-08-20",
+        "reviewCycle": "12 months",
+        "drives": [
+          "chk-tour"
+        ],
+        "summary": "A tour is a conversation with a route. Ask what they are training for before showing them anything."
+      },
+      {
+        "id": "pr-evolt",
+        "name": "Running an Evolt360 body scan",
+        "area": "front-desk",
+        "owner": "Head of Excellence",
+        "status": "documented",
+        "reviewed": "2026-06-11",
+        "reviewCycle": "12 months",
+        "drives": [
+          "chk-evolt"
+        ],
+        "summary": "Same conditions every time, including the contraindication check, or the comparison between scans is worthless."
+      },
+      {
+        "id": "pr-open",
+        "name": "Opening the gym",
+        "area": "operations",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-09-01",
+        "reviewCycle": "6 months",
+        "drives": [
+          "gd-opening",
+          "chk-opening"
+        ],
+        "summary": "Everything from the car park at 4:45am to the first member through the door at 5:00am."
+      },
+      {
+        "id": "pr-close",
+        "name": "Closing and lock-up",
+        "area": "operations",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-09-01",
+        "reviewCycle": "6 months",
+        "drives": [
+          "gd-closing",
+          "chk-closing"
+        ],
+        "summary": "The staffed day ends and 24/7 access continues. What must be true before the last staff member leaves."
+      },
+      {
+        "id": "pr-sweep",
+        "name": "Gym floor sweep",
+        "area": "operations",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-08-20",
+        "reviewCycle": "12 months",
+        "drives": [
+          "chk-floor-sweep"
+        ],
+        "summary": "The hourly walk on a staffed shift. Ten minutes, the whole floor, and a hello to whoever is training."
+      },
+      {
+        "id": "pr-deepclean",
+        "name": "Weekly deep clean",
+        "area": "operations",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-08-20",
+        "reviewCycle": "12 months",
+        "drives": [
+          "chk-deep-clean"
+        ],
+        "summary": "The jobs the daily clean does not reach, rostered to one shift a week."
+      },
+      {
+        "id": "pr-equipment",
+        "name": "Equipment fault and repair",
+        "area": "operations",
+        "owner": "Joey",
+        "status": "draft",
+        "reviewed": "2026-09-10",
+        "reviewCycle": "12 months",
+        "drives": [],
+        "summary": "Tagging a machine out of service, logging the fault, getting a contractor in, and telling members when it will be back.",
+        "note": "Captured from a floor conversation. Needs the contractor list and the approval limit before it becomes a guide."
+      },
+      {
+        "id": "pr-stock",
+        "name": "Stock and consumables ordering",
+        "area": "operations",
+        "owner": "Manager on duty",
+        "status": "gap",
+        "reviewed": null,
+        "reviewCycle": "12 months",
+        "drives": [],
+        "summary": "Towels, cleaning product, first aid, RECOVER consumables. Who orders, at what trigger, and against whose budget.",
+        "note": "Currently held by one person. First on the list to document."
+      },
+      {
+        "id": "pr-recover-turn",
+        "name": "RECOVER room turnaround",
+        "area": "recover",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-08-14",
+        "reviewCycle": "6 months",
+        "drives": [
+          "gd-recover-turnaround",
+          "chk-recover-room"
+        ],
+        "summary": "The ten minutes between bookings, done the same way every time."
+      },
+      {
+        "id": "pr-recover-book",
+        "name": "Booking a RECOVER session",
+        "area": "recover",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-08-14",
+        "reviewCycle": "6 months",
+        "drives": [
+          "sim-book-recover"
+        ],
+        "summary": "Room availability, Together against Solo, payment or a membership inclusion."
+      },
+      {
+        "id": "pr-recover-water",
+        "name": "RECOVER water quality and plant",
+        "area": "recover",
+        "owner": "Joey",
+        "status": "draft",
+        "reviewed": "2026-09-12",
+        "reviewCycle": "6 months",
+        "drives": [],
+        "summary": "Ice bath water testing, filter changes, sauna maintenance and the logs that have to be kept.",
+        "note": "Half written. The compliance requirement needs confirming before this drives a checklist."
+      },
+      {
+        "id": "pr-class-checkin",
+        "name": "Class check-in and no-shows",
+        "area": "classes",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-07-02",
+        "reviewCycle": "12 months",
+        "drives": [
+          "gd-class-checkin"
+        ],
+        "summary": "Opening the class, checking members in, marking no-shows, and closing the list so the numbers are real."
+      },
+      {
+        "id": "pr-class-setup",
+        "name": "Class studio setup and pack down",
+        "area": "classes",
+        "owner": "Head of Excellence",
+        "status": "documented",
+        "reviewed": "2026-08-20",
+        "reviewCycle": "12 months",
+        "drives": [
+          "chk-class-studio"
+        ],
+        "summary": "Before the coach arrives and after the last member leaves."
+      },
+      {
+        "id": "pr-class-cover",
+        "name": "Finding class cover",
+        "area": "classes",
+        "owner": "Manager on duty",
+        "status": "gap",
+        "reviewed": null,
+        "reviewCycle": "12 months",
+        "drives": [],
+        "summary": "A coach calls in sick two hours before a full class. Who is called, in what order, and what members are told.",
+        "note": "Happens monthly and is handled differently every time."
+      },
+      {
+        "id": "pr-roster",
+        "name": "Building the weekly roster",
+        "area": "people",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-09-05",
+        "reviewCycle": "6 months",
+        "drives": [
+          "gd-mgr-roster"
+        ],
+        "summary": "Published Thursday for the week starting Monday. Cover first, preferences second."
+      },
+      {
+        "id": "pr-handover",
+        "name": "Shift handover",
+        "area": "people",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-09-05",
+        "reviewCycle": "12 months",
+        "drives": [
+          "chk-mgr-handover"
+        ],
+        "summary": "Five things every handover covers, so the next shift starts informed."
+      },
+      {
+        "id": "pr-onboard",
+        "name": "Onboarding a new starter",
+        "area": "people",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-09-05",
+        "reviewCycle": "6 months",
+        "drives": [
+          "gd-mgr-onboard-starter",
+          "chk-week1"
+        ],
+        "summary": "The portal does the teaching. The manager does the shadowing and the sign-off."
+      },
+      {
+        "id": "pr-hiring",
+        "name": "Hiring a coach",
+        "area": "people",
+        "owner": "Katie King",
+        "status": "documented",
+        "reviewed": "2026-08-28",
+        "reviewCycle": "12 months",
+        "drives": [
+          "gd-owner-hiring"
+        ],
+        "summary": "Qualifications screen the applicant in. Temperament decides the hire."
+      },
+      {
+        "id": "pr-cancel",
+        "name": "Cancellations and freezes",
+        "area": "money",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-09-05",
+        "reviewCycle": "6 months",
+        "drives": [
+          "gd-mgr-cancellation",
+          "sim-mgr-refund"
+        ],
+        "summary": "Diagnose the reason before offering anything. A freeze comes back; a cancellation usually does not."
+      },
+      {
+        "id": "pr-eod",
+        "name": "End of day and till reconciliation",
+        "area": "money",
+        "owner": "Manager on duty",
+        "status": "draft",
+        "reviewed": "2026-09-12",
+        "reviewCycle": "6 months",
+        "drives": [],
+        "summary": "Closing the till, running the report, filing it, and what to do when it does not balance.",
+        "note": "Written from the current practice. Needs the finance sign-off on the variance threshold."
+      },
+      {
+        "id": "pr-complaint",
+        "name": "Member complaint escalation",
+        "area": "money",
+        "owner": "Katie King",
+        "status": "gap",
+        "reviewed": null,
+        "reviewCycle": "12 months",
+        "drives": [],
+        "summary": "What the desk can resolve, what goes to the manager, what reaches a founder, and the timeframe for each.",
+        "note": "Nothing written. The most common source of inconsistent outcomes."
+      },
+      {
+        "id": "pr-incident",
+        "name": "Incidents and first aid",
+        "area": "compliance",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-09-01",
+        "reviewCycle": "6 months",
+        "drives": [
+          "gd-incident",
+          "gd-mgr-incident-followup"
+        ],
+        "summary": "The first two minutes, then the report, then the 48 hours of follow-up."
+      },
+      {
+        "id": "pr-evac",
+        "name": "Evacuation",
+        "area": "compliance",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-09-01",
+        "reviewCycle": "6 months",
+        "drives": [
+          "chk-emergency"
+        ],
+        "summary": "Drill or real, the order is the same, including both RECOVER rooms and every change room."
+      },
+      {
+        "id": "pr-compliance",
+        "name": "Monthly compliance round",
+        "area": "compliance",
+        "owner": "Manager on duty",
+        "status": "documented",
+        "reviewed": "2026-09-05",
+        "reviewCycle": "6 months",
+        "drives": [
+          "chk-mgr-monthly"
+        ],
+        "summary": "First aid, defibrillator, fire, lighting, water logs, certifications. The dull one that matters when something goes wrong."
+      },
+      {
+        "id": "pr-artarmon",
+        "name": "Artarmon pre-opening",
+        "area": "compliance",
+        "owner": "Katie King",
+        "status": "draft",
+        "reviewed": "2026-09-15",
+        "reviewCycle": "3 months",
+        "drives": [
+          "gd-owner-artarmon"
+        ],
+        "summary": "Everything that must exist before a second site opens its doors.",
+        "note": "Live document. Updated as the fit-out progresses."
+      }
+    ]
   }
 }
