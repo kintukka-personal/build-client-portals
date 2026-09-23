@@ -157,6 +157,16 @@ Two things to get right when drawing: give every stroke inside the plan
 pixel and a stroke-width of 1 comes out ten pixels wide; and lay pins out clear of the
 label band, since a pin hangs *above* the point it marks.
 
+### A support page of their own
+
+`support.audience.<id>` replaces the Support page for that audience: an `intro`, a `faq`,
+and a `contact` block (`label`, `text`, `name`, `address`, `email`, `phone`, `phoneLabel`,
+`demo`). Members get that instead of the staff page — the questions the desk actually
+gets, and one way to reach the gym, rather than an escalation ladder aimed at whoever is
+on shift. The contact rows are the same tap-to-copy rows the staff contact cards use, so
+they behave the same in an in-app browser that swallows `mailto:` and `tel:`. Leave the
+block out and the audience gets the staff page.
+
 ### What's new
 
 A `news` block gives a spotlight post and a swipeable carousel of the rest. Posts carry

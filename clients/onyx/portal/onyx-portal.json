@@ -1167,18 +1167,75 @@
       "audience": "member",
       "area": "tips",
       "group": "m-recover",
-      "title": "Using the infrared sauna",
-      "minutes": 3,
+      "title": "In the sauna: how long, and how we leave it",
+      "minutes": 2,
       "demo": true,
-      "blurb": "The panel, the lights, how long to sit and what to do when you are finished.",
+      "blurb": "Checking the room is free, how long to sit, and what to do on your way out.",
       "steps": [
-        "Check the door tag. Green means free, red means someone is in and the room is at temperature.",
-        "The panel is on the wall to your right as you walk in. Press the power button once; the display wakes and shows the current temperature.",
-        "Set the temperature with the up and down arrows. 45 to 55 degrees suits most people. It takes about 10 minutes to come up from cold.",
-        "The light button cycles the colour therapy: white, red, blue, green, then off. Hold it for two seconds to go straight back to white.",
-        "Take a towel in and sit on it. Fifteen to twenty minutes is plenty; come out earlier if you feel light-headed.",
-        "Turn the panel off on your way out and wipe the bench down with the spray and paper by the door.",
+        "Check the door tag. Green means free, red means someone is in and the room is already at temperature.",
+        "Take a towel in and sit on it. Everyone after you would rather you did.",
+        "Fifteen to twenty minutes is plenty. Come out earlier if you feel light-headed — there is nothing to prove in here.",
+        "Do not go straight from the sauna into the ice bath. Cool down on your own first.",
+        "Turn the panel off on your way out and wipe the bench with the spray and paper by the door.",
         "Drink water. The station is by reception."
+      ]
+    },
+    {
+      "id": "m-sauna-panel",
+      "type": "guide",
+      "audience": "member",
+      "area": "tips",
+      "title": "How to use the sauna panel",
+      "minutes": 2,
+      "demo": true,
+      "blurb": "Turning it on, setting the temperature, and how long it takes to come up from cold.",
+      "group": "m-recover",
+      "steps": [
+        "The panel is on the wall to your right as you walk in, at shoulder height.",
+        "Press the power button once. The display wakes and shows the temperature the room is at right now, not the one it is set to.",
+        "Press it again to see the target. It flashes for a few seconds, and the up and down arrows change it while it is flashing.",
+        "45 to 55 degrees suits most people. The room maxes out at 65, which is hotter than almost anyone needs.",
+        "From cold it takes about ten minutes to come up. If the door tag was red when you arrived, it is already there.",
+        "The fan button runs the circulation fan. Leave it on — it is what stops the room feeling stuffy rather than hot.",
+        "Hold power for two seconds to turn it off. Do that on your way out even if someone is waiting; they will set their own."
+      ]
+    },
+    {
+      "id": "m-sauna-light",
+      "type": "guide",
+      "audience": "member",
+      "area": "tips",
+      "title": "Changing the light colour in the sauna",
+      "minutes": 1,
+      "demo": true,
+      "blurb": "The colour therapy button, what each colour is for, and how to get back to plain white.",
+      "group": "m-recover",
+      "steps": [
+        "The light button is the one with the bulb icon, under the temperature arrows.",
+        "Each press moves to the next colour: white, red, blue, green, amber, then off.",
+        "Hold it for two seconds to jump straight back to white from wherever you are.",
+        "Red is the one most people come for — it is the colour used for skin and recovery. Blue and green are calmer to sit in. There is no wrong answer.",
+        "The colour does nothing to the heat. The panel still reads the real temperature whatever the room looks like.",
+        "Leave it on white when you finish, so the next person walks into a room they can see in."
+      ]
+    },
+    {
+      "id": "m-sauna-speaker",
+      "type": "guide",
+      "audience": "member",
+      "area": "tips",
+      "title": "Connecting your phone to the sauna speaker",
+      "minutes": 2,
+      "demo": true,
+      "blurb": "Pairing over Bluetooth, what to do when it will not connect, and the one rule about volume.",
+      "group": "m-recover",
+      "steps": [
+        "Turn the speaker on at the panel: the button with the note icon. A blue light blinks while it waits to pair.",
+        "On your phone open Bluetooth and look for ONYX Sauna. Tap it. The blinking light goes solid once you are connected.",
+        "Not in the list? Someone else is still paired — a phone holds the connection from outside the room. Hold the note button for three seconds to drop the old device, then look again.",
+        "Play from whatever app you like. Volume is on your phone, not on the panel.",
+        "Keep it at a level the room can live with. The door is not thick and the RECOVER rooms are next door. If someone else is in with you, ask first.",
+        "Take your phone out with you. Do not leave it in there — the heat is well past what a phone is built for."
       ]
     },
     {
@@ -1291,6 +1348,55 @@
     }
   ],
   "support": {
+    "audience": {
+      "member": {
+        "intro": "The questions we get asked at the desk most. If yours is not here, ask us.",
+        "faq": [
+          {
+            "q": "I have forgotten my locker code.",
+            "a": "There is no master code at the desk — you set your own and the lock only knows that one. Come and find us and the manager on duty will open it. Check you are at the right locker first; most of the time it is the wrong door rather than a forgotten code."
+          },
+          {
+            "q": "The class I want is full.",
+            "a": "Get on the waitlist in GymMaster. Roughly one in five booked spots frees up on the day, and the app tells you the moment one does. Turning up on spec and hoping is the one thing that does not work — the coach takes the list as it stands."
+          },
+          {
+            "q": "I need to cancel a class booking.",
+            "a": "Cancel it in GymMaster rather than just not coming. It takes a second and it gives the spot to whoever is next on the waitlist. Repeatedly not showing up without cancelling is the only thing that puts your booking privileges at risk."
+          },
+          {
+            "q": "Do I need to book the sauna or the ice bath?",
+            "a": "No. The infrared sauna and the ice bath are walk-in — check the door tag and go. Only the RECOVER Together and Solo rooms need a booking, because they are one group at a time."
+          },
+          {
+            "q": "How do I freeze my membership?",
+            "a": "Talk to us and we will book you a call with the manager. Freezing keeps the rate you joined on, which cancelling and rejoining does not, so it is almost always the better option if you are going away for a while."
+          },
+          {
+            "q": "My Fitness Passport app will not load.",
+            "a": "Do not stand at the desk fighting it. Give us your name and your Passport number, go and train, and we will record the visit for you."
+          },
+          {
+            "q": "Something is broken or does not feel safe.",
+            "a": "Tell us at the desk straight away, however small it seems. A loose pin or a frayed cable is a five-minute fix if we know about it and a much bigger problem if we find out next week."
+          },
+          {
+            "q": "I have lost something.",
+            "a": "Ask at the desk. Lost property is kept behind reception for a month. Anything valuable — keys, a wallet, a phone — goes somewhere locked, so it will not be in the box."
+          }
+        ],
+        "contact": {
+          "label": "Still stuck?",
+          "text": "Come and see whoever is on the desk — that is what we are there for. Outside opening hours these reach us and someone will get back to you.",
+          "name": "ONYX Gym & Fitness, Alexandria",
+          "address": "20 Bowden Street, Alexandria NSW",
+          "email": "hello@onyxgym.com.au",
+          "phone": "+61255500100",
+          "phoneLabel": "(02) 5550 0100",
+          "demo": true
+        }
+      }
+    },
     "faq": [
       {
         "q": "A member's fob or card will not scan.",
@@ -2245,7 +2351,7 @@
   },
   "floorplans": {
     "title": "Look around",
-    "intro": "Search a machine by name, or a body part like legs or back, and the areas that have it light up. Tap a pin for what it is.",
+    "intro": "Search a machine, or a body part like legs or back. Tap a pin for what it is.",
     "placeholder": "Try legs, chest, treadmill, sauna",
     "sites": [
       {

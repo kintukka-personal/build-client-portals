@@ -196,8 +196,13 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .pager a.next { text-align: right; }
 
 /* ---- look around: the floorplan ---- */
-.plan { margin-top: 18px; border: 1px solid var(--border); background: var(--surface); padding: 10px; }
-.plan svg { display: block; width: 100%; height: auto; }
+.plan { margin-top: 18px; border: 1px solid var(--border); background: var(--surface); padding: 10px;
+  display: flex; justify-content: center; }
+/* A portrait plan at full column width runs off the bottom of a phone and you never
+   see the whole room at once, which is the one thing a plan is for. Height leads and
+   the width follows the shape. */
+.plan svg { display: block; width: auto; height: auto; max-width: 100%; max-height: 54vh; }
+@media (min-width: 900px) { .plan svg { max-height: 62vh; } }
 .zone rect { fill: var(--surface-raised); stroke: var(--border); stroke-width: 1px; vector-effect: non-scaling-stroke; transition: fill .18s, stroke .18s; }
 .zone text { fill: var(--text-muted); font-size: 3.4px; font-weight: var(--w-semibold); letter-spacing: .04em;
   text-anchor: middle; dominant-baseline: middle; transition: fill .18s; text-transform: uppercase; }
@@ -1357,6 +1362,26 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   function viewSupport() {
     const s = CFG.support;
+    /* An audience can have a support page of its own. A member does not need the
+       staff escalation ladder — they need the questions we get asked at the desk and
+       one way to reach us. */
+    const own = (s.audience || {})[S.audience];
+    if (own) {
+      const c = own.contact || {};
+      const row = (icon, k, v, href, open) => `<div class="crow"><button type="button" class="copy" data-copy="${esc(v)}" data-what="${esc(k)}"><svg><use href="#${icon}"/></svg><span><span class="k">${esc(k)} \u00B7 tap to copy</span><span class="v">${esc(v)}</span></span></button><a class="open" href="${esc(href)}" aria-label="${esc(open)}"><svg><use href="#i-ext"/></svg></a></div>`;
+      return `<div class="hero"><h1>Support</h1><p>${esc(own.intro || '')}</p></div>
+        <div class="section"><div class="label">${esc(own.faqLabel || 'The usual questions')}</div>${(own.faq || []).map(f => `<details><summary>${esc(f.q)}</summary><div class="ans">${esc(f.a)}</div></details>`).join('')}</div>
+        <div class="section"><div class="label">${esc(c.label || 'Contact us')}</div>
+          <p class="muted" style="font-size:15px;margin:-2px 0 0">${esc(c.text || '')}</p>
+          ${c.name || c.address ? `<div class="card" style="margin-top:14px"><div class="type">${esc(c.name || '')}</div>${c.address ? `<p class="muted" style="font-size:15px;margin-top:6px">${esc(c.address)}</p>` : ''}</div>` : ''}
+          <div class="contact-rows">${[
+            c.email ? row('i-mail', 'Email', c.email, 'mailto:' + encodeURI(c.email), 'Open in your email app') : '',
+            c.phone ? row('i-phone', 'Phone', c.phoneLabel || c.phone, 'tel:' + String(c.phone).replace(/[^+0-9]/g, ''), 'Call this number') : ''
+          ].join('')}</div>
+          ${c.demo ? `<p class="muted" style="font-size:13px;margin-top:12px">These contact details are placeholders for ONYX to replace.</p>` : ''}
+        </div>
+        <div class="section"><a class="btn outline" href="${esc(CFG.client.memberLogin)}" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Member login</a></div>`;
+    }
     return `<div class="hero"><h1>Support</h1><p>The answers to the questions that come up every week, then who to go to when it is not one of them.</p></div>
       <div class="section"><div class="label">The usual questions</div>${s.faq.map(f => `<details><summary>${esc(f.q)}</summary><div class="ans">${esc(f.a)}</div></details>`).join('')}</div>
       <div class="section"><div class="label">Direct assistance</div><p class="muted" style="font-size:14px;margin:-2px 0 14px">Find your problem, then go to the person under it.</p><div class="grid2">${s.assistance.map((c, i) => `<div class="card assist"><ul class="q">${c.queries.map(q => `<li>${esc(q)}</li>`).join('')}</ul><button type="button" class="goto" data-contact="${i}"><span class="k">Go to</span><span class="name">${esc(c.name)}</span><span class="role">${esc(c.role)}</span><span class="how">Tap for contact details</span><svg class="chev"><use href="#i-arrow-r"/></svg></button></div>`).join('')}</div></div>
