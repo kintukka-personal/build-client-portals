@@ -79,9 +79,26 @@ including the SimStudio video export.
 `onyx-portal.html` is generated. Edit `onyx-portal.json` for content and
 `template/portal/portal-engine.html` for behaviour, then rebuild. Never edit the output.
 
-## Opening from a file share
+## One file, or a folder
 
-Opened as a file, the portal loads its simulations from the sibling `content/` folder and
-completion arrives by message. The SCORM shim needs the portal and the export to share an
-origin, which a file share does not give them, so on a file share the message path does
-the work and on a web host both paths do.
+By default the build **inlines every local simulation** into `onyx-portal.html` and the
+engine hands each one to its frame as `srcdoc`. So the portal is a single file you can
+email, AirDrop or drop in a chat, and the simulations come with it. A file opened on its
+own cannot reach a sibling `content/` folder, which is what a phone's file viewer gives
+you — before this, every simulation frame came up black.
+
+Each file is inlined once however many items point at it. The placeholder's `?title=` and
+`?steps=` have no URL to ride on, so they ride on the frame's `name` instead.
+
+```
+node tools/build-portal.js onyx              # one file, simulations inlined
+node tools/build-portal.js onyx --no-embed   # simulations stay separate files
+```
+
+Use `--no-embed` for a hosted build, where a 1 MB page that loads every simulation up
+front is worse than a small page that fetches one when it is opened.
+
+Completion arrives by message either way. The SCORM shim needs the portal and the export
+to share an origin: a `srcdoc` frame does share it, so the inlined build gets both paths
+even from a file; separate files on a file share get the message path only, and both on a
+web host.

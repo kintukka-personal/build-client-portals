@@ -47,7 +47,10 @@ clients/<slug>/portal/
    about.
 7. **Build.** `node tools/build-portal.js <slug>`. The build refuses a path that names an
    unknown item, an item with an unknown audience, area or group, a group in an unknown
-   area, an item whose area contradicts its group, and warns on a missing file.
+   area, an item whose area contradicts its group, and warns on a missing file. Every
+   local simulation is inlined into the page and handed to its frame as `srcdoc`, so the
+   portal is one file that works with nothing beside it — which is what a phone's file
+   viewer gives you. `--no-embed` keeps them as separate files for a hosted build.
 8. **Walk it** on a phone: the landing pick, name prompt, a simulation to completion, a guide ticked through,
    a wrong key then the right one, an export from Me. Check the desktop rail.
 9. **Hand it over** as a link or a folder. Keys go to the client separately.

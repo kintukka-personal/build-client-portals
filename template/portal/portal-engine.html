@@ -490,6 +490,12 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   const $ = (s, r = document) => r.querySelector(s);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const byId = Object.fromEntries(CFG.items.map(i => [i.id, i]));
+  /* Sent as a single file the portal cannot reach a sibling content/ folder, so the
+     build inlines each simulation and the frame is given srcdoc instead of src. One
+     copy of a file serves every item pointing at it; the query string that used to
+     carry the placeholder's title and step count rides on the frame's name. */
+  const SIMS = (() => { const n = document.getElementById('portal-sims'); try { return n ? JSON.parse(n.textContent) : null; } catch (e) { return null; } })();
+  const simSrc = it => { if (!SIMS || !it.src) return null; const [f, q] = it.src.split('?'); return SIMS[f] ? { html: SIMS[f], name: q || '' } : null; };
   const TYPE = { simulation: 'Simulation', hotspot: 'Interactive photo', video: 'Video', guide: 'Guide', checklist: 'Checklist', article: 'Article', link: 'Link' };
 
   // ---- state ------------------------------------------------------------
@@ -724,8 +730,11 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       // listens for one in case a later export carries steps; the button is what
       // actually closes it off.
       const shaped = it.ratio ? ` class="frame shaped" style="--ratio:${esc(it.ratio)}"` : ' class="frame"';
-      html += `<div${shaped}><iframe id="sim" src="${esc(it.src)}" title="${esc(it.title)}" allow="fullscreen" allowfullscreen loading="eager"></iframe></div>
-        <div class="frame-actions"><button class="btn outline small" id="sim-full" type="button"><svg><use href="#i-full"/></svg>Full screen</button><a class="btn ghost small" href="${esc(it.src)}" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Open on its own</a>
+      const inl = simSrc(it);
+      // srcdoc is set from script rather than written into the attribute: the file is
+      // most of a megabyte and belongs in the page once, not once per item.
+      html += `<div${shaped}><iframe id="sim"${inl ? ` name="${esc(inl.name)}"` : ` src="${esc(it.src)}"`} title="${esc(it.title)}" allow="fullscreen" allowfullscreen loading="eager"></iframe></div>
+        <div class="frame-actions"><button class="btn outline small" id="sim-full" type="button"><svg><use href="#i-full"/></svg>Full screen</button><a class="btn ghost small" id="sim-open" href="${esc(it.src)}" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Open on its own</a>
         ${it.type === 'hotspot'
           ? `${isDone(it.id) ? '' : `<button class="btn small" id="mark-done" type="button">Mark as read</button>`}<span class="note">Tap each marker on the photo to read it, then mark it off. ${esc(it.hotspots ? it.hotspots + ' markers' : 'Every marker')} — open them all before you close it.</span>`
           : `<span class="note">Completion is recorded here the moment the simulation finishes. Nothing to tick.</span>`}</div>`;
@@ -755,6 +764,16 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function wireItem(r) {
     const it = byId[r.id]; if (!it) return;
     const mark = $('#mark-done'); if (mark) mark.addEventListener('click', () => complete(it.id, { selfMarked: true }));
+    const inl = simSrc(it); const frame = $('#sim');
+    if (inl && frame) frame.srcdoc = inl.html;
+    const open = $('#sim-open');
+    // An inlined simulation has no file to link to, so it opens from a blob of itself.
+    if (inl && open) open.addEventListener('click', e => {
+      e.preventDefault();
+      const u = URL.createObjectURL(new Blob([inl.html], { type: 'text/html' }));
+      window.open(u, '_blank', 'noopener');
+      setTimeout(() => URL.revokeObjectURL(u), 60000);
+    });
     const full = $('#sim-full'); if (full) full.addEventListener('click', () => { const f = $('#sim'); if (f.requestFullscreen) f.requestFullscreen().catch(() => {}); else if (f.webkitRequestFullscreen) f.webkitRequestFullscreen(); });
     const vid = $('#vid'); if (vid) vid.addEventListener('ended', () => complete(it.id));
     const link = $('#open-link'); if (link) link.addEventListener('click', () => setTimeout(() => complete(it.id), 300));
