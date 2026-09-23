@@ -21,10 +21,10 @@ clients/<slug>/portal/
    audiences and their keys, and the footer.
 2. **Write the first path.** Ten to fifteen items for the first audience, in the order a
    new starter meets them. Videos first, the opening shift, then the systems simulations.
-3. **Fill items.** Each item has a type: `simulation`, `video`, `guide`, `checklist`,
-   `article` or `link`, and each type carries its own icon in the interface. Guides carry
-   `steps`, checklists carry `checks`, articles carry `body`, links carry `href`,
-   simulations and videos carry `src`. Mark anything the client has not confirmed
+3. **Fill items.** Each item has a type: `simulation`, `hotspot`, `video`, `guide`,
+   `checklist`, `article` or `link`, and each type carries its own icon in the interface.
+   Guides carry `steps`, checklists carry `checks`, articles carry `body`, links carry
+   `href`, simulations, hotspots and videos carry `src`. Mark anything the client has not confirmed
    `"demo": true`; the portal shows a Demo chip until it is cleared.
 4. **Areas and groups.** `areas` are the Learn filter chips; three is usually right
    (Getting Started, Guides, Checklists), and the selected area's `blurb` prints under the
@@ -36,12 +36,21 @@ clients/<slug>/portal/
    the job, not the content type: a simulation belongs beside the guide it teaches.
 5. **Simulations.** Until an export exists, point `src` at the placeholder with a title and
    step count. When it lands, point at the file and set `demo` to false.
-6. **Build.** `node tools/build-portal.js <slug>`. The build refuses a path that names an
+6. **Interactive photos.** A SimStudio export can be one still with markers on it rather
+   than a click-through. Those are `"type": "hotspot"`, with `hotspots` for the marker
+   count and `ratio` for the capture's pixel size — the frame takes that shape at every
+   width, so a portrait photo is not letterboxed into a 16/9 box. A marker never advances
+   a step and never scores, so an export made only of markers never reports a completion:
+   the portal listens for one anyway and gives the item a Mark as read button. Check the
+   client's export in the frame at phone width before you ship it; see
+   `clients/<slug>/portal/content/README.md` for two bar-allowance bugs worth knowing
+   about.
+7. **Build.** `node tools/build-portal.js <slug>`. The build refuses a path that names an
    unknown item, an item with an unknown audience, area or group, a group in an unknown
    area, an item whose area contradicts its group, and warns on a missing file.
-7. **Walk it** on a phone: the landing pick, name prompt, a simulation to completion, a guide ticked through,
+8. **Walk it** on a phone: the landing pick, name prompt, a simulation to completion, a guide ticked through,
    a wrong key then the right one, an export from Me. Check the desktop rail.
-8. **Hand it over** as a link or a folder. Keys go to the client separately.
+9. **Hand it over** as a link or a folder. Keys go to the client separately.
 
 ## Reports
 
