@@ -9,7 +9,8 @@
     "website": "https://onyxgym.com.au",
     "memberLogin": "https://onyxgym.com.au",
     "portalTitle": "ONYX Learning Hub",
-    "tagline": "Not only a gym, but also a community."
+    "tagline": "Not only a gym, but also a community.",
+    "demoNote": "Everything in here is placeholder material written to show the shape of the portal. None of it is ONYX's real procedure yet — treat it as a draft to correct, not as instructions to follow."
   },
   "storageKey": "onyx-portal:v2",
   "audiences": [
@@ -111,6 +112,13 @@
           "blurb": "Every process, and the training it drives."
         },
         {
+          "id": "t-news",
+          "to": "news",
+          "eyebrow": "What's new",
+          "kind": "news",
+          "blurb": "The member blog. Write one, or schedule it."
+        },
+        {
           "id": "t-desk",
           "to": "path",
           "eyebrow": "Owner's desk",
@@ -172,6 +180,13 @@
     {
       "id": "reports",
       "label": "Reports",
+      "audiences": [
+        "owner"
+      ]
+    },
+    {
+      "id": "news",
+      "label": "Blog",
       "audiences": [
         "owner"
       ]
@@ -2286,7 +2301,7 @@
     "title": "What's new",
     "intro": "Timetable changes, new kit, and what is on at Alexandria.",
     "demo": true,
-    "note": "Demo posts. Real ones are written in the config and the page redraws; the spotlight is whichever post is first.",
+    "note": "Demo posts. A post written here is saved on this device and joins the list straight away; export it and it goes into the config as a permanent one. A date in the future holds it back until then.",
     "posts": [
       {
         "id": "n-recover-hours",
@@ -2348,6 +2363,22 @@
           "If the app will not load, do not stand at the desk fighting it. Give us your name and Passport number, go and train, and we will record the visit."
         ]
       }
+    ],
+    "audiences": [
+      "member",
+      "owner"
+    ],
+    "authors": [
+      "owner"
+    ],
+    "writeLabel": "Write a post",
+    "tags": [
+      "Facilities",
+      "Equipment",
+      "Classes",
+      "Community",
+      "Memberships",
+      "Opening hours"
     ]
   },
   "floorplans": {

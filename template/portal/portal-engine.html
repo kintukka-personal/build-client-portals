@@ -75,7 +75,8 @@ main { --gutter: 16px; flex: 1; padding: 0 var(--gutter) calc(84px + env(safe-ar
 .section { margin-top: 30px; }
 .section > .label { margin-bottom: 10px; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.section-head h3 { font-size: 18px; }
+.section-head h3 { font-size: 18px; display: flex; align-items: center; gap: 7px; }
+.section-head h3 svg { width: 16px; height: 16px; flex: none; }
 .section-head a { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: var(--w-semibold); }
 
 /* ---- buttons ---- */
@@ -100,7 +101,7 @@ main { --gutter: 16px; flex: 1; padding: 0 var(--gutter) calc(84px + env(safe-ar
 .cw > .card { flex: 1; min-width: 0; }
 .cw + .cw { margin-top: 10px; }
 .card + .card { margin-top: 10px; }
-.fav { position: absolute; top: 6px; right: 6px; z-index: 2; width: 38px; height: 38px; display: grid;
+.fav { position: absolute; top: 3px; right: 4px; z-index: 2; width: 38px; height: 38px; display: grid;
   place-items: center; background: none; border: 0; color: var(--border); padding: 0; }
 .fav svg { width: 19px; height: 19px; }
 .fav:hover { color: var(--text-muted); }
@@ -117,15 +118,23 @@ main { --gutter: 16px; flex: 1; padding: 0 var(--gutter) calc(84px + env(safe-ar
 .card.active { border: 2px solid var(--primary); padding: 15px; }
 a.card:hover { border-color: var(--text-muted); }
 .ti { width: 15px; height: 15px; flex: none; }
-.card .type { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; padding-right: 34px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); font-weight: var(--w-semibold); }
+.card .type { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; padding-right: 30px; min-height: 17px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); font-weight: var(--w-semibold); }
 .card .type.amber { color: var(--cta); }
 .card .type .dot { color: var(--text-muted); letter-spacing: 0; }
 .card h4 { font-size: 17px; margin: 6px 0 4px; }
 .card .meta { font-size: 13px; color: var(--text-muted); }
 .card .blurb { font-size: 14px; color: var(--text-muted); margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.card .state { position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; color: var(--primary); }
+/* On the type row, not in the corner: the corner belongs to the star, which is the
+   control. Two icons stacked on one another was the whole problem. */
+.card .state { width: 16px; height: 16px; flex: none; color: var(--primary); }
 .card .state.prog { color: var(--cta); }
 .card.done h4 { color: var(--text-muted); }
+/* One line at the top of a list instead of a chip on every card in it. Twenty-odd
+   Demo chips stop being read; one banner above them does not. */
+.demobar { display: flex; gap: 10px; align-items: flex-start; border: 1px solid var(--cta); border-left-width: 3px;
+  padding: 12px 14px; margin-top: 16px; font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
+.demobar svg { width: 17px; height: 17px; flex: none; color: var(--cta); margin-top: 1px; }
+.demobar b { color: var(--cta); font-weight: var(--w-semibold); letter-spacing: .08em; text-transform: uppercase; font-size: 11px; display: block; margin-bottom: 3px; }
 .demo { display: inline-block; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border-quiet); padding: 2px 6px; font-weight: var(--w-semibold); }
 .prog { height: 4px; background: var(--surface-raised); margin: 12px 0 6px; }
 .prog i { display: block; height: 100%; background: var(--cta); transition: width .3s ease; }
@@ -136,6 +145,14 @@ a.card:hover { border-color: var(--text-muted); }
 .row-list .card .meta { margin-top: 3px; display: flex; align-items: center; gap: 7px; }
 .row-list .card .state { position: static; }
 .grid2 { display: grid; gap: 10px; grid-template-columns: 1fr; }
+/* One height for all of them. A title on one line against two, or a blurb that runs
+   short, used to leave the rows ragged; the card now holds its shape and the text
+   sits at the top of it. */
+/* Two lines of type, two of title, two of blurb — one height for every card on the
+   page, not just within a section, since each group renders its own grid. Measured
+   against the longest of them at every width, with 6px to spare. */
+.grid2 .card { height: 192px; }
+.grid2 .card h4 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 @media (min-width: 720px) { .grid2 { grid-template-columns: 1fr 1fr; } .grid2 .card + .card { margin-top: 0; } }
 
 /* ---- home ---- */
@@ -293,6 +310,8 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 @media (min-width: 720px) { .post-hero h2 { font-size: 32px; } }
 .post-hero .when, .post .when { font-size: 13px; color: var(--text-muted); }
 .post-hero .lead { margin-top: 12px; font-size: 16px; }
+.sched { display: inline-block; margin-left: 8px; font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--cta); border: 1px solid var(--cta); padding: 2px 6px; font-weight: var(--w-semibold); vertical-align: 1px; }
 .carousel { display: grid; grid-auto-flow: column; grid-auto-columns: 78%; gap: 12px; margin-top: 14px;
   overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-width: thin; }
 @media (min-width: 720px) { .carousel { grid-auto-columns: 42%; } }
@@ -527,6 +546,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     <symbol id="t-simulation" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="1.5"/><path d="m10 9.5 5.5 3.2-5.5 3.2z" fill="currentColor" stroke="none"/><path d="M8 20.5h8"/></g></symbol>
     <symbol id="i-plan" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 10h7V3M10 10h11M10 15h11M14 21v-6"/></g></symbol>
     <symbol id="i-news" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M16 9h4v10a2 2 0 0 1-2 2M7 9h6M7 13h6M7 17h4"/></g></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.4" r="1.05" fill="currentColor" stroke="none"/></g></symbol>
     <symbol id="i-star" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 3.2l2.6 5.6 6 .8-4.4 4.2 1.1 6.1-5.3-2.9-5.3 2.9 1.1-6.1L3.4 9.6l6-.8z"/></symbol>
     <symbol id="i-import" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M12 14V4M12 14l-3.2-3.2M12 14l3.2-3.2"/></g></symbol>
     <symbol id="t-hotspot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M21 12.5V5H3v14h10"/><path d="m3 16 4.5-4.5 3.5 3.5"/><circle cx="8.5" cy="9" r="1.4"/><path d="M18.5 14c1.9 0 3.5 1.5 3.5 3.4 0 2.4-3.5 5.1-3.5 5.1S15 19.8 15 17.4c0-1.9 1.6-3.4 3.5-3.4z"/><circle cx="18.5" cy="17.4" r="1.2"/></g></symbol>
@@ -642,7 +662,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   // ---- state ------------------------------------------------------------
   const KEY = CFG.storageKey;
-  const fresh = () => ({ name: '', audience: 'employee', landed: false, returnTo: null, unlocked: {}, drafts: [], items: {}, checks: {}, favs: [], lastOpened: null, created: new Date().toISOString() });
+  const fresh = () => ({ name: '', audience: 'employee', landed: false, returnTo: null, unlocked: {}, drafts: [], posts: [], items: {}, checks: {}, favs: [], lastOpened: null, created: new Date().toISOString() });
   let S = fresh();
   try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
@@ -809,6 +829,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   // ---- pieces -----------------------------------------------------------
   const stateIcon = id => isDone(id) ? '<svg class="state" aria-label="Complete"><use href="#i-check"/></svg>' : status(id) === 'in-progress' ? '<svg class="state prog" aria-label="In progress"><use href="#i-prog"/></svg>' : '';
   const metaOf = (it, withArea = true) => [it.minutes ? it.minutes + ' min' : null, it.steps && it.type === 'simulation' ? it.steps + ' steps' : null, it.hotspots ? it.hotspots + ' hotspots' : null, Array.isArray(it.steps) ? it.steps.length + ' steps' : null, it.checks ? it.checks.length + ' items' : null, withArea ? groupLabel(groupOf(it)) : null].filter(Boolean).join(' · ');
+  const demoBar = list => (CFG.client.demoNote && list.some(i => i.demo))
+    ? `<div class="demobar"><svg><use href="#i-alert"/></svg><span><b>Demo content</b>${esc(CFG.client.demoNote)}</span></div>` : '';
   const areaLabel = id => (CFG.areas.find(a => a.id === id) || {}).label || '';
   const groups = () => CFG.groups || CFG.areas.map(a => ({ id: a.id, area: a.id, label: a.label, blurb: a.blurb }));
   const groupOf = it => it.group || it.area;
@@ -817,11 +839,10 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function card(it, opts = {}) {
     const done = isDone(it.id);
     return `<div class="cw">${favBtn(it.id)}<a class="card ${done ? 'done' : ''} ${opts.active ? 'active' : ''}" href="#/item/${it.id}">
-      <div class="type ${opts.amber ? 'amber' : ''}"><svg class="ti"><use href="#t-${it.type}"/></svg>${esc(opts.prefix ? opts.prefix + ' · ' : '')}${TYPE[it.type]} <span class="dot">·</span> ${esc(metaOf(it, false))}${it.demo ? ' <span class="demo">Demo</span>' : ''}</div>
+      <div class="type ${opts.amber ? 'amber' : ''}"><svg class="ti"><use href="#t-${it.type}"/></svg>${esc(opts.prefix ? opts.prefix + ' · ' : '')}${TYPE[it.type]} <span class="dot">·</span> ${esc(metaOf(it, false))}${stateIcon(it.id)}</div>
       <h4>${esc(it.title)}</h4>
       ${opts.blurb !== false ? `<div class="blurb">${esc(it.blurb)}</div>` : ''}
       ${opts.progress != null ? `<div class="prog"><i style="width:${opts.progress}%"></i></div>` : ''}
-      ${stateIcon(it.id)}
     </a></div>`;
   }
   function rowCard(it, n) {
@@ -878,10 +899,10 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const A = aud(); const seesTeam = seesOf(A).length > 1;
     let html = `<div class="hero"><h1>${esc(A.learnTitle || 'Learn')}</h1><p>${A.learnIntro ? esc(A.learnIntro) + ' ' : `${visible().length} items for ${esc(A.label.toLowerCase())}s${seesTeam ? ', including everything the team sees' : ''}. `}${selArea && selArea.blurb ? esc(selArea.blurb) : ''}</p></div>
       <label class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search titles and descriptions" value="${esc(r.q.get('q') || '')}" aria-label="Search"></label>
-      <div class="chips">${chips.map(([k, l]) => `<button type="button" data-area="${k}" class="${sel === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>`;
+      <div class="chips">${chips.map(([k, l]) => `<button type="button" data-area="${k}" class="${sel === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>${demoBar(items)}`;
     if (!items.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another filter.</div>`;
     const fv = favs().filter(i => items.includes(i));
-    if (fv.length) html += `<div class="section"><div class="section-head"><h3><svg class="ti" style="color:var(--cta);vertical-align:-2px;margin-right:6px"><use href="#i-star"/></svg>Favourites</h3><span class="muted" style="font-size:13px">${fv.length}</span></div><div class="grid2">${fv.map(i => card(i)).join('')}</div></div>`;
+    if (fv.length) html += `<div class="section"><div class="section-head"><h3><svg style="color:var(--cta)"><use href="#i-star"/></svg>Favourites</h3><span class="muted" style="font-size:13px">${fv.length}</span></div><div class="grid2">${fv.map(i => card(i)).join('')}</div></div>`;
     groups().forEach(g => {
       const list = items.filter(i => groupOf(i) === g.id); if (!list.length) return;
       html += `<div class="section"><div class="section-head"><h3>${esc(g.label)}</h3><span class="muted" style="font-size:13px">${list.filter(i => isDone(i.id)).length} of ${list.length} done</span></div>${g.blurb ? `<p class="muted" style="font-size:14px;margin:-4px 0 12px">${esc(g.blurb)}</p>` : ''}<div class="grid2">${list.map(i => card(i)).join('')}</div></div>`;
@@ -1186,33 +1207,108 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
 
   // ---- what's new -------------------------------------------------------
+  /* Config posts and posts written on this device, newest first. A date in the
+     future is a scheduled post: its author sees it with the date on it, everyone
+     else sees it when the day comes. */
   const newsCfg = () => CFG.news || null;
-  const postById = id => ((newsCfg() || {}).posts || []).find(p => p.id === id);
+  const canWrite = () => ((newsCfg() || {}).authors || []).includes(S.audience);
+  const today = () => new Date().toISOString().slice(0, 10);
+  const isScheduled = p => (p.date || '') > today();
+  function newsPosts() {
+    const N = newsCfg(); if (!N) return [];
+    const all = (N.posts || []).concat(S.posts || []);
+    return all.filter(p => canWrite() || !isScheduled(p))
+              .sort((x, y) => String(y.date).localeCompare(String(x.date)));
+  }
+  const postById = id => ((newsCfg() || {}).posts || []).concat(S.posts || []).find(p => p.id === id);
   const fmtPost = s => { const d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' }); };
+  const schedTag = p => isScheduled(p) ? `<span class="sched">Scheduled · ${esc(fmtPost(p.date))}</span>` : '';
 
   function viewNews() {
-    const N = newsCfg(); if (!N || !(N.posts || []).length) return `<div class="empty" style="margin-top:24px">Nothing posted yet.</div>`;
-    const [lead, ...rest] = N.posts;
-    let html = `<div class="hero"><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
-      <a class="post-hero" href="#/post/${esc(lead.id)}" style="display:block;color:inherit">
-        <span class="tag">${esc(lead.tag || '')}</span>
+    const N = newsCfg(); if (!N) return `<div class="empty" style="margin-top:24px">Nothing posted yet.</div>`;
+    if (N.audiences && !N.audiences.includes(S.audience)) { go('home'); return ''; }
+    const posts = newsPosts();
+    const write = canWrite() ? `<a class="btn small" href="#/post/new"><svg><use href="#i-plus"/></svg>${esc(N.writeLabel || 'Write a post')}</a>` : '';
+    let html = `<div class="hero"><div class="hero-row"><div><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>${write}</div></div>`;
+    if (!posts.length) return html + `<div class="empty" style="margin-top:16px">Nothing posted yet.${canWrite() ? ' Write the first one.' : ''}</div>`;
+    const [lead, ...rest] = posts;
+    html += `<a class="post-hero" href="#/post/${esc(lead.id)}" style="display:block;color:inherit">
+        <span class="tag">${esc(lead.tag || '')}</span>${schedTag(lead)}
         <h2>${esc(lead.title)}</h2>
-        <div class="when">${esc(fmtPost(lead.date))}</div>
+        <div class="when">${esc(fmtPost(lead.date))}${lead.local ? ' · written on this device' : ''}</div>
         <p class="lead">${esc(lead.lead)}</p>
         <div class="frame-actions" style="margin-top:14px"><span class="btn outline small">Read it<svg style="margin-left:2px"><use href="#i-arrow-r"/></svg></span></div>
       </a>`;
     if (rest.length) html += `<div class="section"><div class="section-head"><h3>Earlier</h3><span class="muted" style="font-size:13px">${rest.length} post${rest.length > 1 ? 's' : ''}</span></div>
-      <div class="carousel">${rest.map(p => `<a class="post" href="#/post/${esc(p.id)}"><span class="tag">${esc(p.tag || '')}</span><h3>${esc(p.title)}</h3><div class="when">${esc(fmtPost(p.date))}</div><p style="margin-top:8px">${esc(p.lead)}</p></a>`).join('')}</div></div>`;
+      <div class="carousel">${rest.map(p => `<a class="post" href="#/post/${esc(p.id)}"><span class="tag">${esc(p.tag || '')}</span>${schedTag(p)}<h3>${esc(p.title)}</h3><div class="when">${esc(fmtPost(p.date))}${p.local ? ' · this device' : ''}</div><p style="margin-top:8px">${esc(p.lead)}</p></a>`).join('')}</div></div>`;
+    if (canWrite() && (S.posts || []).length) html += `<div class="section"><div class="actions"><button class="btn outline small" id="posts-export" type="button"><svg><use href="#i-down"/></svg>Export ${(S.posts || []).length} written here</button><span class="note">Hand the file to whoever maintains the portal and they become permanent posts everyone sees, on any device.</span></div></div>`;
     if (N.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(N.note)}</p>`;
     return html;
   }
+  function wireNews() {
+    const x = $('#posts-export'); if (!x) return;
+    x.addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(S.posts || [], null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `${CFG.client.slug}-posts-${today()}.json`;
+      document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      toast('Posts exported');
+    });
+  }
+
   function viewPost(r) {
-    const p = postById(r.id); if (!p) return `<div class="empty" style="margin-top:24px">That post does not exist. <a href="#/news">Back to What's new</a></div>`;
-    return `<a class="back" href="#/news"><svg><use href="#i-back"/></svg>What's new</a>
-      <div class="article-head"><span class="tag" style="color:var(--primary);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--w-semibold)">${esc(p.tag || '')}</span>
-      <h1>${esc(p.title)}</h1><div class="meta" style="font-size:14px;color:var(--text-muted)">${esc(fmtPost(p.date))}</div>
+    if (r.id === 'new') return viewPostNew();
+    const p = postById(r.id); if (!p) return `<div class="empty" style="margin-top:24px">That post does not exist. <a href="#/news">Back</a></div>`;
+    if (isScheduled(p) && !canWrite()) { go('news'); return ''; }
+    return `<a class="back" href="#/news"><svg><use href="#i-back"/></svg>${esc((newsCfg() || {}).title || "What's new")}</a>
+      <div class="article-head"><span class="tag" style="color:var(--primary);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--w-semibold)">${esc(p.tag || '')}</span>${schedTag(p)}
+      <h1>${esc(p.title)}</h1><div class="meta" style="font-size:14px;color:var(--text-muted)">${esc(fmtPost(p.date))}${p.local ? ' · written on this device' : ''}</div>
       <p class="blurb">${esc(p.lead)}</p></div>
-      <div class="article">${(p.body || []).map(x => `<p>${esc(x)}</p>`).join('')}</div>`;
+      <div class="article">${(p.body || []).map(x => `<p>${esc(x)}</p>`).join('')}</div>
+      ${p.local ? `<div class="section"><div class="actions"><button class="btn ghost small" id="post-del" type="button">Delete this post</button><span class="note">It only exists on this device.</span></div></div>` : ''}`;
+  }
+
+  /* Writing one. The lead is the first paragraph of the body rather than a fifth
+     field to fill in — it is the line that already had to be written well. */
+  function viewPostNew() {
+    if (!canWrite()) { go('news'); return ''; }
+    const N = newsCfg() || {};
+    return `<a class="back" href="#/news"><svg><use href="#i-back"/></svg>${esc(N.title || "What's new")}</a>
+      <div class="item-head"><h1>Write a post</h1><p class="blurb">It joins the blog as soon as you save it. Date it ahead and it waits until that day — you will see it here with the date on it in the meantime, members will not.</p></div>
+      <div class="fstack">
+        <div class="field"><label for="p-title">Title</label><input class="input" id="p-title" placeholder="RECOVER is open an hour earlier"></div>
+        <div class="field"><label for="p-tag">Tag</label><input class="input" id="p-tag" list="p-tags" placeholder="Facilities" autocomplete="off">
+          <datalist id="p-tags">${(N.tags || []).map(t => `<option value="${esc(t)}"></option>`).join('')}</datalist>
+          <div class="hint">What it is about. Pick one you have used before so the blog stays tidy.</div></div>
+        <div class="field"><label for="p-date">Date</label><input class="input" id="p-date" type="date" value="${today()}">
+          <div class="hint">Today publishes it now. A day ahead holds it back until then — you will see it here with the date on it, members will not.</div></div>
+        <div class="field"><label for="p-body">The post</label><textarea id="p-body" rows="10" placeholder="RECOVER now opens at 5am on weekdays, so you can get a round in before work.&#10;&#10;This came out of the member survey. The rooms are on a timer and hot when the doors open."></textarea>
+          <div class="hint">A blank line starts a new paragraph. The first one is the whole story in a sentence or two — it is what shows on the card and at the top of the post.</div></div>
+        <div class="err" id="p-err"></div>
+      </div>
+      <div class="actions"><button class="btn" id="p-save" type="button">Save and publish</button><a class="btn ghost small" href="#/news">Cancel</a>
+      <span class="note">Posts written here live on this device. Export them and they become permanent posts everyone sees.</span></div>`;
+  }
+  function wirePostNew() {
+    const save = $('#p-save'); if (!save) return;
+    save.addEventListener('click', () => {
+      const tag = $('#p-tag').value.trim(), title = $('#p-title').value.trim();
+      const date = $('#p-date').value || today();
+      const paras = $('#p-body').value.split(/\n\s*\n/).map(t => t.trim()).filter(Boolean);
+      if (!title || !paras.length) { $('#p-err').textContent = 'A title and a body, at least.'; return; }
+      const post = { id: 'p-' + Math.random().toString(36).slice(2, 10), tag: tag || 'News', title, date,
+                     lead: paras[0], body: paras.slice(1).length ? paras.slice(1) : paras, local: true };
+      S.posts = [post].concat(S.posts || []); save_();
+      toast(isScheduled(post) ? 'Scheduled for ' + fmtPost(post.date) : 'Published');
+      go('post/' + post.id);
+    });
+  }
+  const save_ = () => save();
+  function wirePost(r) {
+    const del = $('#post-del'); if (!del) return;
+    del.addEventListener('click', () => confirm('Delete this post?', 'It is only on this device, so nothing else changes.', () => {
+      S.posts = (S.posts || []).filter(p => p.id !== r.id); save(); toast('Post deleted'); go('news');
+    }));
   }
 
   // ---- home tiles ------------------------------------------------------
@@ -1494,8 +1590,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     else if (r.view === 'processes') { v.innerHTML = viewProcesses(r); wireProcesses(); }
     else if (r.view === 'process') { v.innerHTML = viewProcess(r); if (r.id === 'new') wireProcessNew(); else wireProcess(r); }
     else if (r.view === 'lookaround') { v.innerHTML = viewLook(r); wireLook(); }
-    else if (r.view === 'news') v.innerHTML = viewNews();
-    else if (r.view === 'post') v.innerHTML = viewPost(r);
+    else if (r.view === 'news') { v.innerHTML = viewNews(); wireNews(); }
+    else if (r.view === 'post') { v.innerHTML = viewPost(r); if (r.id === 'new') wirePostNew(); else wirePost(r); }
     else if (r.view === 'reports') { v.innerHTML = viewReports(); wireTips(); const b = $('#imp-open'); if (b) b.addEventListener('click', importPanel); }
     else if (r.view === 'support') v.innerHTML = viewSupport();
     else if (r.view === 'me') { v.innerHTML = viewMe(); wireMe(); }

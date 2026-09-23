@@ -183,11 +183,34 @@ on shift. The contact rows are the same tap-to-copy rows the staff contact cards
 they behave the same in an in-app browser that swallows `mailto:` and `tel:`. Leave the
 block out and the audience gets the staff page.
 
-### What's new
+### What's new, and writing one
 
 A `news` block gives a spotlight post and a swipeable carousel of the rest. Posts carry
-`id`, `title`, `date`, `tag`, `lead` and `body`. The first post is the spotlight — order
-the list, and the page follows.
+`id`, `title`, `date`, `tag`, `lead` and `body`; the list is ordered by date, newest
+first, and the newest is the spotlight. `audiences` says who reads it.
+
+`authors` says who can write one. Those audiences get a **Write a post** button and a form
+of four fields — title, tag, date, body — where a blank line starts a paragraph and the
+first paragraph becomes the `lead`, because that is the line that had to be written well
+anyway. `tags` fills the tag field's suggestions, so the blog does not end up with six
+spellings of the same thing.
+
+**A date in the future schedules it.** The author sees it in the list with a Scheduled
+badge and the date; nobody else sees it, and a member who opens its link directly is sent
+back. On the day it appears on its own. Posts written this way live on the device and
+export as JSON, the same bargain the process library makes: capture next to the person
+who knows, without pretending a static file is a shared database.
+
+### Cards, chips and stars
+
+Every card is the same height — two lines of type, two of title, two of blurb, all
+clamped. Each group renders its own grid, so stretching rows only lines up one section;
+the height is fixed instead. If you add to the type row, re-measure it.
+
+Per-item `demo: true` no longer prints a chip on the card. Twenty Demo chips stop being
+read; one banner above the list does not. Set `client.demoNote` and the Learn page prints
+it once, whenever anything in view is demo. The chip still shows on an item's own page,
+where it is the only one on screen.
 
 ## Roles
 
