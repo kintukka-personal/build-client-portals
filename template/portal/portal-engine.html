@@ -174,6 +174,61 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .pager a .t { font-size: 14px; display: block; }
 .pager a.next { text-align: right; }
 
+/* ---- home tiles ---- */
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 24px; }
+@media (min-width: 900px) { .tiles { grid-template-columns: repeat(3, 1fr); } }
+.tile-l { grid-column: span 2; }
+@media (min-width: 900px) { .tile-l { grid-column: span 3; } }
+.tl { display: flex; flex-direction: column; gap: 10px; background: var(--surface); border: 1px solid var(--border-quiet); padding: 16px; color: inherit; min-height: 168px; position: relative; }
+.tl:hover { border-color: var(--primary); text-decoration: none; }
+.tl .eb { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--primary); padding-right: 22px; line-height: 1.35; }
+.tl[data-a="cta"] .eb { color: var(--cta); }
+.tl .fig { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; min-width: 0; }
+.tl .big { font-size: 34px; font-weight: var(--w-semibold); line-height: 1.05; letter-spacing: -.02em; }
+.tl .big small { font-size: 14px; font-weight: var(--w-regular); color: var(--text-muted); letter-spacing: 0; margin-left: 6px; }
+.tl .d { font-size: 12px; color: var(--text-muted); }
+.tl .d b { color: var(--primary); font-weight: var(--w-semibold); }
+.tl .bl { font-size: 13px; color: var(--text-muted); line-height: 1.45; }
+.tl .go { position: absolute; top: 14px; right: 13px; width: 18px; height: 18px; color: var(--text-muted); }
+.tl:hover .go { color: var(--primary); }
+.tl .nx { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--cta); }
+.tl .nx svg { width: 14px; height: 14px; flex: none; }
+.tl .nt { font-size: 16px; font-weight: var(--w-semibold); line-height: 1.25; }
+.tl .mk { width: 54px; color: var(--primary); }
+.tl .mini { display: flex; height: 6px; gap: 2px; }
+.tl .mini i { display: block; }
+.tl .mini i.ok { background: var(--primary); } .tl .mini i.dr { background: var(--cta); } .tl .mini i.gp { background: var(--border); }
+.tl.wide { flex-direction: row; align-items: center; gap: 18px; min-height: 0; }
+.tl.wide .fig { flex: none; }
+.tl.wide .txt { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+/* ---- process library ---- */
+.pstat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
+.pstat button { background: var(--surface); border: 1px solid var(--border-quiet); padding: 12px 10px; text-align: left; display: flex; flex-direction: column; gap: 3px; }
+.pstat button.on { border-color: var(--ac); background: color-mix(in srgb, var(--ac) 12%, var(--surface)); }
+.pstat button[data-s="documented"] { --ac: var(--primary); } .pstat button[data-s="draft"] { --ac: var(--cta); } .pstat button[data-s="gap"] { --ac: var(--error); }
+.pstat .n { font-size: 26px; font-weight: var(--w-semibold); line-height: 1; color: var(--ac); }
+.pstat .l { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); font-weight: var(--w-semibold); }
+.prow { display: block; background: var(--surface); border: 1px solid var(--border-quiet); border-left: 3px solid var(--ac); padding: 14px 16px; color: inherit; }
+.prow + .prow { margin-top: 8px; }
+.prow:hover { border-color: var(--text-muted); border-left-color: var(--ac); text-decoration: none; }
+.prow[data-s="documented"] { --ac: var(--primary); } .prow[data-s="draft"] { --ac: var(--cta); } .prow[data-s="gap"] { --ac: var(--error); }
+.prow .top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.prow h4 { font-size: 16px; font-weight: var(--w-semibold); line-height: 1.3; }
+.prow .st { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--ac); white-space: nowrap; flex: none; }
+.prow .sm { font-size: 13px; color: var(--text-muted); margin-top: 5px; line-height: 1.45; }
+.prow .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip2 { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--text-muted); border: 1px solid var(--border-quiet); padding: 3px 7px; }
+.chip2.drv { color: var(--primary); border-color: color-mix(in srgb, var(--primary) 40%, transparent); }
+.pdet { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 10px 16px; font-size: 14px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border-quiet); }
+.pdet .k { color: var(--text-muted); }
+.drafts-note { font-size: 13px; color: var(--text-muted); border: 1px dashed var(--border-quiet); padding: 14px; margin-top: 18px; line-height: 1.5; }
+.field label { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-weight: var(--w-semibold); margin-bottom: 6px; }
+.fstack { display: grid; gap: 16px; margin-top: 18px; }
+.fstack .input, .fstack textarea, .fstack select { width: 100%; padding: 12px 14px; font: inherit; font-size: 16px; color: var(--text); background: var(--surface-raised); border: 1px solid var(--border); border-radius: 0; }
+.fstack textarea { min-height: 130px; resize: vertical; line-height: 1.5; }
+.fstack .hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; line-height: 1.45; }
+
 /* ---- reports ---- */
 .kpi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 @media (min-width: 720px) { .kpi { grid-template-columns: repeat(3, 1fr); } }
@@ -318,6 +373,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     <symbol id="i-home" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
     <symbol id="i-learn" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z"/></symbol>
     <symbol id="i-support" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/><path d="m5.6 5.6 4 4M14.4 14.4l4 4M18.4 5.6l-4 4M9.6 14.4l-4 4"/></g></symbol>
+    <symbol id="i-proc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7"/><rect x="13.5" y="3.5" width="7" height="7"/><rect x="3.5" y="13.5" width="7" height="7"/><path d="M14 17h7M17.5 13.5v7"/></g></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-reports" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 20h16"/><path d="M6.5 16v-5M11 16V6M15.5 16v-8M20 16v-3"/></g></symbol>
     <symbol id="i-me" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></g></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M21.5 11.2v.8a9.5 9.5 0 1 1-5.6-8.7M8.5 11.8l3 3 9-9.5"/></symbol>
@@ -429,7 +486,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   // ---- state ------------------------------------------------------------
   const KEY = CFG.storageKey;
-  const fresh = () => ({ name: '', audience: 'employee', landed: false, returnTo: null, unlocked: {}, items: {}, checks: {}, lastOpened: null, created: new Date().toISOString() });
+  const fresh = () => ({ name: '', audience: 'employee', landed: false, returnTo: null, unlocked: {}, drafts: [], items: {}, checks: {}, lastOpened: null, created: new Date().toISOString() });
   let S = fresh();
   try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
@@ -469,7 +526,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   const navIcon = { home: 'i-home', learn: 'i-learn', reports: 'i-reports', support: 'i-support', me: 'i-me' };
   const navItems = () => CFG.nav.filter(n => !n.audiences || n.audiences.includes(S.audience));
   function renderNav() {
-    const r = route(); const cur = r.view === 'item' ? 'learn' : r.view; const nav = navItems();
+    const r = route(); const cur = r.view === 'item' ? 'learn' : (r.view === 'process' ? 'processes' : r.view); const nav = navItems();
     const link = n => `<a href="#/${n.id}" ${cur === n.id ? 'aria-current="page"' : ''}><svg><use href="#${navIcon[n.id]}"/></svg><span>${esc(n.label)}</span></a>`;
     $('#tabbar').innerHTML = nav.map(link).join('');
     $('#tabbar').style.gridTemplateColumns = `repeat(${nav.length}, 1fr)`;
@@ -589,6 +646,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const a = aud(); const p = pathFor(a.id);
     const name = S.name ? ', ' + S.name : '';
     let html = `<div class="hero"><h1>Welcome to <span class="g">${esc(CFG.client.name)}</span>${esc(name)}.</h1><p>${esc(a.intro)}</p></div>`;
+    if (a.homeTiles) return html + `<div class="tiles">${a.homeTiles.map(tile).join('')}</div>`;
     if (a.homeLink) html += `<a class="homelink" href="#/${esc(a.homeLink.to)}"><span><span class="t">${esc(a.homeLink.label)}</span><span class="b">${esc(a.homeLink.blurb || '')}</span></span><svg><use href="#i-arrow-r"/></svg></a>`;
     if (p) {
       const pr = pathProgress(p);
@@ -760,6 +818,171 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     view.onpointerleave = hide; view.onpointerdown = e => { const el = e.target.closest('[data-tip]'); if (el) { show(el, e.clientX, e.clientY); setTimeout(hide, 1800); } };
   }
 
+  // ---- home tiles ------------------------------------------------------
+  function tileFigure(t) {
+    const R = CFG.reports || {};
+    if (t.kind === 'stat') {
+      const s = (R.tiles || []).find(x => x.id === t.statFrom) || {};
+      const neg = /^[\u2212-]/.test(String(s.delta || ''));
+      return `<span class="big">${esc(s.value || '')}</span><span class="d"><b>${neg ? '\u25BC' : '\u25B2'} ${esc(s.delta || '')}</b> ${esc(s.deltaLabel || '')} \u00B7 ${esc((s.label || '').toLowerCase())}</span>`;
+    }
+    if (t.kind === 'upnext') {
+      const p = pathFor(S.audience); const pend = p ? p.items.filter(id => !isDone(id)) : [];
+      const id = (S.lastOpened && pend.includes(S.lastOpened)) ? S.lastOpened : pend[0];
+      if (!id) return `<span class="nx"><svg><use href="#i-check"/></svg>All done</span><span class="nt">Nothing waiting on you.</span>`;
+      const it = byId[id];
+      return `<span class="nx"><svg><use href="#t-${it.type}"/></svg>${TYPE[it.type]} \u00B7 ${esc(it.minutes)} min</span><span class="nt">${esc(it.title)}</span>`;
+    }
+    if (t.kind === 'progress') {
+      const p = pathFor(S.audience); const pr = p ? pathProgress(p) : { done: 0, total: 0 };
+      return `<span class="big">${pr.done}<small>of ${pr.total} done</small></span>`;
+    }
+    if (t.kind === 'processes') {
+      const L = procList(); const c = s => L.filter(x => x.status === s).length;
+      const tot = L.length || 1;
+      return `<span class="big">${L.length}<small>processes</small></span>
+        <span class="mini">${[['ok', c('documented')], ['dr', c('draft')], ['gp', c('gap')]].map(([k, n]) => n ? `<i class="${k}" style="flex:${n}"></i>` : '').join('')}</span>
+        <span class="d">${c('documented')} documented \u00B7 ${c('draft') + c('gap')} to write</span>`;
+    }
+    if (t.kind === 'count') return `<span class="big">${visible().length}<small>items</small></span>`;
+    if (t.kind === 'mark') return `<svg class="mk" viewBox="4 2 96 74"><use href="#mark"/></svg>`;
+    return '';
+  }
+  function tileHref(t) {
+    if (t.external) return t.to;
+    if (t.to === 'upnext') {
+      const p = pathFor(S.audience); const pend = p ? p.items.filter(id => !isDone(id)) : [];
+      const id = (S.lastOpened && pend.includes(S.lastOpened)) ? S.lastOpened : pend[0];
+      return id ? '#/item/' + id : '#/path';
+    }
+    return '#/' + t.to;
+  }
+  function tile(t) {
+    const wide = t.kind === 'mark';
+    return `<a class="tl ${t.span === 2 ? 'tile-l' : ''} ${wide ? 'wide' : ''}" data-a="${esc(t.accent || 'primary')}" href="${esc(tileHref(t))}"${t.external ? ' target="_blank" rel="noopener"' : ''}>
+      <svg class="go"><use href="#${t.external ? 'i-ext' : 'i-arrow-r'}"/></svg>
+      ${wide ? `<span class="fig">${tileFigure(t)}</span><span class="txt"><span class="eb">${esc(t.eyebrow)}</span><span class="bl">${esc(t.blurb || '')}</span></span>`
+             : `<span class="eb">${esc(t.eyebrow)}</span><span class="fig">${tileFigure(t)}</span><span class="bl">${esc(t.blurb || '')}</span>`}
+    </a>`;
+  }
+
+  function viewPath() {
+    const p = pathFor(S.audience); if (!p) { go('home'); return ''; }
+    const pr = pathProgress(p);
+    return `<a class="back" href="#/home"><svg><use href="#i-back"/></svg>Home</a>
+      <div class="item-head"><h1>${esc(p.title)}</h1><p class="blurb">${esc(p.blurb)}</p></div>
+      <div class="section"><div class="bignum">${pr.done}<small>of ${pr.total} complete</small></div><div class="prog green"><i style="width:${pr.pct}%"></i></div>
+      <div class="row-list" style="margin-top:16px">${p.items.map((id, i) => rowCard(byId[id], i + 1)).join('')}</div></div>`;
+  }
+
+  // ---- process library --------------------------------------------------
+  const procCfg = () => CFG.processes || null;
+  const procList = () => { const P = procCfg(); return P ? P.items.concat(S.drafts || []) : []; };
+  const procById = id => procList().find(x => x.id === id);
+  const statusLabel = s => ((procCfg() || {}).statuses || []).find(x => x.id === s) || { label: s };
+  const procArea = id => (((procCfg() || {}).areas) || []).find(a => a.id === id) || { label: id };
+  const fmtDate = iso => { if (!iso) return 'Never'; try { return new Date(iso).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return iso; } };
+
+  function viewProcesses(r) {
+    const P = procCfg(); if (!P) return `<div class="empty" style="margin-top:24px">No process library is configured.</div>`;
+    if (P.audiences && !P.audiences.includes(S.audience)) { go('home'); return ''; }
+    const sel = r.q.get('status') || 'all'; const q = (r.q.get('q') || '').toLowerCase();
+    const all = procList();
+    const list = all.filter(x => (sel === 'all' || x.status === sel) && (!q || (x.name + ' ' + (x.summary || '') + ' ' + procArea(x.area).label).toLowerCase().includes(q)));
+    const count = s => all.filter(x => x.status === s).length;
+    let html = `<a class="back" href="#/home"><svg><use href="#i-back"/></svg>Home</a>
+      <div class="item-head"><h1>${esc(P.title)}</h1><p class="blurb">${esc(P.blurb)}</p></div>
+      <div class="pstat">${(P.statuses || []).map(s => `<button type="button" data-s="${s.id}" class="${sel === s.id ? 'on' : ''}"><span class="n">${count(s.id)}</span><span class="l">${esc(s.label)}</span></button>`).join('')}</div>
+      <div class="actions" style="margin-top:14px"><a class="btn small" href="#/process/new"><svg><use href="#i-plus"/></svg>Document a process</a>${sel !== 'all' ? `<a class="btn ghost small" href="#/processes">Show all ${all.length}</a>` : ''}</div>
+      <label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="Search processes" value="${esc(r.q.get('q') || '')}" aria-label="Search processes"></label>`;
+    if (!list.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another status.</div>`;
+    (P.areas || []).forEach(ar => {
+      const rows = list.filter(x => x.area === ar.id); if (!rows.length) return;
+      html += `<div class="section"><div class="section-head"><h3>${esc(ar.label)}</h3><span class="muted" style="font-size:13px">${rows.length}</span></div>
+        ${rows.map(x => `<a class="prow" data-s="${esc(x.status)}" href="#/process/${esc(x.id)}">
+          <span class="top"><h4>${esc(x.name)}</h4><span class="st">${esc(statusLabel(x.status).label)}${x.local ? ' \u00B7 this device' : ''}</span></span>
+          <span class="sm">${esc(x.summary || '')}</span>
+          <span class="meta"><span class="chip2">${esc(x.owner || 'Unassigned')}</span>${(x.drives || []).length ? `<span class="chip2 drv">Drives ${(x.drives || []).length}</span>` : ''}<span class="chip2">Reviewed ${esc(fmtDate(x.reviewed))}</span></span></a>`).join('')}</div>`;
+    });
+    if (P.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(P.note)}</p>`;
+    return html;
+  }
+  function wireProcesses() {
+    const input = $('#pq');
+    if (input) {
+      let tm; input.addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(() => {
+        const p = new URLSearchParams(route().q); if (input.value) p.set('q', input.value); else p.delete('q');
+        history.replaceState(null, '', '#/processes' + (p.toString() ? '?' + p : '')); renderBody();
+        const i2 = $('#pq'); if (i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }
+      }, 180); });
+    }
+    document.querySelectorAll('.pstat button').forEach(b => b.addEventListener('click', () => {
+      const p = new URLSearchParams(route().q); const cur = p.get('status');
+      if (cur === b.dataset.s) p.delete('status'); else p.set('status', b.dataset.s);
+      go('/processes' + (p.toString() ? '?' + p : ''));
+    }));
+  }
+
+  function viewProcess(r) {
+    if (r.id === 'new') return viewProcessNew();
+    const x = procById(r.id); if (!x) return `<div class="empty" style="margin-top:24px">That process does not exist. <a href="#/processes">Back to the library</a></div>`;
+    const drives = (x.drives || []).map(id => byId[id]).filter(Boolean);
+    return `<a class="back" href="#/processes"><svg><use href="#i-back"/></svg>Process library</a>
+      <div class="item-head"><div class="type" style="color:var(--${x.status === 'documented' ? 'primary' : x.status === 'draft' ? 'cta' : 'error'})">${esc(statusLabel(x.status).label)}${x.local ? ' \u00B7 drafted on this device' : ''}</div>
+      <h1>${esc(x.name)}</h1><p class="blurb">${esc(x.summary || '')}</p></div>
+      ${x.note ? `<div class="drafts-note">${esc(x.note)}</div>` : ''}
+      <div class="pdet">
+        <span class="k">Area</span><span>${esc(procArea(x.area).label)}</span>
+        <span class="k">Owned by</span><span>${esc(x.owner || 'Unassigned')}</span>
+        <span class="k">Last reviewed</span><span>${esc(fmtDate(x.reviewed))}</span>
+        <span class="k">Review cycle</span><span>${esc(x.reviewCycle || 'Not set')}</span>
+      </div>
+      ${Array.isArray(x.steps) && x.steps.length ? `<div class="section"><div class="label">The process</div><ol class="steps">${x.steps.map(s => `<li><span class="n"></span><p>${esc(s)}</p><span></span></li>`).join('')}</ol></div>` : ''}
+      <div class="section"><div class="label">What it drives</div>
+        ${drives.length ? `<p class="muted" style="font-size:14px;margin:-2px 0 12px">Change this process and these are the pieces of training that have to change with it.</p><div class="grid2">${drives.map(i => card(i)).join('')}</div>`
+          : `<div class="empty">Nothing yet. This process is not behind any guide, checklist or simulation your team can see.</div>`}</div>
+      ${x.local ? `<div class="actions"><button class="btn small" id="exp-one" type="button"><svg><use href="#i-down"/></svg>Export this draft</button><button class="btn ghost small" id="del-one" type="button">Delete draft</button></div>` : ''}`;
+  }
+  function wireProcess(r) {
+    const x = procById(r.id); if (!x || !x.local) return;
+    const e = $('#exp-one'); if (e) e.addEventListener('click', () => download(`${CFG.client.slug}-process-${x.id}.json`, JSON.stringify(x, null, 2)));
+    const d = $('#del-one'); if (d) d.addEventListener('click', () => confirm('Delete this draft?', 'It is only on this device and cannot be recovered.', () => {
+      S.drafts = (S.drafts || []).filter(y => y.id !== x.id); save(); go('processes'); toast('Draft deleted');
+    }));
+  }
+
+  function viewProcessNew() {
+    const P = procCfg() || { areas: [] };
+    return `<a class="back" href="#/processes"><svg><use href="#i-back"/></svg>Process library</a>
+      <div class="item-head"><h1>Document a process</h1><p class="blurb">Write it while it is fresh. The draft is saved on this device and joins the library straight away, marked as a draft so nobody mistakes it for signed-off procedure. Export it when you want it turned into a guide, a checklist or a simulation.</p></div>
+      <div class="fstack">
+        <div class="field"><label for="f-name">What is the process called</label><input class="input" id="f-name" placeholder="Ordering consumables"></div>
+        <div class="field"><label for="f-area">Area</label><select class="input" id="f-area">${(P.areas || []).map(a => `<option value="${esc(a.id)}">${esc(a.label)}</option>`).join('')}</select></div>
+        <div class="field"><label for="f-owner">Who owns it</label><input class="input" id="f-owner" placeholder="Manager on duty"></div>
+        <div class="field"><label for="f-sum">Why it matters, in a sentence</label><input class="input" id="f-sum" placeholder="What goes wrong when this is done differently by different people."></div>
+        <div class="field"><label for="f-steps">The steps</label><textarea id="f-steps" placeholder="One step per line, in the order they happen."></textarea><div class="hint">One per line. Write what a person actually does, not what the system does.</div></div>
+        <div class="field"><label for="f-note">Anything unresolved</label><input class="input" id="f-note" placeholder="What still needs confirming before this becomes training."></div>
+      </div>
+      <div class="actions"><button class="btn" id="f-save" type="button">Save draft</button><a class="btn ghost small" href="#/processes">Cancel</a>
+      <span class="note">Drafts live on this device only. Export sends the file to whoever maintains the portal.</span></div>`;
+  }
+  function wireProcessNew() {
+    const b = $('#f-save'); if (!b) return;
+    b.addEventListener('click', () => {
+      const name = $('#f-name').value.trim();
+      if (!name) { $('#f-name').focus(); toast('Give the process a name first'); return; }
+      const steps = $('#f-steps').value.split('\n').map(s => s.trim()).filter(Boolean);
+      const x = { id: 'draft-' + Date.now().toString(36), name, area: $('#f-area').value, owner: $('#f-owner').value.trim() || 'Unassigned',
+        status: 'draft', reviewed: new Date().toISOString().slice(0, 10), reviewCycle: 'Not set', drives: [],
+        summary: $('#f-sum').value.trim(), note: $('#f-note').value.trim() || 'Drafted in the portal. Not yet reviewed.', steps, local: true, by: S.name || null };
+      S.drafts = (S.drafts || []).concat([x]); save(); go('process/' + x.id); toast('Draft saved');
+    });
+  }
+  const download = (name, text) => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' })); a.download = name;
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  };
+
   function viewSupport() {
     const s = CFG.support;
     return `<div class="hero"><h1>Support</h1><p>The answers to the questions that come up every week, then who to go to when it is not one of them.</p></div>
@@ -810,7 +1033,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
     toast('Progress card exported');
   }
-  function fmtDate(iso) { if (!iso) return ''; try { return new Date(iso).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return iso; } }
+
 
   // ---- completion from simulations ------------------------------------
   window.addEventListener('message', e => {
@@ -837,6 +1060,9 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (r.view === 'home') v.innerHTML = viewHome();
     else if (r.view === 'learn') { v.innerHTML = viewLearn(r); wireLearn(); }
     else if (r.view === 'item') { v.innerHTML = viewItem(r); wireItem(r); }
+    else if (r.view === 'path') v.innerHTML = viewPath();
+    else if (r.view === 'processes') { v.innerHTML = viewProcesses(r); wireProcesses(); }
+    else if (r.view === 'process') { v.innerHTML = viewProcess(r); if (r.id === 'new') wireProcessNew(); else wireProcess(r); }
     else if (r.view === 'reports') { v.innerHTML = viewReports(); wireTips(); }
     else if (r.view === 'support') v.innerHTML = viewSupport();
     else if (r.view === 'me') { v.innerHTML = viewMe(); wireMe(); }
@@ -850,7 +1076,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const key = r.view + '/' + (r.id || '') + '?' + r.q.toString();
     renderNav(); renderBody();
     if (r.view === 'home' && S.landed && !S.name && !S.nameSkipped && !$('#dlg-name').open) setTimeout(askName, 350);
-    if (key !== lastKey && !/^learn/.test(key) ) window.scrollTo(0, 0);
+    if (key !== lastKey && !/^learn/.test(key) && !/^processes/.test(key)) window.scrollTo(0, 0);
     lastKey = key;
   }
   render();

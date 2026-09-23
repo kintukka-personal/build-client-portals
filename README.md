@@ -43,7 +43,8 @@ standalone: open it from disk, drop it on a share, host it, or wrap it as an app
 and videos sit beside it in `content/`; see `clients/onyx/portal/content/README.md`.
 
 What the portal does today: a landing page that asks who you are here as, three audiences
-each behind a per-device access key, learning paths, an owner Reports page with stat tiles and charts from figures in the config, with progress, simulations in a frame that record
+each behind a per-device access key, learning paths, an owner Reports page with stat tiles and charts from figures in the config, a tile-grid
+Home and a process library that links each documented process to the training it drives, with progress, simulations in a frame that record
 completion from the SimStudio completion message and a SCORM shim, guides and checklists
 with tickable steps, videos, articles, links, search, support contacts and FAQ, and a
 progress card export from the Me page. Progress is stored per device.

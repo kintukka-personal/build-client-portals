@@ -53,6 +53,34 @@ a hover tooltip and a table view. Give the audience a `homeLink` to put a button
 their Home, and list `reports` in `nav` with `audiences` so it replaces Learn in their tab
 bar. Figures are whatever the config says; mark the block `demo` until they are real.
 
+## Home tiles
+
+An audience with a `homeTiles` array gets a tile grid on Home instead of the standard
+path list, and its path moves to its own page at `#/path`. Each tile carries an
+`eyebrow`, a `blurb`, a `to` (a view id, `upnext`, or an external href with
+`external: true`), an optional `span: 2`, and a `kind` that decides the figure the engine
+draws: `stat` pulls a named tile out of the reports block, `upnext` resolves the next
+unfinished item in the path, `progress` shows path completion, `processes` shows the
+library's status split, `count` shows how many items the audience can see, and `mark`
+sets the client's own mark beside the text. Use it where the audience navigates rather
+than works through a sequence.
+
+## Process library
+
+An optional `processes` block turns on a library at `#/processes`, gated by `audiences`.
+Each process carries a name, an `area`, an owner, a `status` (documented, draft or gap),
+a review date and cycle, a summary, and `drives`: the ids of the guides, checklists and
+simulations that process produces. That last field is the point of the whole thing. It
+makes the link between a procedure and its training explicit, so changing a process shows
+you exactly what has to change with it, and a process driving nothing is visibly a process
+nobody is being trained on.
+
+The library also takes drafts. "Document a process" captures a new one into the device's
+own storage, where it joins the list marked as a draft so nobody mistakes it for signed-off
+procedure, and exports as JSON for whoever maintains the portal. That keeps capture close
+to the person who knows the process without pretending a static file can be a shared
+database.
+
 ## Roles
 
 Client-side keys keep the portal off a random phone and hide areas from casual browsing on a
