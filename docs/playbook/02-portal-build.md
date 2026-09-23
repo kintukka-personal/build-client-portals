@@ -65,6 +65,15 @@ a hover tooltip and a table view. Give the audience a `homeLink` to put a button
 their Home, and list `reports` in `nav` with `audiences` so it replaces Learn in their tab
 bar. Figures are whatever the config says; mark the block `demo` until they are real.
 
+An optional `import` block on `reports` puts an **Import data** button beside the page
+title. It opens a panel that says what an import would take (`takes`), what it would do
+with the files (`does`), and a `status` line — and nothing else: no file picker is wired
+up. It is there so an owner being shown the page understands where their own numbers go
+and can say which exports they have, and so the conversation about building the mapping
+starts from something concrete. `cta` and `to` send them somewhere to have it; `demo: true`
+puts a Soon chip on the button. Pair it with a guide in the owner's path so the detail
+lives somewhere you can point at, the way `gd-owner-reports` does for ONYX.
+
 ## Home tiles
 
 An audience with a `homeTiles` array gets a tile grid on Home instead of the standard
