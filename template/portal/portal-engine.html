@@ -1230,13 +1230,45 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   const fmtPost = s => { const d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' }); };
   const schedTag = p => isScheduled(p) ? `<span class="sched">Scheduled · ${esc(fmtPost(p.date))}</span>` : '';
 
-  function viewNews() {
+  /* An author lands on a hub — write one, or go and read the blog as a member sees
+     it. Everyone else lands straight on the blog, because reading it is all they
+     came to do. */
+  function viewNews(r) {
     const N = newsCfg(); if (!N) return `<div class="empty" style="margin-top:24px">Nothing posted yet.</div>`;
     if (N.audiences && !N.audiences.includes(S.audience)) { go('home'); return ''; }
+    if (canWrite() && !(r && r.q.get('all'))) return viewNewsHub(N);
+    return viewBlog(N, canWrite());
+  }
+
+  function viewNewsHub(N) {
     const posts = newsPosts();
-    const write = canWrite() ? `<a class="btn small" href="#/post/new"><svg><use href="#i-plus"/></svg>${esc(N.writeLabel || 'Write a post')}</a>` : '';
-    let html = `<div class="hero"><div class="hero-row"><div><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>${write}</div></div>`;
-    if (!posts.length) return html + `<div class="empty" style="margin-top:16px">Nothing posted yet.${canWrite() ? ' Write the first one.' : ''}</div>`;
+    const sched = posts.filter(isScheduled).length;
+    const mine = (S.posts || []).length;
+    return `<div class="hero"><h1>${esc(N.ownerTitle || 'Blog')}</h1><p>${esc(N.ownerIntro || '')}</p></div>
+      <div class="tiles">
+        <a class="tl" data-a="cta" href="#/post/new">
+          <svg class="go"><use href="#i-arrow-r"/></svg>
+          <span class="eb">${esc(N.writeLabel || 'Write a post')}</span>
+          <span class="fig"><span class="nx"><svg><use href="#i-plus"/></svg>New</span><span class="nt">Tag, title, date, body</span></span>
+          <span class="bl">Date it ahead and it waits until that day.</span>
+        </a>
+        <a class="tl" href="#/news?all=1">
+          <svg class="go"><use href="#i-arrow-r"/></svg>
+          <span class="eb">See the blog</span>
+          <span class="fig"><span class="big">${posts.length}<small>post${posts.length === 1 ? '' : 's'}</small></span></span>
+          <span class="bl">${sched ? `${sched} scheduled, waiting. ` : ''}The page as a member sees it.</span>
+        </a>
+      </div>
+      ${mine ? `<div class="section"><div class="actions"><button class="btn outline small" id="posts-export" type="button"><svg><use href="#i-down"/></svg>Export ${mine} written here</button><span class="note">Written here they live on this device. Hand the file to whoever maintains the portal and they become permanent posts everyone sees, on any device.</span></div></div>` : ''}
+      ${N.note ? `<p class="muted" style="font-size:13px;margin-top:22px">${esc(N.note)}</p>` : ''}`;
+  }
+
+  function viewBlog(N, author) {
+    const posts = newsPosts();
+    const back = author ? `<a class="back" href="#/news"><svg><use href="#i-back"/></svg>${esc(N.ownerTitle || 'Blog')}</a>` : '';
+    const write = author ? `<a class="btn small" href="#/post/new"><svg><use href="#i-plus"/></svg>${esc(N.writeLabel || 'Write a post')}</a>` : '';
+    let html = `${back}<div class="hero"><div class="hero-row"><div><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>${write}</div></div>`;
+    if (!posts.length) return html + `<div class="empty" style="margin-top:16px">Nothing posted yet.${author ? ' Write the first one.' : ''}</div>`;
     const [lead, ...rest] = posts;
     html += `<a class="post-hero" href="#/post/${esc(lead.id)}" style="display:block;color:inherit">
         <span class="tag">${esc(lead.tag || '')}</span>${schedTag(lead)}
@@ -1247,10 +1279,10 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       </a>`;
     if (rest.length) html += `<div class="section"><div class="section-head"><h3>Earlier</h3><span class="muted" style="font-size:13px">${rest.length} post${rest.length > 1 ? 's' : ''}</span></div>
       <div class="carousel">${rest.map(p => `<a class="post" href="#/post/${esc(p.id)}"><span class="tag">${esc(p.tag || '')}</span>${schedTag(p)}<h3>${esc(p.title)}</h3><div class="when">${esc(fmtPost(p.date))}${p.local ? ' · this device' : ''}</div><p style="margin-top:8px">${esc(p.lead)}</p></a>`).join('')}</div></div>`;
-    if (canWrite() && (S.posts || []).length) html += `<div class="section"><div class="actions"><button class="btn outline small" id="posts-export" type="button"><svg><use href="#i-down"/></svg>Export ${(S.posts || []).length} written here</button><span class="note">Hand the file to whoever maintains the portal and they become permanent posts everyone sees, on any device.</span></div></div>`;
     if (N.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(N.note)}</p>`;
     return html;
   }
+
   function wireNews() {
     const x = $('#posts-export'); if (!x) return;
     x.addEventListener('click', () => {
@@ -1266,7 +1298,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (r.id === 'new') return viewPostNew();
     const p = postById(r.id); if (!p) return `<div class="empty" style="margin-top:24px">That post does not exist. <a href="#/news">Back</a></div>`;
     if (isScheduled(p) && !canWrite()) { go('news'); return ''; }
-    return `<a class="back" href="#/news"><svg><use href="#i-back"/></svg>${esc((newsCfg() || {}).title || "What's new")}</a>
+    return `<a class="back" href="#/news${canWrite() ? '?all=1' : ''}"><svg><use href="#i-back"/></svg>${esc((newsCfg() || {}).title || "What's new")}</a>
       <div class="article-head"><span class="tag" style="color:var(--primary);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--w-semibold)">${esc(p.tag || '')}</span>${schedTag(p)}
       <h1>${esc(p.title)}</h1><div class="meta" style="font-size:14px;color:var(--text-muted)">${esc(fmtPost(p.date))}${p.local ? ' · written on this device' : ''}</div>
       <p class="blurb">${esc(p.lead)}</p></div>
@@ -1596,7 +1628,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     else if (r.view === 'processes') { v.innerHTML = viewProcesses(r); wireProcesses(); }
     else if (r.view === 'process') { v.innerHTML = viewProcess(r); if (r.id === 'new') wireProcessNew(); else wireProcess(r); }
     else if (r.view === 'lookaround') { v.innerHTML = viewLook(r); wireLook(); }
-    else if (r.view === 'news') { v.innerHTML = viewNews(); wireNews(); }
+    else if (r.view === 'news') { v.innerHTML = viewNews(r); wireNews(); }
     else if (r.view === 'post') { v.innerHTML = viewPost(r); if (r.id === 'new') wirePostNew(); else wirePost(r); }
     else if (r.view === 'reports') { v.innerHTML = viewReports(); wireTips(); const b = $('#imp-open'); if (b) b.addEventListener('click', importPanel); }
     else if (r.view === 'support') v.innerHTML = viewSupport();

@@ -2381,7 +2381,9 @@
       "Community",
       "Memberships",
       "Opening hours"
-    ]
+    ],
+    "ownerTitle": "Blog",
+    "ownerIntro": "Write a post for members, or read the blog the way they see it."
   },
   "floorplans": {
     "title": "Look around",
