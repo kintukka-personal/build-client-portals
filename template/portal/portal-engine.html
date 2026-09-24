@@ -1494,7 +1494,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     let html = `${backLink(navItems().some(n => n.id === 'processes') ? '' : '#/home', navLabel('home', 'Home'))}
       <div class="item-head"><h1>${esc(P.title)}</h1><p class="blurb">${esc(P.blurb)}</p></div>
       <div class="pstat">${(P.statuses || []).map(s => `<button type="button" data-s="${s.id}" class="${sel === s.id ? 'on' : ''}"><span class="n">${count(s.id)}</span><span class="l">${esc(s.label)}</span></button>`).join('')}</div>
-      <div class="actions" style="margin-top:14px"><a class="btn small" href="#/process/new"><svg><use href="#i-plus"/></svg>Document a process</a>${sel !== 'all' ? `<a class="btn ghost small" href="#/processes">Show all ${all.length}</a>` : ''}</div>
+      <div class="actions" style="margin-top:14px"><a class="btn small" href="#/process/new"><svg><use href="#i-plus"/></svg>Document a process</a><a class="btn outline small" href="#/learn"><svg><use href="#i-learn"/></svg>Team library \u00B7 ${visible().length}</a>${sel !== 'all' ? `<a class="btn ghost small" href="#/processes">Show all ${all.length}</a>` : ''}</div>
       <hr class="rule">
       <label class="search" style="margin-top:0"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="Search processes" value="${esc(r.q.get('q') || '')}" aria-label="Search processes"></label>`;
     if (!list.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another status.</div>`;

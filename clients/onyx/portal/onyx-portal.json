@@ -127,15 +127,6 @@
           "blurb": "The nine things worth your time."
         },
         {
-          "id": "t-team",
-          "to": "learn",
-          "eyebrow": "Team library",
-          "kind": "count",
-          "countOf": "items",
-          "blurb": "Everything your team can see.",
-          "countLabel": "items"
-        },
-        {
           "id": "t-brand",
           "to": "../brand/onyx-brand-sheet.html",
           "external": true,
