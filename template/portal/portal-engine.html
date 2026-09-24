@@ -366,6 +366,7 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .tl.wide .txt { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 
 /* ---- process library ---- */
+.rule { border: 0; border-top: 1px solid var(--border-quiet); margin: 20px 0 16px; }
 .pstat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
 .pstat button { background: var(--surface); border: 1px solid var(--border-quiet); padding: 12px 10px; text-align: left; display: flex; flex-direction: column; gap: 3px; }
 .pstat button.on { border-color: var(--ac); background: color-mix(in srgb, var(--ac) 12%, var(--surface)); }
@@ -737,7 +738,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   window.addEventListener('hashchange', render);
 
   // ---- chrome -----------------------------------------------------------
-  const navIcon = { home: 'i-home', lookaround: 'i-plan', learn: 'i-learn', reports: 'i-reports', news: 'i-news', support: 'i-support', me: 'i-me' };
+  const navIcon = { home: 'i-home', lookaround: 'i-plan', learn: 'i-learn', reports: 'i-reports', news: 'i-news', processes: 'i-proc', support: 'i-support', me: 'i-me' };
   const navItems = () => CFG.nav.filter(n => !n.audiences || n.audiences.includes(S.audience));
   function renderNav() {
     const r = route(); const cur = r.view === 'item' ? 'learn' : (r.view === 'process' ? 'processes' : r.view); const nav = navItems();
@@ -1479,11 +1480,12 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const all = procList();
     const list = all.filter(x => (sel === 'all' || x.status === sel) && (!q || (x.name + ' ' + (x.summary || '') + ' ' + procArea(x.area).label).toLowerCase().includes(q)));
     const count = s => all.filter(x => x.status === s).length;
-    let html = `${backLink('#/home', navLabel('home', 'Home'))}
+    let html = `${backLink(navItems().some(n => n.id === 'processes') ? '' : '#/home', navLabel('home', 'Home'))}
       <div class="item-head"><h1>${esc(P.title)}</h1><p class="blurb">${esc(P.blurb)}</p></div>
       <div class="pstat">${(P.statuses || []).map(s => `<button type="button" data-s="${s.id}" class="${sel === s.id ? 'on' : ''}"><span class="n">${count(s.id)}</span><span class="l">${esc(s.label)}</span></button>`).join('')}</div>
       <div class="actions" style="margin-top:14px"><a class="btn small" href="#/process/new"><svg><use href="#i-plus"/></svg>Document a process</a>${sel !== 'all' ? `<a class="btn ghost small" href="#/processes">Show all ${all.length}</a>` : ''}</div>
-      <label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="Search processes" value="${esc(r.q.get('q') || '')}" aria-label="Search processes"></label>`;
+      <hr class="rule">
+      <label class="search" style="margin-top:0"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="Search processes" value="${esc(r.q.get('q') || '')}" aria-label="Search processes"></label>`;
     if (!list.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another status.</div>`;
     (P.areas || []).forEach(ar => {
       const rows = list.filter(x => x.area === ar.id); if (!rows.length) return;

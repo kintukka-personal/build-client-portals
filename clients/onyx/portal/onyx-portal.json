@@ -201,6 +201,13 @@
       ]
     },
     {
+      "id": "processes",
+      "label": "Processes",
+      "audiences": [
+        "owner"
+      ]
+    },
+    {
       "id": "support",
       "label": "Support"
     },
@@ -209,8 +216,7 @@
       "label": "Me",
       "audiences": [
         "employee",
-        "manager",
-        "owner"
+        "manager"
       ]
     }
   ],
