@@ -210,7 +210,7 @@ select:hover{border-color:var(--muted)}
 .cover .big{font-size:27px;font-weight:600;font-family:var(--mono);letter-spacing:-.02em}
 
 /* ---- insights ---- */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:12px}
 .tile{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:15px 16px}
 .tile .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
 .tile .v{font-size:30px;font-weight:600;font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.025em;margin-top:5px;line-height:1.05}
@@ -226,11 +226,13 @@ select:hover{border-color:var(--muted)}
 .crow .cl small{color:var(--dim);font-family:var(--mono);font-size:11px;margin-left:5px}
 .track{height:22px;background:var(--sunk);border:1px solid var(--line-soft);border-radius:5px;overflow:hidden;position:relative}
 .track i{display:block;height:100%;background:var(--green);border-radius:4px 0 0 4px}
-.track.q i{background:var(--dim)}
+.track.q i{background:repeating-linear-gradient(135deg,var(--green-deep) 0 4px,transparent 4px 9px),var(--green-tint)}
 .track .base{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--amber);opacity:.85}
 .crow .cv{font-family:var(--mono);font-size:13px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
 .crow .cv small{display:block;font-size:10.5px;color:var(--dim);font-weight:400}
-.crow.thin .cv{font-weight:400;color:var(--dim)}
+.crow.thin .cv{color:var(--muted)}
+.lowflag{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);
+  border:1px solid var(--amber-deep);border-radius:100px;padding:1px 6px;margin-left:7px;font-weight:500;vertical-align:1px}
 .crow.thin .cl{color:var(--muted)}
 .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);font-family:var(--mono);margin-top:4px}
 .legend span{display:flex;align-items:center;gap:6px}
@@ -243,6 +245,8 @@ select:hover{border-color:var(--muted)}
 .liftbar i{position:absolute;top:2px;height:16px;border-radius:3px}
 .liftbar i.up{background:var(--green);left:50%}
 .liftbar i.down{background:var(--error);right:50%}
+.liftbar i.up.lowbar{background:repeating-linear-gradient(135deg,var(--green-deep) 0 4px,transparent 4px 9px),var(--green-tint)}
+.liftbar i.down.lowbar{background:repeating-linear-gradient(135deg,var(--error) 0 4px,transparent 4px 9px),var(--error-tint)}
 .liftv{font-family:var(--mono);font-size:12.5px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
 @media (max-width:620px){.lift{grid-template-columns:minmax(0,1fr) 62px;row-gap:4px}.liftbar{grid-column:1/2}}
 
@@ -410,7 +414,7 @@ select:hover{border-color:var(--muted)}
         <div class="card">
           <div class="sechead"><h3>Conversion by how they came in</h3><span class="note">the one chart worth putting on the wall</span></div>
           <div class="chart" id="c-type"></div>
-          <div class="legend"><span><i style="background:var(--green)"></i>joined</span><span><i style="background:var(--amber)"></i>all-lead average</span></div>
+          <div class="legend"><span><i style="background:var(--green)"></i>joined</span><span><i style="background:var(--amber)"></i>all-lead average</span><span><i style="background:repeating-linear-gradient(135deg,var(--green-deep) 0 4px,transparent 4px 9px),var(--green-tint)"></i>under 8 leads</span></div>
         </div>
 
         <div class="card">
@@ -466,7 +470,7 @@ const fmtPct=v=>(Math.round(v*10)/10).toFixed(1)+'%';
 const dstr=d=>d instanceof Date?d.toISOString().slice(0,10):String(d||'').slice(0,10);
 
 /* ---------- state ---------- */
-const S={file:'',sheet:'',headers:[],rows:[],prof:[],map:{},notes:[],outcome:'sold',rules:[],step:0};
+const S={file:'',sheet:'',headers:[],rows:[],prof:[],map:{},notes:[],outcome:'flag',rules:[],step:0};
 const MIN_N=8;              /* below this a rate is not reported as a rate */
 const STEPS=[
   {id:'p-source',name:'Source',meta:()=>S.rows.length?S.rows.length+' rows':'no file'},
@@ -695,13 +699,12 @@ function bars(el,items,opts){
   const o=opts||{}, max=Math.max(100,...items.map(x=>x.r));
   el.innerHTML=items.map(x=>{
     const thin=x.thin&&!o.noThin;
-    const w=thin?0:Math.max(x.r/max*100,x.r>0?1.5:0);
+    const w=Math.max(x.r/max*100,x.r>0?1.5:0);
     return '<div class="crow'+(thin?' thin':'')+'">'+
-      '<div class="cl">'+esc(x.k||x.t)+'<small>n='+x.n+'</small></div>'+
+      '<div class="cl">'+esc(x.k||x.t)+'<small>n='+x.n+'</small>'+(thin?'<b class="lowflag">low</b>':'')+'</div>'+
       '<div class="track'+(thin?' q':'')+'"><i style="width:'+w+'%"></i>'+
         (o.base!=null?'<span class="base" style="left:'+(o.base/max*100)+'%"></span>':'')+'</div>'+
-      '<div class="cv">'+(thin?'<span style="color:var(--dim)">'+x.c+'/'+x.n+'</span>':fmtPct(x.r))+
-        '<small>'+(thin?'too few':x.c+' of '+x.n)+'</small></div></div>';
+      '<div class="cv">'+fmtPct(x.r)+'<small>'+x.c+' of '+x.n+'</small></div></div>';
   }).join('');
 }
 function renderRail(){
@@ -784,19 +787,27 @@ function renderMap(){
   const st=S.rows.map(memberState);
   const cnt={flag:st.filter(s=>s.flag).length,live:st.filter(s=>s.hasLive).length,sold:st.filter(s=>s.hasLive&&!s.fp).length};
   const O=[
-    ['sold','A membership your team sold','A live product on the account that is not a corporate scheme. The number you can hold a sales conversation about.'],
-    ['live','Any live membership','Includes Fitness Passport, which arrives through an employer rather than through the funnel.'],
-    ['flag','Whatever the export flags','The Active Memberships column as-is. This is what a pivot table gives you today.']
+    ['flag','The export\u2019s own flag','The Active Memberships column as it comes. Matches the number ONYX already reports, so the report reconciles instead of starting an argument.'],
+    ['live','Parsed from the membership history','A product on the account with no end date against it. Worth running as a check on the flag.'],
+    ['sold','Only memberships your team sold','Strips out the corporate scheme, which arrives through an employer rather than through the funnel.']
   ];
   $('#outchoice').innerHTML=O.map(o=>'<label class="opt" data-on="'+(S.outcome===o[0]?1:0)+'">'+
     '<input type="radio" name="oc" value="'+o[0]+'"'+(S.outcome===o[0]?' checked':'')+'>'+
     '<span><span class="t">'+o[1]+'</span><span class="d">'+o[2]+'</span></span>'+
     '<span class="big">'+cnt[o[0]]+'<small>rows</small></span></label>').join('');
   const fp=st.filter(s=>s.hasLive&&s.fp).length, wb=st.filter(s=>s.winback).length;
-  $('#outexplain').innerHTML='<div class="alert warn"><span class="ic">i</span><div>'+
-    'The gap between <b>'+cnt.flag+'</b> and <b>'+cnt.sold+'</b> is not rounding. <b>'+fp+'</b> of the accounts came in on Fitness Passport, and <b>'+wb+
-    '</b> had a membership here before that had already ended, so they are win-backs rather than new members. '+
-    'The export has one flag for all three and no column that separates them.</div></div>';
+  const agree=st.filter(s=>s.flag===s.hasLive).length;
+  $('#outexplain').innerHTML=
+    '<div class="alert '+(agree===st.length?'ok':'warn')+'"><span class="ic">'+(agree===st.length?'\u2713':'!')+'</span><div>'+
+    (agree===st.length
+      ? 'The flag and the membership history agree on all <b>'+st.length+'</b> rows, so the export\u2019s own number holds up.'
+      : 'The flag and the membership history disagree on <b>'+(st.length-agree)+'</b> rows, so one of them is wrong.')+
+    '</div></div>'+
+    '<div class="alert warn" style="margin-top:9px"><span class="ic">i</span><div>'+
+    'What it does not tell you is what the <b>'+cnt.flag+'</b> is made of: <b>'+cnt.sold+'</b> memberships your team sold and <b>'+fp+
+    '</b> that arrived on Fitness Passport through an employer. Cutting across both, <b>'+wb+'</b> of the '+cnt.flag+
+    ' are win-backs who had a membership here before that had ended, not new members. '+
+    'Report the split under the headline and the sales conversation still gets the number it needs.</div></div>';
 }
 function renderRules(){
   const R=window.__R;
@@ -835,28 +846,30 @@ function renderOut(){
   ].filter(Boolean).map(t=>'<div class="tile '+t[3]+'"><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div><div class="s">'+t[2]+'</div></div>').join('');
   bars($('#c-type'),R.byChannel.map(x=>({...x})),{base:R.base});
   bars($('#c-src'),R.bySource,{base:R.base});
-  $('#srcnote').textContent='rates hidden below '+MIN_N+' leads';
+  $('#srcnote').textContent='low = under '+MIN_N+' leads, where one sign-up swings the rate';
   bars($('#c-staff'),R.byStaff,{base:R.base});
-  $('#staffnote').textContent='rates hidden below '+MIN_N+' leads &middot; one sign-up moves these by several points';
-  const shown=R.tags.filter(t=>t.n>=MIN_N);
+  $('#staffnote').innerHTML='low = under '+MIN_N+' leads &middot; one sign-up moves any of these by several points';
+  const shown=R.tags.slice();
   const mx=Math.max(20,...shown.map(t=>Math.abs(t.lift)));
   $('#c-lift').innerHTML=shown.length?shown.map(t=>{
-    const w=Math.abs(t.lift)/mx*50, up=t.lift>=0;
-    return '<div class="lift"><div class="cl" style="font-size:13px">'+esc(t.t)+'<small style="color:var(--dim);font-family:var(--mono);font-size:11px;margin-left:5px">n='+t.n+'</small></div>'+
-      '<div class="liftbar"><span class="mid"></span><i class="'+(up?'up':'down')+'" style="width:'+w+'%"></i></div>'+
+    const w=Math.abs(t.lift)/mx*50, up=t.lift>=0, low=t.n<MIN_N;
+    return '<div class="lift"><div class="cl" style="font-size:13px">'+esc(t.t)+'<small style="color:var(--dim);font-family:var(--mono);font-size:11px;margin-left:5px">n='+t.n+'</small>'+(low?'<b class="lowflag">low</b>':'')+'</div>'+
+      '<div class="liftbar"><span class="mid"></span><i class="'+(up?'up':'down')+(low?' lowbar':'')+'" style="width:'+w+'%"></i></div>'+
       '<div class="liftv" style="color:'+(up?'var(--green)':'var(--error)')+'">'+(up?'+':'')+Math.round(t.lift)+'<span style="color:var(--dim);font-weight:400"> pts</span></div></div>';
-  }).join(''):'<p class="lede">No tag reached '+MIN_N+' rows.</p>';
+  }).join(''):'<p class="lede">No rule matched a row.</p>';
   /* findings */
   const F=[];
   if(tour&&tour.n>=10&&tour.r-ntR>15)F.push({p:1,tag:'Act on this',h:'A tour is worth '+Math.round(tour.r-ntR)+' points of conversion',
     b:'Tours convert at <b>'+fmtPct(tour.r)+'</b> ('+tour.c+' of '+tour.n+'). Everyone else who walked through the door converted at <b>'+fmtPct(ntR)+'</b> ('+ntC+' of '+ntN+
       '). A walk-in who does not get a booked tour behaves almost exactly like someone who just paid for a casual, so it is not the visit that converts, it is the tour.',
     d:'<b>'+ntN+'</b> people came in without one. Converting even 15% of them into a booked tour at the current tour rate is about <b>'+upside+' extra memberships a month</b> from foot traffic already inside the building.'});
-  if(R.fpN||R.winback||R.churn)F.push({p:2,tag:'Definition',h:'The membership flag is not a conversion count',
-    b:'It records who is a member at the moment the file was exported, not who joined from this lead. <b>'+R.fpN+'</b> arrived on Fitness Passport through an employer, <b>'+R.winback+
-      '</b> already had a membership here that ended, and <b>'+R.churn+'</b> row'+(R.churn===1?' is a cancellation inside this very month':'s are cancellations inside this very month')+
-      ' sitting in the leads report scored as a lead that did not convert.',
-    d:'Report sold memberships, corporate scheme and win-backs as three separate lines. The membership history column already carries everything needed to split them.'});
+  if(R.fpN||R.winback||R.churn)F.push({p:2,tag:'Definition',h:'The '+R.flagN+' is three different things',
+    b:'The flag counts who is a member at the moment the file was exported. It splits into <b>'+(R.flagN-R.fpN)+
+      '</b> memberships the team sold and <b>'+R.fpN+'</b> that arrived on Fitness Passport through an employer; cutting across both, <b>'+R.winback+
+      '</b> are win-backs who had a membership here before that had ended rather than new members. Separately, <b>'+R.churn+'</b> row'+
+      (R.churn===1?' is a cancellation inside this very month':'s are cancellations inside this very month')+
+      ', sitting in a leads report scored as a lead that did not convert.',
+    d:'Keep reporting the '+R.flagN+' so it reconciles with the system, and show the split underneath it. The membership history column already carries everything needed to break it out.'});
   if(R.lostNotes)F.push({p:3,tag:'Data loss',h:'The qualification notes vanish on exactly the people who joined',
     b:'All <b>'+R.lostNotes+'</b> tours that converted carry nothing in the cleared note but <i>Autocompleted from prospect becoming a member</i>. Whatever the member said about their goal, their old gym or their budget is not in this export.',
     d:'These are the most valuable records you have and they are the ones with no content. Capture the qualification answers in a field the conversion cannot overwrite.'});
@@ -881,9 +894,9 @@ function renderOut(){
     b:'Rows with no age recorded convert at <b>'+fmtPct(na.r)+'</b> against <b>'+fmtPct(R.base)+'</b> overall. Age is not causing anything. It is missing because no real intake conversation happened.',
     d:'Treat an incomplete record as a live warning on the day, not as a gap discovered at month end.'});
   const small=R.bySource.filter(x=>x.thin).length;
-  if(small)F.push({p:2,tag:'Caution',h:small+' of the '+R.bySource.length+' lead sources have too few rows to rate',
-    b:'At three or four leads a source moves from 0% to 33% on a single sign-up. Percentages on those lines would be invented precision, so this report shows the counts and withholds the rate.',
-    d:'Report source conversion on a rolling quarter. One month of a single site will not carry it.'});
+  if(small)F.push({p:2,tag:'Caution',h:small+' of the '+R.bySource.length+' lead sources sit under '+MIN_N+' leads',
+    b:'Their rates are shown and marked <i>low</i>, with a hatched bar. At three or four leads a source swings from 0% to 33% on one sign-up, so read those lines as direction rather than as a measurement.',
+    d:'Report source conversion on a rolling quarter. One month of one site will not carry it on its own.'});
   F.sort((a,b)=>a.p-b.p);
   window.__F=F.length;
   $('#finds').innerHTML=F.map(f=>'<div class="find p'+f.p+'"><h4>'+esc(f.h)+'<span class="tagq">'+f.tag+'</span></h4>'+
