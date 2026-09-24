@@ -39,7 +39,8 @@
           "to": "learn",
           "eyebrow": "Helpful tips",
           "kind": "count",
-          "blurb": "Sauna, lockers, booking a class."
+          "blurb": "Sauna, lockers, booking a class.",
+          "countLabel": "tips"
         },
         {
           "id": "t-news",
@@ -131,7 +132,8 @@
           "eyebrow": "Team library",
           "kind": "count",
           "countOf": "items",
-          "blurb": "Everything your team can see."
+          "blurb": "Everything your team can see.",
+          "countLabel": "items"
         },
         {
           "id": "t-brand",
@@ -3025,6 +3027,7 @@
           }
         ]
       }
-    ]
+    ],
+    "countLabel": "pieces of kit"
   }
 }

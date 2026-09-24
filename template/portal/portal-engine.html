@@ -1348,14 +1348,14 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       // the plan itself, at tile size and without its labels — a shape you recognise
       return `<span class="mini-plan"><svg viewBox="${esc(F.viewBox || '0 0 100 134')}" aria-hidden="true">${(F.zones || [])
         .map(z => `<rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}"/>`).join('')}</svg></span>
-        <span class="nt">${(F.equipment || []).length} things, ${(F.zones || []).length} areas</span>`;
+        <span class="nt">${(F.equipment || []).length} ${esc((planRoot() || {}).countLabel || 'pieces of kit')}, ${(F.zones || []).length} areas</span>`;
     }
     if (t.kind === 'news') {
       const N = newsCfg(); const lead = N && (N.posts || [])[0];
       if (!lead) return `<span class="nt">Nothing posted yet.</span>`;
       return `<span class="nx">${esc(lead.tag || '')} \u00B7 ${esc(fmtPost(lead.date))}</span><span class="nt">${esc(lead.title)}</span>`;
     }
-    if (t.kind === 'count') return `<span class="big">${visible().length}<small>items</small></span>`;
+    if (t.kind === 'count') return `<span class="big">${visible().length}<small>${esc(t.countLabel || 'items')}</small></span>`;
     if (t.kind === 'mark') return `<svg class="mk" viewBox="4 2 96 74"><use href="#mark"/></svg>`;
     return '';
   }
