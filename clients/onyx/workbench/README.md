@@ -28,19 +28,26 @@ Five stages, each one working rather than illustrated:
 5. **Insights** — conversion by channel, source and staff, tag lift against the
    baseline, and written findings generated from the computed numbers.
 
-Rates on groups below 8 rows are withheld rather than printed, so the report
-never manufactures precision it does not have.
+Every rate is shown. Groups under 8 rows are marked `low` and drawn with a
+hatched bar, because at three or four leads a line swings from 0% to 33% on one
+sign-up. The caution is on the chart rather than in a withheld number.
 
 ## What the August 2026 sample showed
 
-- A tour converts at **61.9%**. A walk-in that does not become a booked tour
-  converts at **7.7%**, which is no better than someone who just paid for a
-  casual visit (**10.7%**). It is not the visit that converts, it is the tour.
-- `Active Memberships = 1` is not a conversion count. It is a snapshot of who
-  was a member when the file was exported. Seven arrived on Fitness Passport
-  through an employer, two were win-backs with a prior membership that had
-  ended, and one row is a cancellation inside the reporting month scored as a
-  lead that did not convert.
+- A tour converts at **71.4%**. A walk-in that does not become a booked tour
+  converts at **15.4%**, which is no better than someone who just paid for a
+  casual visit (**17.9%**). It is not the visit that converts, it is the tour.
+- `Active Memberships = 1` counts 27, and the flag agrees with the parsed
+  membership history on all 90 rows, so the export's own number holds up. What
+  it hides is the composition: 20 memberships the team sold and 7 that arrived
+  on Fitness Passport through an employer, with 2 win-backs cutting across
+  both. One further row is a cancellation inside the reporting month, sitting
+  in a leads report scored as a lead that did not convert.
+
+  The workbench defaults to the export's flag so the report reconciles with
+  what ONYX already counts, and reports the split underneath rather than
+  quietly substituting a different total. The headline barely moves either
+  way: the tour gap is 54 points on the flag and 52 on the stricter count.
 - Every tour that converted carries nothing in the cleared note but
   *Autocompleted from prospect becoming a member*. The qualification answers
   for the people who actually joined are not in the export.
