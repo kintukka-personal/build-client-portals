@@ -977,6 +977,12 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   // ---- pieces -----------------------------------------------------------
   const stateIcon = id => isDone(id) ? '<svg class="state" aria-label="Complete"><use href="#i-check"/></svg>' : status(id) === 'in-progress' ? '<svg class="state prog" aria-label="In progress"><use href="#i-prog"/></svg>' : '';
   const metaOf = (it, withArea = true) => [it.minutes ? it.minutes + ' min' : null, it.steps && it.type === 'simulation' ? it.steps + ' steps' : null, it.hotspots ? it.hotspots + ' hotspots' : null, Array.isArray(it.steps) ? it.steps.length + ' steps' : null, it.checks ? it.checks.length + ' items' : null, withArea ? groupLabel(groupOf(it)) : null].filter(Boolean).join(' · ');
+  /* Every page you click into carries the same back link, top left, built here so
+     there is one of them rather than eight that drifted apart. `navLabel` asks the
+     nav what this audience calls a destination — a member's library is Tips, not
+     Learn — so the link names the page it actually returns to. */
+  const backTo = (href, label) => `<a class="back" href="${esc(href)}"><svg><use href="#i-back"/></svg>${esc(label)}</a>`;
+  const navLabel = (id, fallback) => { const n = navItems().find(x => x.id === id); return (n && n.label) || fallback; };
   const demoBar = list => (CFG.client.demoNote && list.some(i => i.demo))
     ? `<div class="demobar"><svg><use href="#i-alert"/></svg><span><b>Demo content</b>${esc(CFG.client.demoNote)}</span></div>` : '';
   const areaLabel = id => (CFG.areas.find(a => a.id === id) || {}).label || '';
@@ -1071,7 +1077,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (!isDone(it.id)) start(it.id); else { S.lastOpened = it.id; save(); }
     currentSim = (it.type === 'simulation' || it.type === 'hotspot') ? it.id : null;
     const rec = S.items[it.id] || {};
-    let html = `<a class="back" href="#/learn"><svg><use href="#i-back"/></svg>Learn</a>
+    let html = `${backTo('#/learn', navLabel('learn', 'Learn'))}
       <div class="item-head"><div class="type"><svg class="ti"><use href="#t-${it.type}"/></svg>${TYPE[it.type]}${it.demo ? ' <span class="demo">Demo</span>' : ''}</div><h1>${esc(it.title)}</h1><div class="meta">${esc(metaOf(it))}</div><p class="blurb">${esc(it.blurb)}</p>
       <div class="actions" style="margin-top:14px">${favBtn(it.id, 'wide')}<span class="note" id="fav-note">${isFav(it.id) ? 'Saved. It is at the top of the list next time.' : 'Save it and it sits at the top of the list next time.'}</span></div></div>`;
     if (isDone(it.id)) {
@@ -1407,7 +1413,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   function viewBlog(N, author) {
     const posts = newsPosts();
-    const back = author ? `<a class="back" href="#/news"><svg><use href="#i-back"/></svg>${esc(N.ownerTitle || 'Blog')}</a>` : '';
+    const back = author ? backTo('#/news', N.ownerTitle || 'Blog') : '';
     const write = author ? `<a class="btn small" href="#/post/new"><svg><use href="#i-plus"/></svg>${esc(N.writeLabel || 'Write a post')}</a>` : '';
     let html = `${back}<div class="hero"><div class="hero-row"><div><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>${write}</div></div>`;
     if (!posts.length) return html + `<div class="empty" style="margin-top:16px">Nothing posted yet.${author ? ' Write the first one.' : ''}</div>`;
@@ -1440,7 +1446,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (r.id === 'new') return viewPostNew();
     const p = postById(r.id); if (!p) return `<div class="empty" style="margin-top:24px">That post does not exist. <a href="#/news">Back</a></div>`;
     if (isScheduled(p) && !canWrite()) { go('news'); return ''; }
-    return `<a class="back" href="#/news${canWrite() ? '?all=1' : ''}"><svg><use href="#i-back"/></svg>${esc((newsCfg() || {}).title || "What's new")}</a>
+    return `${backTo('#/news' + (canWrite() ? '?all=1' : ''), (newsCfg() || {}).title || "What's new")}
       <div class="article-head"><span class="tag" style="color:var(--primary);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--w-semibold)">${esc(p.tag || '')}</span>${schedTag(p)}
       <h1>${esc(p.title)}</h1><div class="meta" style="font-size:14px;color:var(--text-muted)">${esc(fmtPost(p.date))}${p.local ? ' · written on this device' : ''}</div>
       <p class="blurb">${esc(p.lead)}</p></div>
@@ -1453,7 +1459,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function viewPostNew() {
     if (!canWrite()) { go('news'); return ''; }
     const N = newsCfg() || {};
-    return `<a class="back" href="#/news"><svg><use href="#i-back"/></svg>${esc(N.title || "What's new")}</a>
+    return `${backTo('#/news', N.ownerTitle || N.title || "What's new")}
       <div class="item-head"><h1>Write a post</h1><p class="blurb">It joins the blog as soon as you save it. Date it ahead and it waits until that day — you will see it here with the date on it in the meantime, members will not.</p></div>
       <div class="fstack">
         <div class="field"><label for="p-title">Title</label><input class="input" id="p-title" placeholder="RECOVER is open an hour earlier"></div>
@@ -1555,7 +1561,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function viewPath() {
     const p = pathFor(S.audience); if (!p) { go('home'); return ''; }
     const pr = pathProgress(p);
-    return `<a class="back" href="#/home"><svg><use href="#i-back"/></svg>Home</a>
+    return `${backTo('#/home', navLabel('home', 'Home'))}
       <div class="item-head"><h1>${esc(p.title)}</h1><p class="blurb">${esc(p.blurb)}</p></div>
       <div class="section"><div class="bignum">${pr.done}<small>of ${pr.total} complete</small></div><div class="prog green"><i style="width:${pr.pct}%"></i></div>
       <div class="row-list" style="margin-top:16px">${p.items.map((id, i) => rowCard(byId[id], i + 1)).join('')}</div></div>`;
@@ -1576,7 +1582,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const all = procList();
     const list = all.filter(x => (sel === 'all' || x.status === sel) && (!q || (x.name + ' ' + (x.summary || '') + ' ' + procArea(x.area).label).toLowerCase().includes(q)));
     const count = s => all.filter(x => x.status === s).length;
-    let html = `<a class="back" href="#/home"><svg><use href="#i-back"/></svg>Home</a>
+    let html = `${backTo('#/home', navLabel('home', 'Home'))}
       <div class="item-head"><h1>${esc(P.title)}</h1><p class="blurb">${esc(P.blurb)}</p></div>
       <div class="pstat">${(P.statuses || []).map(s => `<button type="button" data-s="${s.id}" class="${sel === s.id ? 'on' : ''}"><span class="n">${count(s.id)}</span><span class="l">${esc(s.label)}</span></button>`).join('')}</div>
       <div class="actions" style="margin-top:14px"><a class="btn small" href="#/process/new"><svg><use href="#i-plus"/></svg>Document a process</a>${sel !== 'all' ? `<a class="btn ghost small" href="#/processes">Show all ${all.length}</a>` : ''}</div>
@@ -1613,7 +1619,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (r.id === 'new') return viewProcessNew();
     const x = procById(r.id); if (!x) return `<div class="empty" style="margin-top:24px">That process does not exist. <a href="#/processes">Back to the library</a></div>`;
     const drives = (x.drives || []).map(id => byId[id]).filter(Boolean);
-    return `<a class="back" href="#/processes"><svg><use href="#i-back"/></svg>Process library</a>
+    return `${backTo('#/processes', 'Process library')}
       <div class="item-head"><div class="type" style="color:var(--${x.status === 'documented' ? 'primary' : x.status === 'draft' ? 'cta' : 'error'})">${esc(statusLabel(x.status).label)}${x.local ? ' \u00B7 drafted on this device' : ''}</div>
       <h1>${esc(x.name)}</h1><p class="blurb">${esc(x.summary || '')}</p></div>
       ${x.note ? `<div class="drafts-note">${esc(x.note)}</div>` : ''}
@@ -1639,7 +1645,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   function viewProcessNew() {
     const P = procCfg() || { areas: [] };
-    return `<a class="back" href="#/processes"><svg><use href="#i-back"/></svg>Process library</a>
+    return `${backTo('#/processes', 'Process library')}
       <div class="item-head"><h1>Document a process</h1><p class="blurb">Write it while it is fresh. The draft is saved on this device and joins the library straight away, marked as a draft so nobody mistakes it for signed-off procedure. Export it when you want it turned into a guide, a checklist or a simulation.</p></div>
       <div class="fstack">
         <div class="field"><label for="f-name">What is the process called</label><input class="input" id="f-name" placeholder="Ordering consumables"></div>
