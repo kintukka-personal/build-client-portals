@@ -96,6 +96,14 @@ makes the link between a procedure and its training explicit, so changing a proc
 you exactly what has to change with it, and a process driving nothing is visibly a process
 nobody is being trained on.
 
+A gap is the one status that asks something of you, so its page says so and offers the
+only thing that closes it: **Document this process**, which opens the form already filled
+in from the gap — name, area, owner, why it matters — leaving the steps, which is the part
+only a person can write. The draft it saves carries `resolves`, the id of the gap it
+answers, so the gap stops reading as untouched, the counts move from gap to draft, and
+whoever takes the export in knows which entry it replaces rather than adding a duplicate
+beside it.
+
 The library also takes drafts. "Document a process" captures a new one into the device's
 own storage, where it joins the list marked as a draft so nobody mistakes it for signed-off
 procedure, and exports as JSON for whoever maintains the portal. That keeps capture close
@@ -121,21 +129,96 @@ theirs, and a tab bar of five at most — a two-word uppercase label wraps at si
 
 ### The floorplan
 
-A `floorplan` block turns on **Look around**: `viewBox`, `zones` (`id`, `label`, `x`, `y`,
-`w`, `h`, `blurb` — plain rectangles in the viewBox's own units), and `equipment`
-(`name`, `zone`, `tags`, optional `note`). A search matches an equipment name, one of its
-tags or a zone label, and every zone holding a match lights up while the rest step back.
-The tags double as chips under the search box, so the body parts are browsable without
-anyone having to guess the words. Tapping a zone picks it instead and lists what is in
-it — the other way people read a plan: not "where is the leg press" but "what is over
-there". Keep zones from overlapping; the labels sit in the middle of each one, so short
-ones read best at phone width.
+A `floorplans` block turns on **Look around**. It holds one `sites` entry per gym, so a
+second location is data rather than code:
 
-### What's new
+```json
+"floorplans": {
+  "title": "Look around", "intro": "…", "placeholder": "…",
+  "sites": [{ "id": "alexandria", "label": "Alexandria", "viewBox": "0 0 100 134",
+              "zones": [...], "equipment": [...] }]
+}
+```
+
+The heading reads **Look around ONYX (Alexandria)** — the client's name and the site's
+label, composed by the engine. With two or more sites a switcher appears above the search
+box and the choice rides in `?site=`; with one, there is nothing to switch and it stays
+hidden. A single legacy `floorplan` block still works and is treated as one site.
+
+A zone is a plain rectangle in the viewBox's own units: `id`, `label`, `x`, `y`, `w`, `h`,
+`blurb`. Keep them from overlapping, and keep labels short — they sit centred, and move to
+the top of the zone once pins are on it.
+
+Equipment carries `name`, `zone`, `tags`, an optional `note`, and `x`/`y` — the point on
+the plan where that machine actually stands. A search matches a name, a tag or a zone
+label; every zone holding a match lights up while the rest step back, and **a pin drops on
+each machine that matched**. Hovering or tapping a pin gives its name, area, tags and note,
+and highlights its row in the list below. Pins only ever draw for what was asked for:
+fifty-one at once is a plan nobody can read. Tapping a zone picks it instead and pins
+everything in it.
+
+The tags double as chips under the search box — one row that scrolls sideways, so the body
+parts are browsable without anyone guessing the words.
+
+Two things to get right when drawing: give every stroke inside the plan
+`vector-effect: non-scaling-stroke`, because the plan draws several viewBox units to the
+pixel and a stroke-width of 1 comes out ten pixels wide; and lay pins out clear of the
+label band, since a pin hangs *above* the point it marks.
+
+### Favourites
+
+Every item card carries a star, and so does the item page. Starring puts an item in a
+**Favourites** group at the top of that audience's Learn page, most recent first. It costs
+nothing to configure — it is on for every audience — and it earns its place wherever
+someone comes back for the same thing over and over: the sauna speaker, the locker code,
+the one form they can never remember.
+
+Favourites live in the device's own storage beside progress, so they are a shortcut, not
+an account. The list is filtered by what the audience can see, so a starred item stays
+out of the way of anyone it was not meant for.
+
+Note the markup: a card is wrapped in `.cw` so the star can sit over it, because a button
+cannot live inside an `<a>` and the star has to be a real control for anyone on a keyboard
+or a screen reader. If you restyle a card, keep the wrapper.
+
+### A support page of their own
+
+`support.audience.<id>` replaces the Support page for that audience: an `intro`, a `faq`,
+and a `contact` block (`label`, `text`, `name`, `address`, `email`, `phone`, `phoneLabel`,
+`demo`). Members get that instead of the staff page — the questions the desk actually
+gets, and one way to reach the gym, rather than an escalation ladder aimed at whoever is
+on shift. The contact rows are the same tap-to-copy rows the staff contact cards use, so
+they behave the same in an in-app browser that swallows `mailto:` and `tel:`. Leave the
+block out and the audience gets the staff page.
+
+### What's new, and writing one
 
 A `news` block gives a spotlight post and a swipeable carousel of the rest. Posts carry
-`id`, `title`, `date`, `tag`, `lead` and `body`. The first post is the spotlight — order
-the list, and the page follows.
+`id`, `title`, `date`, `tag`, `lead` and `body`; the list is ordered by date, newest
+first, and the newest is the spotlight. `audiences` says who reads it.
+
+`authors` says who can write one. Those audiences get a **Write a post** button and a form
+of four fields — title, tag, date, body — where a blank line starts a paragraph and the
+first paragraph becomes the `lead`, because that is the line that had to be written well
+anyway. `tags` fills the tag field's suggestions, so the blog does not end up with six
+spellings of the same thing.
+
+**A date in the future schedules it.** The author sees it in the list with a Scheduled
+badge and the date; nobody else sees it, and a member who opens its link directly is sent
+back. On the day it appears on its own. Posts written this way live on the device and
+export as JSON, the same bargain the process library makes: capture next to the person
+who knows, without pretending a static file is a shared database.
+
+### Cards, chips and stars
+
+Every card is the same height — two lines of type, two of title, two of blurb, all
+clamped. Each group renders its own grid, so stretching rows only lines up one section;
+the height is fixed instead. If you add to the type row, re-measure it.
+
+Per-item `demo: true` no longer prints a chip on the card. Twenty Demo chips stop being
+read; one banner above the list does not. Set `client.demoNote` and the Learn page prints
+it once, whenever anything in view is demo. The chip still shows on an item's own page,
+where it is the only one on screen.
 
 ## Roles
 

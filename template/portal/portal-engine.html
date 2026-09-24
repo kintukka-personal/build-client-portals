@@ -35,7 +35,7 @@ svg { display: block; }
 .hamb { width: 36px; height: 24px; display: flex; flex-direction: column; justify-content: space-between; }
 .hamb i { display: block; height: 4px; background: var(--primary); }
 .rail { display: none; }
-main { flex: 1; padding: 0 16px calc(84px + env(safe-area-inset-bottom)); max-width: 720px; width: 100%; margin: 0 auto; }
+main { --gutter: 16px; flex: 1; padding: 0 var(--gutter) calc(84px + env(safe-area-inset-bottom)); max-width: 720px; width: 100%; margin: 0 auto; }
 .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(0,0,0,.96); border-top: 1px solid var(--border-quiet); padding-bottom: env(safe-area-inset-bottom); }
 .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 10px; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--text-muted); }
 .tabbar a svg { width: 22px; height: 22px; }
@@ -58,7 +58,7 @@ main { flex: 1; padding: 0 16px calc(84px + env(safe-area-inset-bottom)); max-wi
   .rail .aud button { justify-content: flex-start; padding: 11px 12px; }
   .rail .foot { margin-top: auto; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
   .rail .foot .btn { width: 100%; margin-bottom: 14px; }
-  main { padding: 36px 40px 60px; max-width: 980px; margin: 0; }
+  main { --gutter: 40px; padding: 36px var(--gutter) 60px; max-width: 980px; margin: 0; }
 }
 
 /* ---- audience switch ---- */
@@ -75,7 +75,8 @@ main { flex: 1; padding: 0 16px calc(84px + env(safe-area-inset-bottom)); max-wi
 .section { margin-top: 30px; }
 .section > .label { margin-bottom: 10px; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.section-head h3 { font-size: 18px; }
+.section-head h3 { font-size: 18px; display: flex; align-items: center; gap: 7px; }
+.section-head h3 svg { width: 16px; height: 16px; flex: none; fill: currentColor; }
 .section-head a { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: var(--w-semibold); }
 
 /* ---- buttons ---- */
@@ -93,20 +94,47 @@ main { flex: 1; padding: 0 16px calc(84px + env(safe-area-inset-bottom)); max-wi
 .linkmore svg { width: 20px; height: 10px; }
 
 /* ---- cards ---- */
-.card { display: block; background: var(--surface); border: 1px solid var(--border-quiet); padding: 16px; color: inherit; position: relative; }
+.card { display: block; background: var(--surface); border: 1px solid var(--border-quiet); padding: 16px; color: inherit; position: relative; height: 100%; }
+/* A card is wrapped so the star can sit over it: a button cannot live inside an <a>,
+   and the star has to be its own control for anyone on a keyboard or a screen reader. */
+.cw { position: relative; display: flex; }
+.cw > .card { flex: 1; min-width: 0; }
+.cw + .cw { margin-top: 10px; }
 .card + .card { margin-top: 10px; }
+.fav { position: absolute; top: 3px; right: 4px; z-index: 2; width: 38px; height: 38px; display: grid;
+  place-items: center; background: none; border: 0; color: var(--border); padding: 0; }
+.fav svg { width: 19px; height: 19px; fill: none; }
+.fav.on svg { fill: currentColor; }
+.fav:hover { color: var(--text-muted); }
+.fav.on { color: var(--cta); }
+.fav:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+/* on the item page it is a button among buttons, not a corner affordance */
+.fav.wide { position: static; width: auto; height: auto; gap: 8px; grid-auto-flow: column;
+  border: 1px solid var(--border); padding: 9px 14px; font-size: 13px; font-weight: var(--w-semibold);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--text); }
+.fav.wide::after { content: 'Favourite'; }
+.fav.wide.on { border-color: var(--cta); color: var(--cta); }
+.fav.wide.on::after { content: 'Favourited'; }
 .card.active { border: 2px solid var(--primary); padding: 15px; }
 a.card:hover { border-color: var(--text-muted); }
 .ti { width: 15px; height: 15px; flex: none; }
-.card .type { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); font-weight: var(--w-semibold); }
+.card .type { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; padding-right: 30px; min-height: 17px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); font-weight: var(--w-semibold); }
 .card .type.amber { color: var(--cta); }
 .card .type .dot { color: var(--text-muted); letter-spacing: 0; }
 .card h4 { font-size: 17px; margin: 6px 0 4px; }
 .card .meta { font-size: 13px; color: var(--text-muted); }
 .card .blurb { font-size: 14px; color: var(--text-muted); margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.card .state { position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; color: var(--primary); }
+/* On the type row, not in the corner: the corner belongs to the star, which is the
+   control. Two icons stacked on one another was the whole problem. */
+.card .state { width: 16px; height: 16px; flex: none; color: var(--primary); }
 .card .state.prog { color: var(--cta); }
 .card.done h4 { color: var(--text-muted); }
+/* One line at the top of a list instead of a chip on every card in it. Twenty-odd
+   Demo chips stop being read; one banner above them does not. */
+.demobar { display: flex; gap: 10px; align-items: flex-start; border: 1px solid var(--cta); border-left-width: 3px;
+  padding: 12px 14px; margin-top: 16px; font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
+.demobar svg { width: 17px; height: 17px; flex: none; color: var(--cta); margin-top: 1px; }
+.demobar b { color: var(--cta); font-weight: var(--w-semibold); letter-spacing: .08em; text-transform: uppercase; font-size: 11px; display: block; margin-bottom: 3px; }
 .demo { display: inline-block; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border-quiet); padding: 2px 6px; font-weight: var(--w-semibold); }
 .prog { height: 4px; background: var(--surface-raised); margin: 12px 0 6px; }
 .prog i { display: block; height: 100%; background: var(--cta); transition: width .3s ease; }
@@ -117,6 +145,14 @@ a.card:hover { border-color: var(--text-muted); }
 .row-list .card .meta { margin-top: 3px; display: flex; align-items: center; gap: 7px; }
 .row-list .card .state { position: static; }
 .grid2 { display: grid; gap: 10px; grid-template-columns: 1fr; }
+/* One height for all of them. A title on one line against two, or a blurb that runs
+   short, used to leave the rows ragged; the card now holds its shape and the text
+   sits at the top of it. */
+/* Two lines of type, two of title, two of blurb — one height for every card on the
+   page, not just within a section, since each group renders its own grid. Measured
+   against the longest of them at every width, with 6px to spare. */
+.grid2 .card { height: 192px; }
+.grid2 .card h4 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 @media (min-width: 720px) { .grid2 { grid-template-columns: 1fr 1fr; } .grid2 .card + .card { margin-top: 0; } }
 
 /* ---- home ---- */
@@ -196,31 +232,71 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .pager a.next { text-align: right; }
 
 /* ---- look around: the floorplan ---- */
-.plan { margin-top: 18px; border: 1px solid var(--border); background: var(--surface); padding: 10px; }
-.plan svg { display: block; width: 100%; height: auto; }
-.zone rect { fill: var(--surface-raised); stroke: var(--border); stroke-width: .5; transition: fill .18s, stroke .18s; }
+.plan { margin-top: 18px; border: 1px solid var(--border); background: var(--surface); padding: 10px;
+  display: flex; justify-content: center; }
+/* A portrait plan at full column width runs off the bottom of a phone and you never
+   see the whole room at once, which is the one thing a plan is for. Height leads and
+   the width follows the shape. */
+.plan svg { display: block; width: auto; height: auto; max-width: 100%; max-height: 54vh; }
+@media (min-width: 900px) { .plan svg { max-height: 62vh; } }
+.zone rect { fill: var(--surface-raised); stroke: var(--border); stroke-width: 1px; vector-effect: non-scaling-stroke; transition: fill .18s, stroke .18s; }
 .zone text { fill: var(--text-muted); font-size: 3.4px; font-weight: var(--w-semibold); letter-spacing: .04em;
   text-anchor: middle; dominant-baseline: middle; transition: fill .18s; text-transform: uppercase; }
 .zone { cursor: pointer; }
 .zone:hover rect { stroke: var(--text-muted); }
 /* a hit: the area the search found. Fill and stroke both move, because a stroke alone
    is easy to miss on a plan this size and on a phone in a bright room. */
-.zone.hit rect { fill: color-mix(in srgb, var(--primary) 26%, var(--surface-raised)); stroke: var(--primary); stroke-width: 1; }
+.zone.hit rect { fill: color-mix(in srgb, var(--primary) 26%, var(--surface-raised)); stroke: var(--primary); stroke-width: 2px; }
 .zone.hit text { fill: var(--text); }
-.zone.sel rect { fill: color-mix(in srgb, var(--cta) 30%, var(--surface-raised)); stroke: var(--cta); stroke-width: 1.2; }
+.zone.sel rect { fill: color-mix(in srgb, var(--cta) 30%, var(--surface-raised)); stroke: var(--cta); stroke-width: 2px; }
 .zone.sel text { fill: var(--text); }
 /* searching with no match here: everything else steps back so the hits read */
 .plan.filtering .zone:not(.hit):not(.sel) rect { opacity: .45; }
 .plan.filtering .zone:not(.hit):not(.sel) text { opacity: .5; }
 .plan-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.taglist { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.taglist { display: flex; flex-wrap: nowrap; gap: 8px; margin-top: 14px; overflow-x: auto; scrollbar-width: none;
+  /* one row that scrolls, rather than three rows of pills pushing the plan off screen.
+     The gutter padding is negative-margined back so the row can run to both edges. */
+  margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1);
+  padding: 2px var(--gutter); }
+.taglist::-webkit-scrollbar { display: none; }
 .taglist button { background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 13px;
-  padding: 6px 12px; font-weight: var(--w-medium); text-transform: capitalize; }
+  padding: 6px 12px; font-weight: var(--w-medium); text-transform: capitalize; flex: none; white-space: nowrap; }
 .taglist button.on { border-color: var(--primary); color: var(--primary); }
+
+/* ---- a pin per machine ---- */
+.pin { cursor: pointer; }
+/* Strokes are in viewBox units, and the plan draws ~3.5 units to the pixel — a
+   stroke-width of 1 came out ten pixels wide and swallowed the pin. Every stroke
+   on a pin is non-scaling, so it is the width it says whatever the plan is scaled to. */
+.pin path { fill: var(--cta); stroke: var(--bg); stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+.pin circle:not(.hit) { fill: var(--bg); }
+/* the tap target, invisible and much bigger than the pin: a 4-unit teardrop is
+   about 14px on a phone, well under what a thumb can hit */
+.pin .hit { fill: transparent; stroke: none; }
+.pin:hover path, .pin:focus-visible path { fill: var(--primary); }
+.pin.on path { fill: var(--primary); }
+.pin.on circle:not(.hit) { r: 1.4; }
+.pin:focus-visible { outline: none; }
+.pin:focus-visible path { stroke: #fff; stroke-width: 2px; vector-effect: non-scaling-stroke; }
+.eqtip { position: fixed; z-index: 60; max-width: min(78vw, 280px); background: var(--surface-raised);
+  border: 1px solid var(--primary); padding: 10px 12px; pointer-events: none; opacity: 0;
+  transition: opacity .14s; transform: translate(-50%, -100%); }
+.eqtip.show { opacity: 1; }
+.eqtip b { display: block; font-size: 14px; font-weight: var(--w-semibold); }
+.eqtip .w { font-size: 12px; color: var(--primary); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+.eqtip .t { font-size: 12px; color: var(--text-muted); text-transform: capitalize; margin-top: 4px; }
+.eqtip .n { font-size: 12.5px; color: var(--text); margin-top: 6px; line-height: 1.45; }
+.sites { display: flex; gap: 8px; margin-top: 14px; }
+.sites button { background: none; border: 1px solid var(--border); color: var(--text-muted); font-size: 13px;
+  padding: 7px 14px; font-weight: var(--w-medium); }
+.sites button.on { border-color: var(--primary); color: var(--primary); }
 .found { margin-top: 20px; }
 .found .row { display: grid; grid-template-columns: 1fr auto; gap: 10px 14px; align-items: baseline;
   padding: 12px 0; border-top: 1px solid var(--border-quiet); }
 .found .row:first-child { border-top: 0; }
+/* the row for the pin under the pointer, so the plan and the list stay tied together */
+.found .row.on { background: var(--primary-tint); box-shadow: -14px 0 0 var(--primary-tint), 14px 0 0 var(--primary-tint); }
 .found .row b { font-weight: var(--w-semibold); }
 .found .row .where { font-size: 13px; color: var(--primary); white-space: nowrap; }
 .found .row .tg { grid-column: 1 / -1; font-size: 12px; color: var(--text-muted); text-transform: capitalize; margin-top: -4px; }
@@ -234,6 +310,8 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 @media (min-width: 720px) { .post-hero h2 { font-size: 32px; } }
 .post-hero .when, .post .when { font-size: 13px; color: var(--text-muted); }
 .post-hero .lead { margin-top: 12px; font-size: 16px; }
+.sched { display: inline-block; margin-left: 8px; font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--cta); border: 1px solid var(--cta); padding: 2px 6px; font-weight: var(--w-semibold); vertical-align: 1px; }
 .carousel { display: grid; grid-auto-flow: column; grid-auto-columns: 78%; gap: 12px; margin-top: 14px;
   overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-width: thin; }
 @media (min-width: 720px) { .carousel { grid-auto-columns: 42%; } }
@@ -267,6 +345,8 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .tl .nx { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--cta); }
 .tl .nx svg { width: 14px; height: 14px; flex: none; }
 .tl .nt { font-size: 16px; font-weight: var(--w-semibold); line-height: 1.25; }
+.tl .nt.plus { display: flex; align-items: center; gap: 8px; }
+.tl .nt.plus svg { width: 17px; height: 17px; flex: none; }
 .tl .mk { width: 54px; color: var(--primary); }
 /* the plan at tile size: the shape of the room, no labels, nothing to read */
 .tl .mini-plan { display: block; width: 62px; flex: none; }
@@ -275,12 +355,25 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .tl:hover .mini-plan rect { fill: color-mix(in srgb, var(--primary) 22%, var(--surface-raised)); }
 .tl .mini { display: flex; height: 6px; gap: 2px; }
 .tl .mini i { display: block; }
-.tl .mini i.ok { background: var(--primary); } .tl .mini i.dr { background: var(--cta); } .tl .mini i.gp { background: var(--border); }
+.tl .mini i.ok { background: var(--primary); } .tl .mini i.dr { background: var(--cta); } .tl .mini i.gp { background: var(--error); }
+.tl.solid { background: var(--cta); border-color: var(--cta); }
+.tl.solid:hover { background: var(--cta-deep); border-color: var(--cta-deep); }
+.tl.solid .eb, .tl.solid .nx, .tl.solid .nt, .tl.solid .big, .tl.solid .bl, .tl.solid .go,
+.tl.solid .big small, .tl.solid:hover .go { color: var(--text-on-cta); }
+.tl.solid .bl, .tl.solid .big small { opacity: .78; }
 .tl.wide { flex-direction: row; align-items: center; gap: 18px; min-height: 0; }
 .tl.wide .fig { flex: none; }
 .tl.wide .txt { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 
 /* ---- process library ---- */
+/* A gap is the one status that asks something of you, so its page says so and
+   offers the only thing that closes it. */
+.gapcta { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; margin-top: 20px;
+  border: 1px solid var(--error); border-left-width: 3px; padding: 16px; font-size: 14.5px; line-height: 1.55; color: var(--text-muted); }
+.gapcta b { color: var(--error); }
+.drafts-note.answered { border-left-color: var(--cta); }
+.gapcta .btn { flex: none; }
+.rule { border: 0; border-top: 1px solid var(--border-quiet); margin: 20px 0 16px; }
 .pstat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
 .pstat button { background: var(--surface); border: 1px solid var(--border-quiet); padding: 12px 10px; text-align: left; display: flex; flex-direction: column; gap: 3px; }
 .pstat button.on { border-color: var(--ac); background: color-mix(in srgb, var(--ac) 12%, var(--surface)); }
@@ -302,10 +395,16 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .pdet .k { color: var(--text-muted); }
 .drafts-note { font-size: 13px; color: var(--text-muted); border: 1px dashed var(--border-quiet); padding: 14px; margin-top: 18px; line-height: 1.5; }
 .field label { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-weight: var(--w-semibold); margin-bottom: 6px; }
-.fstack { display: grid; gap: 16px; margin-top: 18px; }
+.fstack { display: grid; gap: 18px; margin-top: 18px; max-width: 580px; }
+/* .field is a flex row elsewhere — the name and its Save button on the Me page —
+   and that was landing here too. In a form a field is a label over its control. */
+.fstack .field { display: grid; gap: 6px; margin-top: 0; align-items: start; }
+.fstack .field label { margin-bottom: 0; }
 .fstack .input, .fstack textarea, .fstack select { width: 100%; padding: 12px 14px; font: inherit; font-size: 16px; color: var(--text); background: var(--surface-raised); border: 1px solid var(--border); border-radius: 0; }
 .fstack textarea { min-height: 130px; resize: vertical; line-height: 1.5; }
-.fstack .hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; line-height: 1.45; }
+.fstack .hint { font-size: 12px; color: var(--text-muted); margin-top: 0; line-height: 1.45; }
+.fstack .err { color: var(--error); font-size: 14px; min-height: 1.4em; }
+.fstack input[type="date"] { max-width: 220px; }
 
 /* ---- reports ---- */
 .kpi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -468,6 +567,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     <symbol id="t-simulation" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="1.5"/><path d="m10 9.5 5.5 3.2-5.5 3.2z" fill="currentColor" stroke="none"/><path d="M8 20.5h8"/></g></symbol>
     <symbol id="i-plan" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 10h7V3M10 10h11M10 15h11M14 21v-6"/></g></symbol>
     <symbol id="i-news" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M16 9h4v10a2 2 0 0 1-2 2M7 9h6M7 13h6M7 17h4"/></g></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.4" r="1.05" fill="currentColor" stroke="none"/></g></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 3.2l2.6 5.6 6 .8-4.4 4.2 1.1 6.1-5.3-2.9-5.3 2.9 1.1-6.1L3.4 9.6l6-.8z"/></symbol>
     <symbol id="i-import" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M12 14V4M12 14l-3.2-3.2M12 14l3.2-3.2"/></g></symbol>
     <symbol id="t-hotspot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M21 12.5V5H3v14h10"/><path d="m3 16 4.5-4.5 3.5 3.5"/><circle cx="8.5" cy="9" r="1.4"/><path d="M18.5 14c1.9 0 3.5 1.5 3.5 3.4 0 2.4-3.5 5.1-3.5 5.1S15 19.8 15 17.4c0-1.9 1.6-3.4 3.5-3.4z"/><circle cx="18.5" cy="17.4" r="1.2"/></g></symbol>
     <symbol id="t-video" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="5" width="13" height="14" rx="1.5"/><path d="m15.5 12 6-3.5v11l-6-3.5z"/></g></symbol>
@@ -582,7 +683,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   // ---- state ------------------------------------------------------------
   const KEY = CFG.storageKey;
-  const fresh = () => ({ name: '', audience: 'employee', landed: false, returnTo: null, unlocked: {}, drafts: [], items: {}, checks: {}, lastOpened: null, created: new Date().toISOString() });
+  const fresh = () => ({ name: '', audience: 'employee', landed: false, returnTo: null, unlocked: {}, drafts: [], posts: [], items: {}, checks: {}, favs: [], lastOpened: null, created: new Date().toISOString() });
   let S = fresh();
   try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
@@ -595,6 +696,13 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   const seesOf = a => a.sees || (a.id === 'employee' ? ['employee'] : ['employee', a.id]);
   const visible = () => { const s = seesOf(aud()); return CFG.items.filter(i => s.includes(i.audience)); };
   const pathFor = a => CFG.paths.find(p => p.audience === a);
+  /* Favourites: the one you keep coming back for — the sauna speaker, every time.
+     Most recent first, kept on the device like everything else here, so it is a
+     shortcut rather than an account. */
+  const isFav = id => (S.favs || []).includes(id);
+  const favs = () => (S.favs || []).map(id => byId[id]).filter(i => i && seesOf(aud()).includes(i.audience));
+  function toggleFav(id) { S.favs = S.favs || []; const i = S.favs.indexOf(id);
+    if (i < 0) S.favs.unshift(id); else S.favs.splice(i, 1); save(); return i < 0; }
   const status = id => (S.items[id] && S.items[id].status) || 'new';
   const isDone = id => status(id) === 'complete';
   const pathProgress = p => { const done = p.items.filter(isDone).length; return { done, total: p.items.length, pct: p.items.length ? Math.round(done / p.items.length * 100) : 0 }; };
@@ -613,17 +721,31 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
 
   // ---- routing ----------------------------------------------------------
-  function route() {
-    const h = location.hash.replace(/^#\/?/, '') || 'home';
+  function route(hash) {
+    const h = (hash == null ? location.hash : hash).replace(/^#\/?/, '') || 'home';
     const [pathPart, qs] = h.split('?');
     const seg = pathPart.split('/');
     return { view: seg[0] || 'home', id: seg[1] || null, q: new URLSearchParams(qs || '') };
   }
   const go = h => { location.hash = '#/' + String(h).replace(/^#?\/?/, ''); };
+
+  /* Where the back link goes. A page reached by clicking something inside another
+     page goes back to that page — a tile on the owner's Home into Reports comes
+     back to the Home they were on, not to whatever Reports' parent would be. A page
+     reached from the tab bar has no "back": tabs are peers, not a path.
+     Captured before the hash changes, so location.hash is still the page being left. */
+  let cameFrom = null;
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#/"]'); if (!a) return;
+    if (a.closest('#tabbar, #rail-nav, #menu-nav')) { cameFrom = null; return; }
+    if (a.classList.contains('back')) { cameFrom = null; return; }   // going back is not arriving
+    const here = location.hash || '#/home';
+    if (a.getAttribute('href') !== here) cameFrom = here;
+  }, true);
   window.addEventListener('hashchange', render);
 
   // ---- chrome -----------------------------------------------------------
-  const navIcon = { home: 'i-home', lookaround: 'i-plan', learn: 'i-learn', reports: 'i-reports', news: 'i-news', support: 'i-support', me: 'i-me' };
+  const navIcon = { home: 'i-home', lookaround: 'i-plan', learn: 'i-learn', reports: 'i-reports', news: 'i-news', processes: 'i-proc', support: 'i-support', me: 'i-me' };
   const navItems = () => CFG.nav.filter(n => !n.audiences || n.audiences.includes(S.audience));
   function renderNav() {
     const r = route(); const cur = r.view === 'item' ? 'learn' : (r.view === 'process' ? 'processes' : r.view); const nav = navItems();
@@ -642,6 +764,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-aud]'); if (b) { switchAudience(b.dataset.aud); return; }
+    const fb = e.target.closest('[data-fav]');
+    if (fb) { e.preventDefault(); const on = toggleFav(fb.dataset.fav); toast(on ? 'Added to favourites' : 'Removed from favourites'); renderBody(); return; }
     const cp = e.target.closest('[data-copy]');
     if (cp) { const v = cp.dataset.copy; copyText(v).then(ok => toast(ok ? (cp.dataset.what || 'Value') + ' copied: ' + v : 'Copy is blocked here. Long-press the text to select it.')); return; }
     const g = e.target.closest('[data-contact]'); if (g) { openContact(+g.dataset.contact); return; }
@@ -740,19 +864,45 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   // ---- pieces -----------------------------------------------------------
   const stateIcon = id => isDone(id) ? '<svg class="state" aria-label="Complete"><use href="#i-check"/></svg>' : status(id) === 'in-progress' ? '<svg class="state prog" aria-label="In progress"><use href="#i-prog"/></svg>' : '';
   const metaOf = (it, withArea = true) => [it.minutes ? it.minutes + ' min' : null, it.steps && it.type === 'simulation' ? it.steps + ' steps' : null, it.hotspots ? it.hotspots + ' hotspots' : null, Array.isArray(it.steps) ? it.steps.length + ' steps' : null, it.checks ? it.checks.length + ' items' : null, withArea ? groupLabel(groupOf(it)) : null].filter(Boolean).join(' · ');
+  /* Every page you click into carries the same back link, top left, built here so
+     there is one of them rather than eight that drifted apart. `navLabel` asks the
+     nav what this audience calls a destination — a member's library is Tips, not
+     Learn — so the link names the page it actually returns to. */
+  const backTo = (href, label) => `<a class="back" href="${esc(href)}"><svg><use href="#i-back"/></svg>${esc(label)}</a>`;
+  const navLabel = (id, fallback) => { const n = navItems().find(x => x.id === id); return (n && n.label) || fallback; };
+  /* What to call the page a back link returns to. */
+  function hashLabel(h) {
+    const r = route(h);
+    const N = newsCfg() || {};
+    if (r.view === 'news') return r.q.get('all') ? (N.title || "What's new") : (canWrite() ? (N.ownerTitle || 'Blog') : (N.title || "What's new"));
+    if (r.view === 'processes') return (procCfg() || {}).title || 'Process library';
+    if (r.view === 'path') { const p = pathFor(S.audience); return p ? p.title : 'Home'; }
+    if (r.view === 'item') { const it = byId[r.id]; return it ? it.title : navLabel('learn', 'Learn'); }
+    if (r.view === 'process') { const x = procById(r.id); return x ? x.name : ((procCfg() || {}).title || 'Process library'); }
+    if (r.view === 'post') { const x = postById(r.id); return x ? x.title : (N.title || "What's new"); }
+    return navLabel(r.view, r.view.charAt(0).toUpperCase() + r.view.slice(1));
+  }
+  /* The back link a page renders: where you came from if you clicked in, otherwise
+     the page's own parent, and nothing at all for a tab you arrived at directly. */
+  const backLink = (href, label) => {
+    if (cameFrom && cameFrom !== (location.hash || '#/home')) return backTo(cameFrom, hashLabel(cameFrom));
+    return href ? backTo(href, label) : '';
+  };
+  const demoBar = list => (CFG.client.demoNote && list.some(i => i.demo))
+    ? `<div class="demobar"><svg><use href="#i-alert"/></svg><span><b>Demo content</b>${esc(CFG.client.demoNote)}</span></div>` : '';
   const areaLabel = id => (CFG.areas.find(a => a.id === id) || {}).label || '';
   const groups = () => CFG.groups || CFG.areas.map(a => ({ id: a.id, area: a.id, label: a.label, blurb: a.blurb }));
   const groupOf = it => it.group || it.area;
   const groupLabel = id => (groups().find(g => g.id === id) || {}).label || '';
+  const favBtn = (id, cls = '') => `<button type="button" class="fav ${cls}${isFav(id) ? ' on' : ''}" data-fav="${esc(id)}" aria-pressed="${isFav(id)}" aria-label="${isFav(id) ? 'Remove from favourites' : 'Add to favourites'}"><svg><use href="#i-star"/></svg></button>`;
   function card(it, opts = {}) {
     const done = isDone(it.id);
-    return `<a class="card ${done ? 'done' : ''} ${opts.active ? 'active' : ''}" href="#/item/${it.id}">
-      <div class="type ${opts.amber ? 'amber' : ''}"><svg class="ti"><use href="#t-${it.type}"/></svg>${esc(opts.prefix ? opts.prefix + ' · ' : '')}${TYPE[it.type]} <span class="dot">·</span> ${esc(metaOf(it, false))}${it.demo ? ' <span class="demo">Demo</span>' : ''}</div>
+    return `<div class="cw">${favBtn(it.id)}<a class="card ${done ? 'done' : ''} ${opts.active ? 'active' : ''}" href="#/item/${it.id}">
+      <div class="type ${opts.amber ? 'amber' : ''}"><svg class="ti"><use href="#t-${it.type}"/></svg>${esc(opts.prefix ? opts.prefix + ' · ' : '')}${TYPE[it.type]} <span class="dot">·</span> ${esc(metaOf(it, false))}${stateIcon(it.id)}</div>
       <h4>${esc(it.title)}</h4>
       ${opts.blurb !== false ? `<div class="blurb">${esc(it.blurb)}</div>` : ''}
       ${opts.progress != null ? `<div class="prog"><i style="width:${opts.progress}%"></i></div>` : ''}
-      ${stateIcon(it.id)}
-    </a>`;
+    </a></div>`;
   }
   function rowCard(it, n) {
     return `<a class="card ${isDone(it.id) ? 'done' : ''}" href="#/item/${it.id}"><span class="n">${String(n).padStart(2, '0')}</span><span><h4>${esc(it.title)}</h4><div class="meta"><svg class="ti"><use href="#t-${it.type}"/></svg>${TYPE[it.type]} · ${esc(it.minutes ? it.minutes + ' min' : '')}</div></span>${stateIcon(it.id) || '<span></span>'}</a>`;
@@ -769,7 +919,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function viewHome() {
     const a = aud(); const p = pathFor(a.id);
     const name = S.name ? ', ' + S.name : '';
-    let html = `<div class="hero"><h1>Welcome to <span class="g">${esc(CFG.client.name)}</span>${esc(name)}.</h1><p>${esc(a.intro)}</p></div>`;
+    let html = `${backLink('')}<div class="hero"><h1>Welcome to <span class="g">${esc(CFG.client.name)}</span>${esc(name)}.</h1><p>${esc(a.intro)}</p></div>`;
     if (a.homeTiles) return html + `<div class="tiles">${a.homeTiles.map(homeTile).join('')}</div>`;
     if (a.homeLink) html += `<a class="homelink" href="#/${esc(a.homeLink.to)}"><span><span class="t">${esc(a.homeLink.label)}</span><span class="b">${esc(a.homeLink.blurb || '')}</span></span><svg><use href="#i-arrow-r"/></svg></a>`;
     if (p) {
@@ -806,10 +956,12 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const chips = [['all', 'All']].concat(areas.map(a => [a.id, a.label]));
     const selArea = CFG.areas.find(a => a.id === sel);
     const A = aud(); const seesTeam = seesOf(A).length > 1;
-    let html = `<div class="hero"><h1>${esc(A.learnTitle || 'Learn')}</h1><p>${A.learnIntro ? esc(A.learnIntro) + ' ' : `${visible().length} items for ${esc(A.label.toLowerCase())}s${seesTeam ? ', including everything the team sees' : ''}. `}${selArea && selArea.blurb ? esc(selArea.blurb) : ''}</p></div>
+    let html = `${backLink('')}<div class="hero"><h1>${esc(A.learnTitle || 'Learn')}</h1><p>${A.learnIntro ? esc(A.learnIntro) + ' ' : `${visible().length} items for ${esc(A.label.toLowerCase())}s${seesTeam ? ', including everything the team sees' : ''}. `}${selArea && selArea.blurb ? esc(selArea.blurb) : ''}</p></div>
       <label class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search titles and descriptions" value="${esc(r.q.get('q') || '')}" aria-label="Search"></label>
-      <div class="chips">${chips.map(([k, l]) => `<button type="button" data-area="${k}" class="${sel === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>`;
+      <div class="chips">${chips.map(([k, l]) => `<button type="button" data-area="${k}" class="${sel === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>${demoBar(items)}`;
     if (!items.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another filter.</div>`;
+    const fv = favs().filter(i => items.includes(i));
+    if (fv.length) html += `<div class="section"><div class="section-head"><h3><svg style="color:var(--cta)"><use href="#i-star"/></svg>Favourites</h3><span class="muted" style="font-size:13px">${fv.length}</span></div><div class="grid2">${fv.map(i => card(i)).join('')}</div></div>`;
     groups().forEach(g => {
       const list = items.filter(i => groupOf(i) === g.id); if (!list.length) return;
       html += `<div class="section"><div class="section-head"><h3>${esc(g.label)}</h3><span class="muted" style="font-size:13px">${list.filter(i => isDone(i.id)).length} of ${list.length} done</span></div>${g.blurb ? `<p class="muted" style="font-size:14px;margin:-4px 0 12px">${esc(g.blurb)}</p>` : ''}<div class="grid2">${list.map(i => card(i)).join('')}</div></div>`;
@@ -830,8 +982,9 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (!isDone(it.id)) start(it.id); else { S.lastOpened = it.id; save(); }
     currentSim = (it.type === 'simulation' || it.type === 'hotspot') ? it.id : null;
     const rec = S.items[it.id] || {};
-    let html = `<a class="back" href="#/learn"><svg><use href="#i-back"/></svg>Learn</a>
-      <div class="item-head"><div class="type"><svg class="ti"><use href="#t-${it.type}"/></svg>${TYPE[it.type]}${it.demo ? ' <span class="demo">Demo</span>' : ''}</div><h1>${esc(it.title)}</h1><div class="meta">${esc(metaOf(it))}</div><p class="blurb">${esc(it.blurb)}</p></div>`;
+    let html = `${backLink('#/learn', navLabel('learn', 'Learn'))}
+      <div class="item-head"><div class="type"><svg class="ti"><use href="#t-${it.type}"/></svg>${TYPE[it.type]}${it.demo ? ' <span class="demo">Demo</span>' : ''}</div><h1>${esc(it.title)}</h1><div class="meta">${esc(metaOf(it))}</div><p class="blurb">${esc(it.blurb)}</p>
+      <div class="actions" style="margin-top:14px">${favBtn(it.id, 'wide')}<span class="note" id="fav-note">${isFav(it.id) ? 'Saved. It is at the top of the list next time.' : 'Save it and it sits at the top of the list next time.'}</span></div></div>`;
     if (isDone(it.id)) {
       const score = rec.score != null ? ` Score ${rec.score}${rec.passed === false ? ', not yet a pass' : ''}.` : '';
       html += `<div class="done-banner"><svg><use href="#i-check"/></svg><span><b>Completed</b> ${esc(fmtDate(rec.completedAt))}.${esc(score)}</span></div>`;
@@ -950,7 +1103,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (R.audiences && !R.audiences.includes(S.audience)) { go('home'); return ''; }
     const ep = pathFor('employee'); const pr = pathProgress(ep);
     const I = R.import;
-    return `<div class="hero"><div class="hero-row"><div><h1>${esc(R.title || 'Reports')}</h1><p>${esc(R.asOf || '')}${R.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
+    return `${backLink('')}<div class="hero"><div class="hero-row"><div><h1>${esc(R.title || 'Reports')}</h1><p>${esc(R.asOf || '')}${R.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
       ${I ? `<button class="btn outline small" id="imp-open" type="button"><svg><use href="#i-import"/></svg>${esc(I.label || 'Import data')}${I.demo ? ' <span class="demo">Soon</span>' : ''}</button>` : ''}</div></div>
       <div class="kpi">${(R.tiles || []).map(kpiTile).join('')}</div>
       <div class="section">${R.members ? lineChart(R.members) : ''}${R.cancellations ? barChart(R.cancellations) : ''}${R.recoverBlocks ? barChart(R.recoverBlocks) : ''}${R.classes ? barChart(R.classes) : ''}</div>
@@ -968,111 +1121,285 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   // ---- look around: the floorplan ---------------------------------------
   /* A search matches an equipment name or one of its tags, and every zone holding a
-     match lights up. Tapping a zone picks it instead, which is the other way people
-     use a plan: not "where is the leg press" but "what is over there". */
-  const planCfg = () => CFG.floorplan || null;
-  const planTags = () => { const seen = []; (planCfg().equipment || []).forEach(e => (e.tags || []).forEach(t => { if (!seen.includes(t)) seen.push(t); })); return seen.sort(); };
+     match lights up, with a pin on each machine that matched. Tapping a zone picks it
+     instead and pins everything in it — the other way people use a plan: not "where is
+     the leg press" but "what is over there". Pins only ever show for what was asked
+     for; fifty-one at once is a plan nobody can read. */
+  const planRoot = () => CFG.floorplans || (CFG.floorplan ? { title: CFG.floorplan.title, intro: CFG.floorplan.intro, placeholder: CFG.floorplan.placeholder, sites: [CFG.floorplan] } : null);
+  const planSites = () => (planRoot() || {}).sites || [];
+  const planSite = id => planSites().find(x => x.id === id) || planSites()[0] || null;
+  let SITE = null;   // the site the view is currently drawing
+  const planTags = () => { const seen = []; (SITE.equipment || []).forEach(e => (e.tags || []).forEach(t => { if (!seen.includes(t)) seen.push(t); })); return seen.sort(); };
+  const zoneById = id => (SITE.zones || []).find(z => z.id === id);
   function planMatches(q) {
-    const F = planCfg(); const t = q.trim().toLowerCase();
-    if (!t) return null;
-    return (F.equipment || []).filter(e =>
+    const t = q.trim().toLowerCase(); if (!t) return null;
+    return (SITE.equipment || []).filter(e =>
       e.name.toLowerCase().includes(t) ||
       (e.tags || []).some(g => g.toLowerCase().includes(t) || t.includes(g.toLowerCase())) ||
-      (zoneById(e.zone) || {}).label.toLowerCase().includes(t));
+      ((zoneById(e.zone) || {}).label || '').toLowerCase().includes(t));
   }
-  const zoneById = id => (planCfg().zones || []).find(z => z.id === id);
+  const planTitle = R => {
+    const base = R.title || 'Look around';
+    const site = planSites().length && SITE ? ` ${CFG.client.name} (${SITE.label})` : '';
+    return base + site;
+  };
 
   function viewLook(r) {
-    const F = planCfg(); if (!F) return `<div class="empty" style="margin-top:24px">No floorplan is configured.</div>`;
+    const R = planRoot(); if (!R) return `<div class="empty" style="margin-top:24px">No floorplan is configured.</div>`;
+    SITE = planSite(r.q.get('site')); if (!SITE) return `<div class="empty" style="margin-top:24px">No floorplan is configured.</div>`;
     const q = r.q.get('q') || ''; const sel = r.q.get('zone') || '';
     const hits = planMatches(q);
     const hitZones = hits ? new Set(hits.map(e => e.zone)) : new Set();
     const filtering = !!(hits || sel);
-    const shown = sel ? (F.equipment || []).filter(e => e.zone === sel) : (hits || []);
+    const shown = sel ? (SITE.equipment || []).filter(e => e.zone === sel) : (hits || []);
     const selZone = sel ? zoneById(sel) : null;
+    const idx = e => (SITE.equipment || []).indexOf(e);
 
-    const zones = (F.zones || []).map(z => {
+    const zones = (SITE.zones || []).map(z => {
       const cls = z.id === sel ? 'sel' : (hitZones.has(z.id) ? 'hit' : '');
       const n = hits ? hits.filter(e => e.zone === z.id).length : 0;
+      // with pins on it the label gets out of the middle and sits along the top
+      const ly = filtering ? z.y + 4 : z.y + z.h / 2;
       return `<g class="zone ${cls}" data-zone="${esc(z.id)}" role="button" tabindex="0"
         aria-label="${esc(z.label)}${n ? `, ${n} match${n > 1 ? 'es' : ''}` : ''}">
         <rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}"/>
-        <text x="${z.x + z.w / 2}" y="${z.y + z.h / 2}">${esc(z.label)}</text>
+        <text x="${z.x + z.w / 2}" y="${ly}">${esc(z.label)}</text>
       </g>`;
     }).join('');
 
-    let html = `<div class="hero"><h1>${esc(F.title || 'Look around')}</h1><p>${esc(F.intro || '')}${F.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
-      <label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="${esc(F.placeholder || 'Search')}" value="${esc(q)}" aria-label="Search equipment"></label>
+    const pins = shown.filter(e => e.x != null && e.y != null).map(e => `<g class="pin" data-eq="${idx(e)}" role="button" tabindex="0" aria-label="${esc(e.name)}, ${esc((zoneById(e.zone) || {}).label || '')}">
+      <circle class="hit" cx="${e.x}" cy="${e.y - 2}" r="5"/>
+      <path d="M${e.x} ${e.y} l-2.1 -3.2 a2.55 2.55 0 1 1 4.2 0 z"/>
+      <circle cx="${e.x}" cy="${e.y - 4}" r="0.95"/>
+    </g>`).join('');
+
+    let html = `${backLink('')}<div class="hero"><h1>${esc(planTitle(R))}</h1><p>${esc(R.intro || '')}${SITE.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>`;
+    if (planSites().length > 1) html += `<div class="sites">${planSites().map(x => `<button type="button" data-site="${esc(x.id)}" class="${x.id === SITE.id ? 'on' : ''}">${esc(x.label)}</button>`).join('')}</div>`;
+    html += `<label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="${esc(R.placeholder || 'Search')}" value="${esc(q)}" aria-label="Search equipment"></label>
       <div class="taglist">${planTags().map(t => `<button type="button" data-tag="${esc(t)}" class="${q.toLowerCase() === t ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>
-      <div class="plan ${filtering ? 'filtering' : ''}"><svg viewBox="${esc(F.viewBox || '0 0 100 134')}" role="img" aria-label="Floorplan of ${esc(CFG.client.tradingName)}">${zones}</svg></div>`;
+      <div class="plan ${filtering ? 'filtering' : ''}"><svg viewBox="${esc(SITE.viewBox || '0 0 100 134')}" role="img" aria-label="Floorplan of ${esc(CFG.client.tradingName)}, ${esc(SITE.label)}">${zones}${pins}</svg></div>`;
 
     if (selZone) {
       html += `<div class="section"><div class="section-head"><h3>${esc(selZone.label)}</h3><a href="#/lookaround${q ? '?q=' + encodeURIComponent(q) : ''}">Clear</a></div>
         ${selZone.blurb ? `<p class="muted" style="font-size:14px;margin:-4px 0 8px">${esc(selZone.blurb)}</p>` : ''}
-        <div class="found">${shown.map(planRow).join('')}</div></div>`;
+        <div class="found">${shown.map(e => planRow(e, idx(e))).join('')}</div></div>`;
     } else if (hits) {
       html += hits.length
-        ? `<div class="section"><div class="section-head"><h3>${hits.length} match${hits.length > 1 ? 'es' : ''}</h3><span class="muted" style="font-size:13px">in ${hitZones.size} area${hitZones.size > 1 ? 's' : ''}</span></div><div class="found">${hits.map(planRow).join('')}</div></div>`
+        ? `<div class="section"><div class="section-head"><h3>${hits.length} match${hits.length > 1 ? 'es' : ''}</h3><span class="muted" style="font-size:13px">in ${hitZones.size} area${hitZones.size > 1 ? 's' : ''}</span></div><div class="found">${hits.map(e => planRow(e, idx(e))).join('')}</div></div>`
         : `<div class="empty" style="margin-top:16px">Nothing matches “${esc(q)}”. Try a body part like legs or back, or ask us at the desk.</div>`;
     } else {
       html += `<p class="muted" style="font-size:14px;margin-top:14px">Tap an area to see what is in it, or search above.</p>`;
     }
-    if (F.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(F.note)}</p>`;
+    if (SITE.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(SITE.note)}</p>`;
     return html;
   }
-  const planRow = e => `<div class="row"><b>${esc(e.name)}</b><span class="where">${esc((zoneById(e.zone) || {}).label || '')}</span>
+  const planRow = (e, i) => `<div class="row" data-row="${i}"><b>${esc(e.name)}</b><span class="where">${esc((zoneById(e.zone) || {}).label || '')}</span>
     <span class="tg">${esc((e.tags || []).join(' · '))}</span>${e.note ? `<span class="nt">${esc(e.note)}</span>` : ''}</div>`;
 
   function wireLook() {
-    const input = $('#pq');
     const setQ = v => {
-      const p = new URLSearchParams(); if (v) p.set('q', v);
+      const r = route(); const p = new URLSearchParams();
+      const sv = r.q.get('site'); if (sv) p.set('site', sv);
+      if (v) p.set('q', v);
       history.replaceState(null, '', '#/lookaround' + (p.toString() ? '?' + p : ''));
       renderBody();
       const i2 = $('#pq'); if (i2 && document.activeElement !== i2) { i2.focus(); i2.setSelectionRange(i2.value.length, i2.value.length); }
     };
+    const input = $('#pq');
     if (input) { let tm; input.addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(() => setQ(input.value), 180); }); }
     document.querySelectorAll('[data-tag]').forEach(b => b.addEventListener('click', () => {
-      const r = route(); setQ(r.q.get('q') === b.dataset.tag ? '' : b.dataset.tag);
+      setQ(route().q.get('q') === b.dataset.tag ? '' : b.dataset.tag);
     }));
+    document.querySelectorAll('[data-site]').forEach(b => b.addEventListener('click', () => go('/lookaround?site=' + b.dataset.site)));
     const pick = z => { const r = route(); const p = new URLSearchParams();
+      const sv = r.q.get('site'); if (sv) p.set('site', sv);
       const qv = r.q.get('q'); if (qv) p.set('q', qv);
       if (r.q.get('zone') !== z) p.set('zone', z);
       go('/lookaround' + (p.toString() ? '?' + p : '')); };
     document.querySelectorAll('[data-zone]').forEach(g => {
-      g.addEventListener('click', () => pick(g.dataset.zone));
+      g.addEventListener('click', e => { if (e.target.closest('.pin')) return; pick(g.dataset.zone); });
       g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(g.dataset.zone); } });
     });
+    wirePins();
+  }
+
+  /* The pin tooltip. Hover shows it and moving away hides it, which is the desktop
+     behaviour; a tap makes it stick, because a phone has no hover and a tooltip that
+     vanishes on lift is a tooltip nobody gets to read. */
+  function wirePins() {
+    const pins = [...document.querySelectorAll('.pin')]; if (!pins.length) return;
+    let tip = $('#eqtip');
+    if (!tip) { tip = document.createElement('div'); tip.id = 'eqtip'; tip.className = 'eqtip'; tip.setAttribute('role', 'tooltip'); document.body.appendChild(tip); }
+    let stuck = null;
+    const eqOf = g => (SITE.equipment || [])[+g.dataset.eq];
+    const show = g => {
+      const e = eqOf(g); if (!e) return;
+      tip.innerHTML = `<b>${esc(e.name)}</b><span class="w">${esc((zoneById(e.zone) || {}).label || '')}</span>
+        <span class="t">${esc((e.tags || []).join(' · '))}</span>${e.note ? `<span class="n">${esc(e.note)}</span>` : ''}`;
+      const r = g.getBoundingClientRect();
+      tip.classList.add('show');
+      // clamped to the viewport, so a pin at either edge still shows a whole card
+      const w = tip.offsetWidth; const half = w / 2 + 8;
+      tip.style.left = Math.min(Math.max(r.left + r.width / 2, half), window.innerWidth - half) + 'px';
+      tip.style.top = (r.top - 8) + 'px';
+      const hl = $(`.found .row[data-row="${g.dataset.eq}"]`);
+      document.querySelectorAll('.found .row.on').forEach(x => x.classList.remove('on'));
+      if (hl) hl.classList.add('on');
+    };
+    const hide = () => { tip.classList.remove('show'); document.querySelectorAll('.found .row.on').forEach(x => x.classList.remove('on')); };
+    pins.forEach(g => {
+      g.addEventListener('pointerenter', () => { if (!stuck) show(g); });
+      g.addEventListener('pointerleave', () => { if (!stuck) hide(); });
+      g.addEventListener('focus', () => show(g));
+      g.addEventListener('blur', () => { if (!stuck) hide(); });
+      g.addEventListener('click', ev => {
+        ev.stopPropagation();
+        if (stuck === g) { stuck = null; g.classList.remove('on'); hide(); return; }
+        pins.forEach(x => x.classList.remove('on'));
+        stuck = g; g.classList.add('on'); show(g);
+      });
+      g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); g.click(); } });
+    });
+    const off = ev => { if (ev.target.closest && ev.target.closest('.pin')) return; if (!stuck) return; stuck.classList.remove('on'); stuck = null; hide(); };
+    document.addEventListener('click', off, { once: false });
+    window.addEventListener('scroll', () => { if (stuck) show(stuck); }, { passive: true });
   }
 
   // ---- what's new -------------------------------------------------------
+  /* Config posts and posts written on this device, newest first. A date in the
+     future is a scheduled post: its author sees it with the date on it, everyone
+     else sees it when the day comes. */
   const newsCfg = () => CFG.news || null;
-  const postById = id => ((newsCfg() || {}).posts || []).find(p => p.id === id);
+  const canWrite = () => ((newsCfg() || {}).authors || []).includes(S.audience);
+  const today = () => new Date().toISOString().slice(0, 10);
+  const isScheduled = p => (p.date || '') > today();
+  function newsPosts() {
+    const N = newsCfg(); if (!N) return [];
+    const all = (N.posts || []).concat(S.posts || []);
+    return all.filter(p => canWrite() || !isScheduled(p))
+              .sort((x, y) => String(y.date).localeCompare(String(x.date)));
+  }
+  const postById = id => ((newsCfg() || {}).posts || []).concat(S.posts || []).find(p => p.id === id);
   const fmtPost = s => { const d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' }); };
+  const schedTag = p => isScheduled(p) ? `<span class="sched">Scheduled · ${esc(fmtPost(p.date))}</span>` : '';
 
-  function viewNews() {
-    const N = newsCfg(); if (!N || !(N.posts || []).length) return `<div class="empty" style="margin-top:24px">Nothing posted yet.</div>`;
-    const [lead, ...rest] = N.posts;
-    let html = `<div class="hero"><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
-      <a class="post-hero" href="#/post/${esc(lead.id)}" style="display:block;color:inherit">
-        <span class="tag">${esc(lead.tag || '')}</span>
+  /* An author lands on a hub — write one, or go and read the blog as a member sees
+     it. Everyone else lands straight on the blog, because reading it is all they
+     came to do. */
+  function viewNews(r) {
+    const N = newsCfg(); if (!N) return `<div class="empty" style="margin-top:24px">Nothing posted yet.</div>`;
+    if (N.audiences && !N.audiences.includes(S.audience)) { go('home'); return ''; }
+    if (canWrite() && !(r && r.q.get('all'))) return viewNewsHub(N);
+    return viewBlog(N, canWrite());
+  }
+
+  function viewNewsHub(N) {
+    const posts = newsPosts();
+    const sched = posts.filter(isScheduled).length;
+    const mine = (S.posts || []).length;
+    return `${backLink('')}<div class="hero"><h1>${esc(N.ownerTitle || 'Blog')}</h1><p>${esc(N.ownerIntro || '')}</p></div>
+      <div class="tiles">
+        <a class="tl solid" href="#/post/new">
+          <svg class="go"><use href="#i-arrow-r"/></svg>
+          <span class="eb">${esc(N.writeLabel || 'Write a post')}</span>
+          <span class="fig"><span class="nt plus"><svg><use href="#i-plus"/></svg>New</span></span>
+          <span class="bl">Tag, title, date, body</span>
+        </a>
+        <a class="tl" href="#/news?all=1">
+          <svg class="go"><use href="#i-arrow-r"/></svg>
+          <span class="eb">See the blog</span>
+          <span class="fig"><span class="big">${posts.length}<small>post${posts.length === 1 ? '' : 's'}</small></span></span>
+          <span class="bl">${sched ? `${sched} scheduled, waiting. ` : ''}The page as a member sees it.</span>
+        </a>
+      </div>
+      ${mine ? `<div class="section"><div class="actions"><button class="btn outline small" id="posts-export" type="button"><svg><use href="#i-down"/></svg>Export ${mine} written here</button><span class="note">Written here they live on this device. Hand the file to whoever maintains the portal and they become permanent posts everyone sees, on any device.</span></div></div>` : ''}
+      ${N.note ? `<p class="muted" style="font-size:13px;margin-top:22px">${esc(N.note)}</p>` : ''}`;
+  }
+
+  function viewBlog(N, author) {
+    const posts = newsPosts();
+    const back = author ? backLink('#/news', N.ownerTitle || 'Blog') : '';
+    const write = author ? `<a class="btn small" href="#/post/new"><svg><use href="#i-plus"/></svg>${esc(N.writeLabel || 'Write a post')}</a>` : '';
+    let html = `${back || backLink('')}<div class="hero"><div class="hero-row"><div><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>${write}</div></div>`;
+    if (!posts.length) return html + `<div class="empty" style="margin-top:16px">Nothing posted yet.${author ? ' Write the first one.' : ''}</div>`;
+    const [lead, ...rest] = posts;
+    html += `<a class="post-hero" href="#/post/${esc(lead.id)}" style="display:block;color:inherit">
+        <span class="tag">${esc(lead.tag || '')}</span>${schedTag(lead)}
         <h2>${esc(lead.title)}</h2>
-        <div class="when">${esc(fmtPost(lead.date))}</div>
+        <div class="when">${esc(fmtPost(lead.date))}${lead.local ? ' · written on this device' : ''}</div>
         <p class="lead">${esc(lead.lead)}</p>
         <div class="frame-actions" style="margin-top:14px"><span class="btn outline small">Read it<svg style="margin-left:2px"><use href="#i-arrow-r"/></svg></span></div>
       </a>`;
     if (rest.length) html += `<div class="section"><div class="section-head"><h3>Earlier</h3><span class="muted" style="font-size:13px">${rest.length} post${rest.length > 1 ? 's' : ''}</span></div>
-      <div class="carousel">${rest.map(p => `<a class="post" href="#/post/${esc(p.id)}"><span class="tag">${esc(p.tag || '')}</span><h3>${esc(p.title)}</h3><div class="when">${esc(fmtPost(p.date))}</div><p style="margin-top:8px">${esc(p.lead)}</p></a>`).join('')}</div></div>`;
+      <div class="carousel">${rest.map(p => `<a class="post" href="#/post/${esc(p.id)}"><span class="tag">${esc(p.tag || '')}</span>${schedTag(p)}<h3>${esc(p.title)}</h3><div class="when">${esc(fmtPost(p.date))}${p.local ? ' · this device' : ''}</div><p style="margin-top:8px">${esc(p.lead)}</p></a>`).join('')}</div></div>`;
     if (N.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(N.note)}</p>`;
     return html;
   }
+
+  function wireNews() {
+    const x = $('#posts-export'); if (!x) return;
+    x.addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(S.posts || [], null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `${CFG.client.slug}-posts-${today()}.json`;
+      document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      toast('Posts exported');
+    });
+  }
+
   function viewPost(r) {
-    const p = postById(r.id); if (!p) return `<div class="empty" style="margin-top:24px">That post does not exist. <a href="#/news">Back to What's new</a></div>`;
-    return `<a class="back" href="#/news"><svg><use href="#i-back"/></svg>What's new</a>
-      <div class="article-head"><span class="tag" style="color:var(--primary);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--w-semibold)">${esc(p.tag || '')}</span>
-      <h1>${esc(p.title)}</h1><div class="meta" style="font-size:14px;color:var(--text-muted)">${esc(fmtPost(p.date))}</div>
+    if (r.id === 'new') return viewPostNew();
+    const p = postById(r.id); if (!p) return `<div class="empty" style="margin-top:24px">That post does not exist. <a href="#/news">Back</a></div>`;
+    if (isScheduled(p) && !canWrite()) { go('news'); return ''; }
+    return `${backLink('#/news' + (canWrite() ? '?all=1' : ''), (newsCfg() || {}).title || "What's new")}
+      <div class="article-head"><span class="tag" style="color:var(--primary);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--w-semibold)">${esc(p.tag || '')}</span>${schedTag(p)}
+      <h1>${esc(p.title)}</h1><div class="meta" style="font-size:14px;color:var(--text-muted)">${esc(fmtPost(p.date))}${p.local ? ' · written on this device' : ''}</div>
       <p class="blurb">${esc(p.lead)}</p></div>
-      <div class="article">${(p.body || []).map(x => `<p>${esc(x)}</p>`).join('')}</div>`;
+      <div class="article">${(p.body || []).map(x => `<p>${esc(x)}</p>`).join('')}</div>
+      ${p.local ? `<div class="section"><div class="actions"><button class="btn ghost small" id="post-del" type="button">Delete this post</button><span class="note">It only exists on this device.</span></div></div>` : ''}`;
+  }
+
+  /* Writing one. The lead is the first paragraph of the body rather than a fifth
+     field to fill in — it is the line that already had to be written well. */
+  function viewPostNew() {
+    if (!canWrite()) { go('news'); return ''; }
+    const N = newsCfg() || {};
+    return `${backLink('#/news', N.ownerTitle || N.title || "What's new")}
+      <div class="item-head"><h1>Write a post</h1><p class="blurb">It joins the blog as soon as you save it. Date it ahead and it waits until that day — you will see it here with the date on it in the meantime, members will not.</p></div>
+      <div class="fstack">
+        <div class="field"><label for="p-title">Title</label><input class="input" id="p-title" placeholder="RECOVER is open an hour earlier"></div>
+        <div class="field"><label for="p-tag">Tag</label><input class="input" id="p-tag" list="p-tags" placeholder="Facilities" autocomplete="off">
+          <datalist id="p-tags">${(N.tags || []).map(t => `<option value="${esc(t)}"></option>`).join('')}</datalist>
+          <div class="hint">What it is about. Pick one you have used before so the blog stays tidy.</div></div>
+        <div class="field"><label for="p-date">Date</label><input class="input" id="p-date" type="date" value="${today()}">
+          <div class="hint">Today publishes it now. A day ahead holds it back until then — you will see it here with the date on it, members will not.</div></div>
+        <div class="field"><label for="p-body">The post</label><textarea id="p-body" rows="10" placeholder="RECOVER now opens at 5am on weekdays, so you can get a round in before work.&#10;&#10;This came out of the member survey. The rooms are on a timer and hot when the doors open."></textarea>
+          <div class="hint">A blank line starts a new paragraph. The first one is the whole story in a sentence or two — it is what shows on the card and at the top of the post.</div></div>
+        <div class="err" id="p-err"></div>
+      </div>
+      <div class="actions"><button class="btn" id="p-save" type="button">Save and publish</button><a class="btn ghost small" href="#/news">Cancel</a>
+      <span class="note">Posts written here live on this device. Export them and they become permanent posts everyone sees.</span></div>`;
+  }
+  function wirePostNew() {
+    const save = $('#p-save'); if (!save) return;
+    save.addEventListener('click', () => {
+      const tag = $('#p-tag').value.trim(), title = $('#p-title').value.trim();
+      const date = $('#p-date').value || today();
+      const paras = $('#p-body').value.split(/\n\s*\n/).map(t => t.trim()).filter(Boolean);
+      if (!title || !paras.length) { $('#p-err').textContent = 'A title and a body, at least.'; return; }
+      const post = { id: 'p-' + Math.random().toString(36).slice(2, 10), tag: tag || 'News', title, date,
+                     lead: paras[0], body: paras.slice(1).length ? paras.slice(1) : paras, local: true };
+      S.posts = [post].concat(S.posts || []); save_();
+      toast(isScheduled(post) ? 'Scheduled for ' + fmtPost(post.date) : 'Published');
+      go('post/' + post.id);
+    });
+  }
+  const save_ = () => save();
+  function wirePost(r) {
+    const del = $('#post-del'); if (!del) return;
+    del.addEventListener('click', () => confirm('Delete this post?', 'It is only on this device, so nothing else changes.', () => {
+      S.posts = (S.posts || []).filter(p => p.id !== r.id); save(); toast('Post deleted'); go('news');
+    }));
   }
 
   // ---- home tiles ------------------------------------------------------
@@ -1095,25 +1422,25 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       return `<span class="big">${pr.done}<small>of ${pr.total} done</small></span>`;
     }
     if (t.kind === 'processes') {
-      const L = procList(); const c = s => L.filter(x => x.status === s).length;
+      const L = procList(); const c = s => L.filter(x => effStatus(x) === s).length;
       const tot = L.length || 1;
       return `<span class="big">${L.length}<small>processes</small></span>
         <span class="mini">${[['ok', c('documented')], ['dr', c('draft')], ['gp', c('gap')]].map(([k, n]) => n ? `<i class="${k}" style="flex:${n}"></i>` : '').join('')}</span>
         <span class="d">${c('documented')} documented \u00B7 ${c('draft') + c('gap')} to write</span>`;
     }
     if (t.kind === 'floorplan') {
-      const F = planCfg(); if (!F) return '';
+      const F = planSites()[0]; if (!F) return '';
       // the plan itself, at tile size and without its labels — a shape you recognise
       return `<span class="mini-plan"><svg viewBox="${esc(F.viewBox || '0 0 100 134')}" aria-hidden="true">${(F.zones || [])
         .map(z => `<rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}"/>`).join('')}</svg></span>
-        <span class="nt">${(F.equipment || []).length} things, ${(F.zones || []).length} areas</span>`;
+        <span class="nt">${(F.equipment || []).length} ${esc((planRoot() || {}).countLabel || 'pieces of kit')}, ${(F.zones || []).length} areas</span>`;
     }
     if (t.kind === 'news') {
       const N = newsCfg(); const lead = N && (N.posts || [])[0];
       if (!lead) return `<span class="nt">Nothing posted yet.</span>`;
       return `<span class="nx">${esc(lead.tag || '')} \u00B7 ${esc(fmtPost(lead.date))}</span><span class="nt">${esc(lead.title)}</span>`;
     }
-    if (t.kind === 'count') return `<span class="big">${visible().length}<small>items</small></span>`;
+    if (t.kind === 'count') return `<span class="big">${visible().length}<small>${esc(t.countLabel || 'items')}</small></span>`;
     if (t.kind === 'mark') return `<svg class="mk" viewBox="4 2 96 74"><use href="#mark"/></svg>`;
     return '';
   }
@@ -1129,7 +1456,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
   function homeTile(t) {
     const wide = t.kind === 'mark' || t.kind === 'floorplan';
-    return `<a class="tl ${t.span === 2 ? 'tile-l' : ''} ${wide ? 'wide' : ''}" data-a="${esc(t.accent || 'primary')}" href="${esc(tileHref(t))}"${t.external ? ' target="_blank" rel="noopener"' : ''}>
+    return `<a class="tl ${t.span === 2 ? 'tile-l' : ''} ${wide ? 'wide' : ''} ${t.solid ? 'solid' : ''}" data-a="${esc(t.accent || 'primary')}" href="${esc(tileHref(t))}"${t.external ? ' target="_blank" rel="noopener"' : ''}>
       <svg class="go"><use href="#${t.external ? 'i-ext' : 'i-arrow-r'}"/></svg>
       ${wide ? `<span class="fig">${tileFigure(t)}</span><span class="txt"><span class="eb">${esc(t.eyebrow)}</span><span class="bl">${esc(t.blurb || '')}</span></span>`
              : `<span class="eb">${esc(t.eyebrow)}</span><span class="fig">${tileFigure(t)}</span><span class="bl">${esc(t.blurb || '')}</span>`}
@@ -1139,7 +1466,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function viewPath() {
     const p = pathFor(S.audience); if (!p) { go('home'); return ''; }
     const pr = pathProgress(p);
-    return `<a class="back" href="#/home"><svg><use href="#i-back"/></svg>Home</a>
+    return `${backLink('#/home', navLabel('home', 'Home'))}
       <div class="item-head"><h1>${esc(p.title)}</h1><p class="blurb">${esc(p.blurb)}</p></div>
       <div class="section"><div class="bignum">${pr.done}<small>of ${pr.total} complete</small></div><div class="prog green"><i style="width:${pr.pct}%"></i></div>
       <div class="row-list" style="margin-top:16px">${p.items.map((id, i) => rowCard(byId[id], i + 1)).join('')}</div></div>`;
@@ -1149,6 +1476,10 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   const procCfg = () => CFG.processes || null;
   const procList = () => { const P = procCfg(); return P ? P.items.concat(S.drafts || []) : []; };
   const procById = id => procList().find(x => x.id === id);
+  /* A draft written against a gap says which one it answers, so the gap stops
+     reading as untouched and the maintainer knows what the file is for. */
+  const resolverFor = id => (S.drafts || []).find(d => d.resolves === id);
+  const effStatus = x => (x.status === 'gap' && resolverFor(x.id)) ? 'draft' : x.status;
   const statusLabel = s => ((procCfg() || {}).statuses || []).find(x => x.id === s) || { label: s };
   const procArea = id => (((procCfg() || {}).areas) || []).find(a => a.id === id) || { label: id };
   const fmtDate = iso => { if (!iso) return 'Never'; try { return new Date(iso).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return iso; } };
@@ -1158,19 +1489,20 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (P.audiences && !P.audiences.includes(S.audience)) { go('home'); return ''; }
     const sel = r.q.get('status') || 'all'; const q = (r.q.get('q') || '').toLowerCase();
     const all = procList();
-    const list = all.filter(x => (sel === 'all' || x.status === sel) && (!q || (x.name + ' ' + (x.summary || '') + ' ' + procArea(x.area).label).toLowerCase().includes(q)));
-    const count = s => all.filter(x => x.status === s).length;
-    let html = `<a class="back" href="#/home"><svg><use href="#i-back"/></svg>Home</a>
+    const list = all.filter(x => (sel === 'all' || effStatus(x) === sel) && (!q || (x.name + ' ' + (x.summary || '') + ' ' + procArea(x.area).label).toLowerCase().includes(q)));
+    const count = s => all.filter(x => effStatus(x) === s).length;
+    let html = `${backLink(navItems().some(n => n.id === 'processes') ? '' : '#/home', navLabel('home', 'Home'))}
       <div class="item-head"><h1>${esc(P.title)}</h1><p class="blurb">${esc(P.blurb)}</p></div>
       <div class="pstat">${(P.statuses || []).map(s => `<button type="button" data-s="${s.id}" class="${sel === s.id ? 'on' : ''}"><span class="n">${count(s.id)}</span><span class="l">${esc(s.label)}</span></button>`).join('')}</div>
-      <div class="actions" style="margin-top:14px"><a class="btn small" href="#/process/new"><svg><use href="#i-plus"/></svg>Document a process</a>${sel !== 'all' ? `<a class="btn ghost small" href="#/processes">Show all ${all.length}</a>` : ''}</div>
-      <label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="Search processes" value="${esc(r.q.get('q') || '')}" aria-label="Search processes"></label>`;
+      <div class="actions" style="margin-top:14px"><a class="btn small" href="#/process/new"><svg><use href="#i-plus"/></svg>Document a process</a><a class="btn outline small" href="#/learn"><svg><use href="#i-learn"/></svg>Team library \u00B7 ${visible().length}</a>${sel !== 'all' ? `<a class="btn ghost small" href="#/processes">Show all ${all.length}</a>` : ''}</div>
+      <hr class="rule">
+      <label class="search" style="margin-top:0"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="Search processes" value="${esc(r.q.get('q') || '')}" aria-label="Search processes"></label>`;
     if (!list.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another status.</div>`;
     (P.areas || []).forEach(ar => {
       const rows = list.filter(x => x.area === ar.id); if (!rows.length) return;
       html += `<div class="section"><div class="section-head"><h3>${esc(ar.label)}</h3><span class="muted" style="font-size:13px">${rows.length}</span></div>
-        ${rows.map(x => `<a class="prow" data-s="${esc(x.status)}" href="#/process/${esc(x.id)}">
-          <span class="top"><h4>${esc(x.name)}</h4><span class="st">${esc(statusLabel(x.status).label)}${x.local ? ' \u00B7 this device' : ''}</span></span>
+        ${rows.map(x => `<a class="prow" data-s="${esc(effStatus(x))}" href="#/process/${esc(x.id)}">
+          <span class="top"><h4>${esc(x.name)}</h4><span class="st">${esc(statusLabel(effStatus(x)).label)}${x.local ? ' \u00B7 this device' : resolverFor(x.id) ? ' \u00B7 drafted here' : ''}</span></span>
           <span class="sm">${esc(x.summary || '')}</span>
           <span class="meta"><span class="chip2">${esc(x.owner || 'Unassigned')}</span>${(x.drives || []).length ? `<span class="chip2 drv">Drives ${(x.drives || []).length}</span>` : ''}<span class="chip2">Reviewed ${esc(fmtDate(x.reviewed))}</span></span></a>`).join('')}</div>`;
     });
@@ -1194,13 +1526,18 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
 
   function viewProcess(r) {
-    if (r.id === 'new') return viewProcessNew();
+    if (r.id === 'new') return viewProcessNew(r);
     const x = procById(r.id); if (!x) return `<div class="empty" style="margin-top:24px">That process does not exist. <a href="#/processes">Back to the library</a></div>`;
     const drives = (x.drives || []).map(id => byId[id]).filter(Boolean);
-    return `<a class="back" href="#/processes"><svg><use href="#i-back"/></svg>Process library</a>
-      <div class="item-head"><div class="type" style="color:var(--${x.status === 'documented' ? 'primary' : x.status === 'draft' ? 'cta' : 'error'})">${esc(statusLabel(x.status).label)}${x.local ? ' \u00B7 drafted on this device' : ''}</div>
+    return `${backLink('#/processes', 'Process library')}
+      <div class="item-head"><div class="type" style="color:var(--${effStatus(x) === 'documented' ? 'primary' : effStatus(x) === 'draft' ? 'cta' : 'error'})">${esc(statusLabel(effStatus(x)).label)}${x.local ? ' \u00B7 drafted on this device' : ''}</div>
       <h1>${esc(x.name)}</h1><p class="blurb">${esc(x.summary || '')}</p></div>
       ${x.note ? `<div class="drafts-note">${esc(x.note)}</div>` : ''}
+      ${x.status === 'gap' && !resolverFor(x.id) ? `<div class="gapcta">
+        <div><b>This one is a gap.</b> Nobody has written it down, so it is done from memory and differently each time. You already know its name, its area and who owns it — what is missing is the steps.</div>
+        <a class="btn small" href="#/process/new?from=${esc(x.id)}"><svg><use href="#i-plus"/></svg>Document this process</a>
+      </div>` : ''}
+      ${resolverFor(x.id) ? `<div class="drafts-note answered">Drafted on this device as <a href="#/process/${esc(resolverFor(x.id).id)}">${esc(resolverFor(x.id).name)}</a>. It is a gap in the library until that draft is exported and taken in.</div>` : ''}
       <div class="pdet">
         <span class="k">Area</span><span>${esc(procArea(x.area).label)}</span>
         <span class="k">Owned by</span><span>${esc(x.owner || 'Unassigned')}</span>
@@ -1221,15 +1558,20 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     }));
   }
 
-  function viewProcessNew() {
+  function viewProcessNew(r) {
     const P = procCfg() || { areas: [] };
-    return `<a class="back" href="#/processes"><svg><use href="#i-back"/></svg>Process library</a>
-      <div class="item-head"><h1>Document a process</h1><p class="blurb">Write it while it is fresh. The draft is saved on this device and joins the library straight away, marked as a draft so nobody mistakes it for signed-off procedure. Export it when you want it turned into a guide, a checklist or a simulation.</p></div>
+    const from = r && r.q.get('from') ? procById(r.q.get('from')) : null;
+    const v = (k, d = '') => from ? (from[k] || d) : d;
+    return `${backLink(from ? '#/process/' + from.id : '#/processes', from ? from.name : 'Process library')}
+      <div class="item-head"><h1>${from ? 'Document this process' : 'Document a process'}</h1><p class="blurb">${from
+        ? 'Filled in from the gap, so all that is left is the steps. Write what a person actually does, in the order they do it.'
+        : 'Write it while it is fresh. The draft is saved on this device and joins the library straight away, marked as a draft so nobody mistakes it for signed-off procedure. Export it when you want it turned into a guide, a checklist or a simulation.'}</p></div>
+      ${from ? `<input type="hidden" id="f-from" value="${esc(from.id)}">` : ''}
       <div class="fstack">
-        <div class="field"><label for="f-name">What is the process called</label><input class="input" id="f-name" placeholder="Ordering consumables"></div>
-        <div class="field"><label for="f-area">Area</label><select class="input" id="f-area">${(P.areas || []).map(a => `<option value="${esc(a.id)}">${esc(a.label)}</option>`).join('')}</select></div>
-        <div class="field"><label for="f-owner">Who owns it</label><input class="input" id="f-owner" placeholder="Manager on duty"></div>
-        <div class="field"><label for="f-sum">Why it matters, in a sentence</label><input class="input" id="f-sum" placeholder="What goes wrong when this is done differently by different people."></div>
+        <div class="field"><label for="f-name">What is the process called</label><input class="input" id="f-name" value="${esc(v('name'))}" placeholder="Ordering consumables"></div>
+        <div class="field"><label for="f-area">Area</label><select class="input" id="f-area">${(P.areas || []).map(a => `<option value="${esc(a.id)}"${a.id === v('area') ? ' selected' : ''}>${esc(a.label)}</option>`).join('')}</select></div>
+        <div class="field"><label for="f-owner">Who owns it</label><input class="input" id="f-owner" value="${esc(v('owner'))}" placeholder="Manager on duty"></div>
+        <div class="field"><label for="f-sum">Why it matters, in a sentence</label><input class="input" id="f-sum" value="${esc(v('summary'))}" placeholder="What goes wrong when this is done differently by different people."></div>
         <div class="field"><label for="f-steps">The steps</label><textarea id="f-steps" placeholder="One step per line, in the order they happen."></textarea><div class="hint">One per line. Write what a person actually does, not what the system does.</div></div>
         <div class="field"><label for="f-note">Anything unresolved</label><input class="input" id="f-note" placeholder="What still needs confirming before this becomes training."></div>
       </div>
@@ -1242,10 +1584,14 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       const name = $('#f-name').value.trim();
       if (!name) { $('#f-name').focus(); toast('Give the process a name first'); return; }
       const steps = $('#f-steps').value.split('\n').map(s => s.trim()).filter(Boolean);
+      const from = $('#f-from') ? $('#f-from').value : '';
+      const src = from ? procById(from) : null;
       const x = { id: 'draft-' + Date.now().toString(36), name, area: $('#f-area').value, owner: $('#f-owner').value.trim() || 'Unassigned',
-        status: 'draft', reviewed: new Date().toISOString().slice(0, 10), reviewCycle: 'Not set', drives: [],
+        status: 'draft', reviewed: new Date().toISOString().slice(0, 10), reviewCycle: 'Not set', drives: (src && src.drives) || [],
         summary: $('#f-sum').value.trim(), note: $('#f-note').value.trim() || 'Drafted in the portal. Not yet reviewed.', steps, local: true, by: S.name || null };
-      S.drafts = (S.drafts || []).concat([x]); save(); go('process/' + x.id); toast('Draft saved');
+      if (from) x.resolves = from;
+      S.drafts = (S.drafts || []).concat([x]); save(); go('process/' + x.id);
+      toast(from ? 'Gap answered \u2014 draft saved' : 'Draft saved');
     });
   }
   const download = (name, text) => {
@@ -1255,7 +1601,27 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   function viewSupport() {
     const s = CFG.support;
-    return `<div class="hero"><h1>Support</h1><p>The answers to the questions that come up every week, then who to go to when it is not one of them.</p></div>
+    /* An audience can have a support page of its own. A member does not need the
+       staff escalation ladder — they need the questions we get asked at the desk and
+       one way to reach us. */
+    const own = (s.audience || {})[S.audience];
+    if (own) {
+      const c = own.contact || {};
+      const row = (icon, k, v, href, open) => `<div class="crow"><button type="button" class="copy" data-copy="${esc(v)}" data-what="${esc(k)}"><svg><use href="#${icon}"/></svg><span><span class="k">${esc(k)} \u00B7 tap to copy</span><span class="v">${esc(v)}</span></span></button><a class="open" href="${esc(href)}" aria-label="${esc(open)}"><svg><use href="#i-ext"/></svg></a></div>`;
+      return `${backLink('')}<div class="hero"><h1>Support</h1><p>${esc(own.intro || '')}</p></div>
+        <div class="section"><div class="label">${esc(own.faqLabel || 'The usual questions')}</div>${(own.faq || []).map(f => `<details><summary>${esc(f.q)}</summary><div class="ans">${esc(f.a)}</div></details>`).join('')}</div>
+        <div class="section"><div class="label">${esc(c.label || 'Contact us')}</div>
+          <p class="muted" style="font-size:15px;margin:-2px 0 0">${esc(c.text || '')}</p>
+          ${c.name || c.address ? `<div class="card" style="margin-top:14px"><div class="type">${esc(c.name || '')}</div>${c.address ? `<p class="muted" style="font-size:15px;margin-top:6px">${esc(c.address)}</p>` : ''}</div>` : ''}
+          <div class="contact-rows">${[
+            c.email ? row('i-mail', 'Email', c.email, 'mailto:' + encodeURI(c.email), 'Open in your email app') : '',
+            c.phone ? row('i-phone', 'Phone', c.phoneLabel || c.phone, 'tel:' + String(c.phone).replace(/[^+0-9]/g, ''), 'Call this number') : ''
+          ].join('')}</div>
+          ${c.demo ? `<p class="muted" style="font-size:13px;margin-top:12px">These contact details are placeholders for ONYX to replace.</p>` : ''}
+        </div>
+        <div class="section"><a class="btn outline" href="${esc(CFG.client.memberLogin)}" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Member login</a></div>`;
+    }
+    return `${backLink('')}<div class="hero"><h1>Support</h1><p>The answers to the questions that come up every week, then who to go to when it is not one of them.</p></div>
       <div class="section"><div class="label">The usual questions</div>${s.faq.map(f => `<details><summary>${esc(f.q)}</summary><div class="ans">${esc(f.a)}</div></details>`).join('')}</div>
       <div class="section"><div class="label">Direct assistance</div><p class="muted" style="font-size:14px;margin:-2px 0 14px">Find your problem, then go to the person under it.</p><div class="grid2">${s.assistance.map((c, i) => `<div class="card assist"><ul class="q">${c.queries.map(q => `<li>${esc(q)}</li>`).join('')}</ul><button type="button" class="goto" data-contact="${i}"><span class="k">Go to</span><span class="name">${esc(c.name)}</span><span class="role">${esc(c.role)}</span><span class="how">Tap for contact details</span><svg class="chev"><use href="#i-arrow-r"/></svg></button></div>`).join('')}</div></div>
       <div class="section"><div class="card"><div class="type">${esc(s.reportIssue.label)}</div><p style="margin-top:8px;font-size:15px" class="muted">${esc(s.reportIssue.text)}</p></div></div>
@@ -1265,7 +1631,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function viewMe() {
     const p = pathFor(S.audience) || pathFor('employee'); const pr = pathProgress(p);
     const doneList = Object.entries(S.items).filter(([, v]) => v.status === 'complete').sort((a, b) => (b[1].completedAt || '').localeCompare(a[1].completedAt || ''));
-    return `<div class="hero"><h1>${esc(S.name || 'You')}</h1><p>Your record lives on this device. Export it whenever your manager asks.</p></div>
+    return `${backLink('')}<div class="hero"><h1>${esc(S.name || 'You')}</h1><p>Your record lives on this device. Export it whenever your manager asks.</p></div>
       <div class="section"><div class="label">Name</div><div class="field"><input class="input" id="me-name" value="${esc(S.name)}" placeholder="First name" aria-label="Your name"><button class="btn small" id="me-save" type="button">Save</button></div></div>
       <div class="section"><div class="label">${esc(p.title)}</div><div class="bignum">${pr.done}<small>of ${pr.total} complete</small></div><div class="prog green"><i style="width:${pr.pct}%"></i></div></div>
       <div class="section"><div class="label">Access</div><div class="kv">${CFG.audiences.map(a => `<span class="k">${esc(a.label)}</span><span>${a.key ? (S.unlocked[a.id] ? 'Unlocked on this device' : 'Locked') : 'Open to everyone'}</span>`).join('')}</div>
@@ -1334,8 +1700,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     else if (r.view === 'processes') { v.innerHTML = viewProcesses(r); wireProcesses(); }
     else if (r.view === 'process') { v.innerHTML = viewProcess(r); if (r.id === 'new') wireProcessNew(); else wireProcess(r); }
     else if (r.view === 'lookaround') { v.innerHTML = viewLook(r); wireLook(); }
-    else if (r.view === 'news') v.innerHTML = viewNews();
-    else if (r.view === 'post') v.innerHTML = viewPost(r);
+    else if (r.view === 'news') { v.innerHTML = viewNews(r); wireNews(); }
+    else if (r.view === 'post') { v.innerHTML = viewPost(r); if (r.id === 'new') wirePostNew(); else wirePost(r); }
     else if (r.view === 'reports') { v.innerHTML = viewReports(); wireTips(); const b = $('#imp-open'); if (b) b.addEventListener('click', importPanel); }
     else if (r.view === 'support') v.innerHTML = viewSupport();
     else if (r.view === 'me') { v.innerHTML = viewMe(); wireMe(); }
