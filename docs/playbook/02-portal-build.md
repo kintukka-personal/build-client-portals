@@ -65,14 +65,65 @@ a hover tooltip and a table view. Give the audience a `homeLink` to put a button
 their Home, and list `reports` in `nav` with `audiences` so it replaces Learn in their tab
 bar. Figures are whatever the config says; mark the block `demo` until they are real.
 
-An optional `import` block on `reports` puts an **Import data** button beside the page
-title. It opens a panel that says what an import would take (`takes`), what it would do
-with the files (`does`), and a `status` line — and nothing else: no file picker is wired
-up. It is there so an owner being shown the page understands where their own numbers go
-and can say which exports they have, and so the conversation about building the mapping
-starts from something concrete. `cta` and `to` send them somewhere to have it; `demo: true`
-puts a Soon chip on the button. Pair it with a guide in the owner's path so the detail
-lives somewhere you can point at, the way `gd-owner-reports` does for ONYX.
+### Importing a real export
+
+An `import` block on `reports` puts an **Import data** button beside the page title and
+makes it work. It holds `converters`: one entry per kind of export the client has. Each
+gives an `id`, a `kind` (which converter in the engine runs it), a `title`, the `source`
+it comes out of, a `blurb`, and a `status` of `ready` or `planned`. The panel lists them
+all, which is half the point — an owner should leave it knowing which of their exports we
+already read and which are still to be built. Only a `ready` one opens a file picker.
+
+A ready converter also carries `expect`: the roles it needs, each with a `label` and a
+list of lowercase `match` fragments tried against the file's headers, so the column can be
+called whatever that system calls it. Mark the ones the maths cannot run without as
+`required` — a file missing those is rejected by name rather than half-read. `multi: true`
+takes every matching column instead of the first, which is how three separate note fields
+become one body of text. `gives` lists what comes back, `corporate` names the membership
+products that arrive through an employer rather than the funnel, and `patterns` holds the
+strings a particular system writes into its own notes (ONYX's pasted tour script, and the
+line GymMaster leaves when a prospect record becomes a member).
+
+`vocabulary` turns the free text into something countable: each rule is a `name`, a `kind`
+of `pos`, `neg` or `neu`, and a comma-separated `words` list, where a word starting with a
+minus sign excludes. Tune it per client; the words ONYX staff actually type are not the
+words the next gym will. The rules that miss are shown alongside the rules that hit.
+
+The maths lives in the engine, not the config, keyed by `kind`. A new export is a config
+entry plus one converter function.
+
+**CSV always works; a spreadsheet needs the network once.** The portal is a single file
+with nothing to fetch and that stays true: CSV is parsed in the engine. An `.xlsx` is a
+zip and needs a real parser, so one is fetched the first time somebody picks one — the
+only outbound request the portal ever makes, and only on demand. Opened offline, the
+`.xlsx` path says so and points at Save As CSV. One check is lost that way: a date stored
+as text is only visible in a typed file, because in a CSV every cell is text, and the
+panel says so rather than quietly reporting one fault fewer.
+
+**Only totals are stored.** The rows are read, counted and dropped; what lands in
+`localStorage` is the aggregate result and the file's name, a few kilobytes with no
+member-level anything in it. That is a promise the panel makes before the file is chosen,
+so keep any change on the right side of it — never put a note snippet or an ID into the
+result object.
+
+### Insights
+
+An `insights` block adds a second page behind an **Insights** button on Reports. Reports
+is the dashboard; Insights is the reading of it: the findings the converter wrote from the
+numbers, then the breakdowns behind them, then what the conversion flag is actually made
+of. Rates on groups under eight rows are marked `low` with a hatched bar rather than
+hidden — the caution belongs on the chart, not in a withheld number.
+
+`demo` holds a worked example so the page is never an empty shell, badged so nobody reads
+it as their own month. Do not hand-write it. `node tools/make-insights-demo.js <slug>`
+lifts the converter out of the engine between its `@converter` markers, runs it over
+`clients/<slug>/workbench/demo-data.json`, and writes the result into the config, so the
+example is the same arithmetic a real import goes through and the two cannot drift.
+Re-run it whenever the converter changes.
+
+Once something is imported, Reports grows a **From your data** section above the demo
+figures, with the file, the period and the row count on it, and Replace and Remove beside
+them. The two kinds of number never share a block.
 
 ## Home tiles
 

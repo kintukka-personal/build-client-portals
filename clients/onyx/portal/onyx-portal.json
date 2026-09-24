@@ -1645,16 +1645,16 @@
         "upIsGood": true,
         "trend": [
           2.1,
-          2.0,
+          2,
           1.7,
           2.2,
           2.2,
           2.1,
-          2.0,
-          2.0,
+          2,
+          2,
           1.9,
-          2.0,
-          2.0,
+          2,
+          2,
           1.9
         ]
       },
@@ -1839,23 +1839,678 @@
     },
     "import": {
       "label": "Import data",
-      "title": "Importing your own numbers",
-      "intro": "The figures on this page are demo figures. This is where your own would come in: the exports you already pull, dropped in each month, turned into the charts above.",
-      "takes": [
-        "The member export from your gym system — actives, joins, cancellations with reasons",
-        "The bookings export — classes and RECOVER, booked against capacity",
-        "The takings export from the POS or payment provider",
-        "Anything else you keep in a spreadsheet, as long as the columns are the same shape each month"
+      "title": "Import a report",
+      "intro": "Pick the export you have. Each one has a converter written against the columns your system actually produces, so the file goes in as it comes out.",
+      "privacy": "The file is read in this browser and never uploaded. Only the totals are kept on this device; the member-level rows are counted and dropped as soon as the numbers are worked out.",
+      "converters": [
+        {
+          "id": "leads",
+          "kind": "leads",
+          "title": "Prospect tours and casual visits",
+          "source": "GymMaster · task report",
+          "status": "ready",
+          "blurb": "Every tour, walk-in and paid casual visit, with who handled it, where the lead came from and whether they ended up a member.",
+          "corporate": [
+            "fitness passport"
+          ],
+          "expect": [
+            {
+              "role": "channel",
+              "label": "How they came in",
+              "match": [
+                "task type",
+                "visit type",
+                "lead type"
+              ],
+              "required": true
+            },
+            {
+              "role": "outcome",
+              "label": "Member right now",
+              "match": [
+                "active membership",
+                "active member"
+              ],
+              "required": true
+            },
+            {
+              "role": "date",
+              "label": "When the task closed",
+              "match": [
+                "cleared on",
+                "closed on",
+                "task date"
+              ]
+            },
+            {
+              "role": "source",
+              "label": "Lead source",
+              "match": [
+                "source promotion",
+                "source",
+                "promotion",
+                "referred by"
+              ]
+            },
+            {
+              "role": "staff",
+              "label": "Staff member",
+              "match": [
+                "staff name",
+                "staff",
+                "consultant",
+                "assigned"
+              ]
+            },
+            {
+              "role": "age",
+              "label": "Age",
+              "match": [
+                "age"
+              ]
+            },
+            {
+              "role": "history",
+              "label": "Membership history",
+              "match": [
+                "all membership",
+                "membership history"
+              ]
+            },
+            {
+              "role": "notes",
+              "label": "Notes and descriptions",
+              "match": [
+                "description",
+                "note"
+              ],
+              "multi": true
+            }
+          ],
+          "gives": [
+            "Conversion split by how they came in — the tour gap",
+            "Lead source and staff breakdowns, with small samples marked",
+            "What the notes say, counted against the all-lead average",
+            "What the membership flag is actually made of",
+            "Data faults worth fixing before they scale"
+          ],
+          "patterns": {
+            "scriptQuestion": "what was their purpose in coming in today?",
+            "autoConvert": "Autocompleted from prospect becoming a member"
+          }
+        },
+        {
+          "id": "members",
+          "kind": "members",
+          "title": "Members, joins and cancellations",
+          "source": "GymMaster · member export",
+          "status": "planned",
+          "blurb": "Needs join and cancel dates against a member ID. That is the export that turns a lead into a length of stay, and tells you how long people last before they leave."
+        },
+        {
+          "id": "bookings",
+          "kind": "bookings",
+          "title": "Class and RECOVER bookings",
+          "source": "GymMaster · bookings export",
+          "status": "planned",
+          "blurb": "Booked against capacity, by class and by hour, so the timetable can be argued about with numbers rather than impressions."
+        },
+        {
+          "id": "takings",
+          "kind": "takings",
+          "title": "Takings",
+          "source": "POS or payment provider",
+          "status": "planned",
+          "blurb": "Revenue by membership product and add-on, matched back to the join that produced it."
+        }
       ],
-      "does": [
-        "Reads each file against a mapping written once for your system, so the column names can be whatever your export calls them",
-        "Matches the same member across files, which is the part that takes the work",
-        "Rolls everything up to the figures on this page and keeps the twelve-month history",
-        "Stores the totals only. Member-level rows are read and discarded, never saved into the portal"
-      ],
-      "status": "Not connected yet. The button is here so you can see where it goes and tell us which exports you actually have; the mapping is built per client once we have a real file from each source.",
-      "cta": "Talk to us about your exports",
-      "demo": true
+      "vocabulary": [
+        {
+          "name": "New to area",
+          "kind": "pos",
+          "words": "just moved, new to the area, moved here, moved to, moving to, relocating"
+        },
+        {
+          "name": "High intent",
+          "kind": "pos",
+          "words": "keen to sign up, ready to join, decide this week, wants to sign up, please follow up, looking to join, high prospect, came in to sign up"
+        },
+        {
+          "name": "PT interest",
+          "kind": "pos",
+          "words": "consult with a pt, pt consultation, speak with a pt, book a consultation with a pt"
+        },
+        {
+          "name": "Competitor named",
+          "kind": "neu",
+          "words": "fitness first, world gym, anytime fitness, snap fitness, city gym, crunch, crossfit, pump chatswood, titans, prime strength, boxing-only, boxing gym"
+        },
+        {
+          "name": "Brought by member",
+          "kind": "neu",
+          "words": "came in with a mate, friend of existing member, friends train here, with his friend, with her friend, with his mate, with her mate"
+        },
+        {
+          "name": "Fitness Passport",
+          "kind": "neu",
+          "words": "fitness passport"
+        },
+        {
+          "name": "RECOVER interest",
+          "kind": "neu",
+          "words": "sauna, recover, -doing much for recovery"
+        },
+        {
+          "name": "Other site lead",
+          "kind": "neu",
+          "words": "artarmon"
+        },
+        {
+          "name": "Price objection",
+          "kind": "neg",
+          "words": "joining fee, price sensitive, more than they wanted, too expensive, discount, not worth the money"
+        },
+        {
+          "name": "Too far",
+          "kind": "neg",
+          "words": "too far, a stretch, not local, a bit far, lives too far, inconvenient"
+        },
+        {
+          "name": "Just visiting",
+          "kind": "neg",
+          "words": "only in sydney, tourist, layover, interstate, couple of days, only here for, visiting"
+        },
+        {
+          "name": "Happy elsewhere",
+          "kind": "neg",
+          "words": "happy where they are, not looking to switch, not interested in making a switch, happy at, not looking for a new gym"
+        },
+        {
+          "name": "Unresponsive",
+          "kind": "neg",
+          "words": "unresponsive, closing out, close out, left voicemail, left vm, unable to contact, asked not to be contacted, requested no call"
+        },
+        {
+          "name": "No show",
+          "kind": "neg",
+          "words": "no show, no-show"
+        }
+      ]
+    },
+    "derivedLabel": "From your data",
+    "demoLabel": "Demo figures",
+    "insights": {
+      "title": "Insights",
+      "demoNote": "Worked example: the August 2026 prospect export put through the same converter your own file goes through. Import yours and this page becomes your month.",
+      "demo": {
+        "kind": "leads",
+        "rows": 90,
+        "typed": true,
+        "period": {
+          "from": "2026-08-01",
+          "to": "2026-08-31"
+        },
+        "base": 30,
+        "tiles": [
+          {
+            "label": "Leads",
+            "value": "90",
+            "sub": "3 ways in"
+          },
+          {
+            "label": "Joined",
+            "value": "27",
+            "sub": "20 sold · 7 employer scheme"
+          },
+          {
+            "label": "Conversion",
+            "value": "30.0%",
+            "sub": "across every lead"
+          },
+          {
+            "label": "With a tour",
+            "value": "71.4%",
+            "sub": "15 of 21 tours",
+            "tone": "good"
+          },
+          {
+            "label": "Without a tour",
+            "value": "17.4%",
+            "sub": "69 walk-ins and casuals",
+            "tone": "warn"
+          }
+        ],
+        "groups": [
+          {
+            "id": "channel",
+            "title": "How they came in",
+            "note": "the one worth putting on the wall",
+            "rows": [
+              {
+                "k": "Casual Visit Paid - First Visit",
+                "n": 56,
+                "c": 10,
+                "r": 17.9,
+                "low": false
+              },
+              {
+                "k": "Prospect Toured",
+                "n": 21,
+                "c": 15,
+                "r": 71.4,
+                "low": false
+              },
+              {
+                "k": "Prospect Toured/Walked In",
+                "n": 13,
+                "c": 2,
+                "r": 15.4,
+                "low": false
+              }
+            ]
+          },
+          {
+            "id": "source",
+            "title": "Where the leads came from",
+            "note": "low = under 8 leads",
+            "rows": [
+              {
+                "k": "Google Search",
+                "n": 17,
+                "c": 6,
+                "r": 35.3,
+                "low": false
+              },
+              {
+                "k": "Word of Mouth",
+                "n": 14,
+                "c": 6,
+                "r": 42.9,
+                "low": false
+              },
+              {
+                "k": "Referral",
+                "n": 14,
+                "c": 3,
+                "r": 21.4,
+                "low": false
+              },
+              {
+                "k": "Instagram",
+                "n": 11,
+                "c": 0,
+                "r": 0,
+                "low": false
+              },
+              {
+                "k": "Walked/Drove By",
+                "n": 10,
+                "c": 3,
+                "r": 30,
+                "low": false
+              },
+              {
+                "k": "Fitness Passport",
+                "n": 7,
+                "c": 3,
+                "r": 42.9,
+                "low": true
+              },
+              {
+                "k": "Google Ad",
+                "n": 6,
+                "c": 4,
+                "r": 66.7,
+                "low": true
+              },
+              {
+                "k": "Facebook",
+                "n": 3,
+                "c": 0,
+                "r": 0,
+                "low": true
+              },
+              {
+                "k": "(not recorded)",
+                "n": 2,
+                "c": 1,
+                "r": 50,
+                "low": true
+              },
+              {
+                "k": "Instagram Ad",
+                "n": 2,
+                "c": 0,
+                "r": 0,
+                "low": true
+              },
+              {
+                "k": "Facebook Ad",
+                "n": 1,
+                "c": 0,
+                "r": 0,
+                "low": true
+              },
+              {
+                "k": "TikTok",
+                "n": 1,
+                "c": 0,
+                "r": 0,
+                "low": true
+              },
+              {
+                "k": "Corporate Offer",
+                "n": 1,
+                "c": 0,
+                "r": 0,
+                "low": true
+              },
+              {
+                "k": "Flyer",
+                "n": 1,
+                "c": 1,
+                "r": 100,
+                "low": true
+              }
+            ]
+          },
+          {
+            "id": "staff",
+            "title": "By staff member",
+            "note": "one sign-up moves any of these by several points",
+            "rows": [
+              {
+                "k": "STAFF-003",
+                "n": 22,
+                "c": 8,
+                "r": 36.4,
+                "low": false
+              },
+              {
+                "k": "STAFF-004",
+                "n": 19,
+                "c": 6,
+                "r": 31.6,
+                "low": false
+              },
+              {
+                "k": "STAFF-005",
+                "n": 16,
+                "c": 5,
+                "r": 31.3,
+                "low": false
+              },
+              {
+                "k": "STAFF-002",
+                "n": 15,
+                "c": 4,
+                "r": 26.7,
+                "low": false
+              },
+              {
+                "k": "STAFF-001",
+                "n": 14,
+                "c": 4,
+                "r": 28.6,
+                "low": false
+              },
+              {
+                "k": "STAFF-006",
+                "n": 4,
+                "c": 0,
+                "r": 0,
+                "low": true
+              }
+            ]
+          },
+          {
+            "id": "age",
+            "title": "By age",
+            "note": "a blank age usually means no real intake conversation happened",
+            "rows": [
+              {
+                "k": "Under 25",
+                "n": 26,
+                "c": 7,
+                "r": 26.9,
+                "low": false
+              },
+              {
+                "k": "25 to 34",
+                "n": 32,
+                "c": 11,
+                "r": 34.4,
+                "low": false
+              },
+              {
+                "k": "35 and over",
+                "n": 14,
+                "c": 7,
+                "r": 50,
+                "low": false
+              },
+              {
+                "k": "Not recorded",
+                "n": 18,
+                "c": 2,
+                "r": 11.1,
+                "low": false
+              }
+            ]
+          }
+        ],
+        "tags": [
+          {
+            "t": "High intent",
+            "n": 8,
+            "c": 4,
+            "kind": "pos",
+            "r": 50,
+            "lift": 20,
+            "low": false
+          },
+          {
+            "t": "Fitness Passport",
+            "n": 8,
+            "c": 4,
+            "kind": "neu",
+            "r": 50,
+            "lift": 20,
+            "low": false
+          },
+          {
+            "t": "New to area",
+            "n": 15,
+            "c": 7,
+            "kind": "pos",
+            "r": 46.7,
+            "lift": 17,
+            "low": false
+          },
+          {
+            "t": "Price objection",
+            "n": 10,
+            "c": 3,
+            "kind": "neg",
+            "r": 30,
+            "lift": 0,
+            "low": false
+          },
+          {
+            "t": "Competitor named",
+            "n": 21,
+            "c": 5,
+            "kind": "neu",
+            "r": 23.8,
+            "lift": -6,
+            "low": false
+          },
+          {
+            "t": "RECOVER interest",
+            "n": 12,
+            "c": 2,
+            "kind": "neu",
+            "r": 16.7,
+            "lift": -13,
+            "low": false
+          },
+          {
+            "t": "Brought by member",
+            "n": 9,
+            "c": 1,
+            "kind": "neu",
+            "r": 11.1,
+            "lift": -19,
+            "low": false
+          },
+          {
+            "t": "Just visiting",
+            "n": 11,
+            "c": 1,
+            "kind": "neg",
+            "r": 9.1,
+            "lift": -21,
+            "low": false
+          },
+          {
+            "t": "Too far",
+            "n": 10,
+            "c": 0,
+            "kind": "neg",
+            "r": 0,
+            "lift": -30,
+            "low": false
+          },
+          {
+            "t": "Happy elsewhere",
+            "n": 8,
+            "c": 0,
+            "kind": "neg",
+            "r": 0,
+            "lift": -30,
+            "low": false
+          },
+          {
+            "t": "Other site lead",
+            "n": 3,
+            "c": 0,
+            "kind": "neu",
+            "r": 0,
+            "lift": -30,
+            "low": true
+          },
+          {
+            "t": "Unresponsive",
+            "n": 9,
+            "c": 0,
+            "kind": "neg",
+            "r": 0,
+            "lift": -30,
+            "low": false
+          },
+          {
+            "t": "No show",
+            "n": 1,
+            "c": 0,
+            "kind": "neg",
+            "r": 0,
+            "lift": -30,
+            "low": true
+          }
+        ],
+        "coverage": {
+          "tagged": 66,
+          "withNote": 90
+        },
+        "split": {
+          "flag": 27,
+          "sold": 20,
+          "corporate": 7,
+          "winback": 2,
+          "churn": 1,
+          "agree": 90,
+          "total": 90
+        },
+        "quality": [
+          {
+            "id": "textdate",
+            "n": 2,
+            "label": "2 of the 90 dates are stored as text",
+            "detail": "They drop silently out of any date filter and no error tells you. Two per cent of a small file you would catch by eye; across a year of exports it is a few hundred rows."
+          },
+          {
+            "id": "dupes",
+            "n": 8,
+            "label": "8 rows are duplicate write-ups",
+            "detail": "4 pieces of note text appear on more than one row, which is one conversation with a group logged separately against each person. Every per-lead rate here is diluted by them."
+          }
+        ],
+        "findings": [
+          {
+            "p": 1,
+            "tag": "Act on this",
+            "h": "A tour is worth 54 points of conversion",
+            "b": "Tours convert at <b>71.4%</b> (15 of 21). Everyone else who walked through the door converted at <b>17.4%</b> (12 of 69). A walk-in who does not get a booked tour behaves almost exactly like someone who just paid for a casual, so it is not the visit that converts, it is the tour.",
+            "d": "<b>69</b> people came in without one. Turning even 15% of them into a booked tour at the current tour rate is about <b>6 extra memberships a month</b> from foot traffic already inside the building."
+          },
+          {
+            "p": 1,
+            "tag": "Act on this",
+            "h": "The notes already say who is never going to join",
+            "b": "<b>too far</b> (10), <b>happy elsewhere</b> (8), <b>unresponsive</b> (9) &mdash; between them <b>25</b> leads, and not one of them converted. That judgement is sitting in a text box where nothing can count it.",
+            "d": "Close these automatically instead of having staff chase them, and the follow-up list drops to the leads that are actually live."
+          },
+          {
+            "p": 2,
+            "tag": "Definition",
+            "h": "The 27 is three different things",
+            "b": "The flag counts who is a member at the moment the file was exported. It splits into <b>20</b> memberships the team sold and <b>7</b> that arrived through an employer scheme; cutting across both, <b>2</b> are win-backs who had a membership here before that had ended rather than new members. Separately, <b>1</b> row is a cancellation inside this very period, sitting in a leads report scored as a lead that did not convert.",
+            "d": "Keep reporting the 27 so it reconciles with the system, and show the split underneath it. The membership history column already carries everything needed to break it out."
+          },
+          {
+            "p": 2,
+            "tag": "Leading indicator",
+            "h": "A blank age field predicts a lost lead",
+            "b": "Rows with no age recorded convert at <b>11.1%</b> against <b>30.0%</b> overall. Age is not causing anything. It is missing because no real intake conversation happened.",
+            "d": "Treat an incomplete record as a live warning on the day, not as a gap discovered at month end."
+          },
+          {
+            "p": 2,
+            "tag": "Caution",
+            "h": "9 of the 14 lead sources sit under 8 leads",
+            "b": "Their rates are shown and marked <i>low</i>. At three or four leads a source swings from 0% to 33% on one sign-up, so read those lines as direction rather than as a measurement.",
+            "d": "Report source conversion on a rolling quarter. One month of one site will not carry it on its own."
+          },
+          {
+            "p": 3,
+            "tag": "Process",
+            "h": "15 tours have the script pasted in and never filled out",
+            "b": "The qualification questions are sitting in the note exactly as the template writes them, with no answers underneath. The prompt is being pasted and the conversation is not being recorded.",
+            "d": "Either the questions get answered in the record or the template stops being pasted. As it stands it looks like data and is not."
+          },
+          {
+            "p": 3,
+            "tag": "Data loss",
+            "h": "The qualification notes vanish on exactly the people who joined",
+            "b": "All <b>9</b> tours that converted carry nothing in the cleared note but the system’s own <i>Autocompleted from prospect becoming a member</i>. Whatever the member said about their goal, their old gym or their budget is not in this export.",
+            "d": "These are the most valuable records you have and they are the ones with no content. Capture the qualification answers in a field the conversion cannot overwrite."
+          },
+          {
+            "p": 3,
+            "tag": "Data fault",
+            "h": "2 of the 90 dates are stored as text",
+            "b": "They drop silently out of any date filter and no error tells you. Two per cent of a small file you would catch by eye; across a year of exports it is a few hundred rows.",
+            "d": "Coerce on import and report what was coerced, rather than assuming the column is clean."
+          },
+          {
+            "p": 3,
+            "tag": "Data fault",
+            "h": "8 rows are duplicate write-ups",
+            "b": "4 pieces of note text appear on more than one row, which is one conversation with a group logged separately against each person. Every per-lead rate here is diluted by them.",
+            "d": "Deduplicate on the note text before counting, or log a group visit once and link the people to it."
+          }
+        ]
+      }
     }
   },
   "processes": {
@@ -2516,7 +3171,7 @@
               "cardio",
               "legs"
             ],
-            "x": 31.0,
+            "x": 31,
             "y": 46.9
           },
           {
@@ -2551,7 +3206,7 @@
               "legs",
               "glutes"
             ],
-            "x": 31.0,
+            "x": 31,
             "y": 52.6
           },
           {
@@ -2768,7 +3423,7 @@
               "chest",
               "shoulders"
             ],
-            "x": 71.0,
+            "x": 71,
             "y": 63.6
           },
           {
@@ -3010,7 +3665,7 @@
             "tags": [
               "facilities"
             ],
-            "x": 74.0,
+            "x": 74,
             "y": 126.8
           },
           {
@@ -3021,7 +3676,7 @@
               "full body"
             ],
             "note": "Timetable is on the site and in GymMaster.",
-            "x": 31.0,
+            "x": 31,
             "y": 19.8
           }
         ]
