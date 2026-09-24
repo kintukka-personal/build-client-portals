@@ -713,13 +713,27 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
 
   // ---- routing ----------------------------------------------------------
-  function route() {
-    const h = location.hash.replace(/^#\/?/, '') || 'home';
+  function route(hash) {
+    const h = (hash == null ? location.hash : hash).replace(/^#\/?/, '') || 'home';
     const [pathPart, qs] = h.split('?');
     const seg = pathPart.split('/');
     return { view: seg[0] || 'home', id: seg[1] || null, q: new URLSearchParams(qs || '') };
   }
   const go = h => { location.hash = '#/' + String(h).replace(/^#?\/?/, ''); };
+
+  /* Where the back link goes. A page reached by clicking something inside another
+     page goes back to that page — a tile on the owner's Home into Reports comes
+     back to the Home they were on, not to whatever Reports' parent would be. A page
+     reached from the tab bar has no "back": tabs are peers, not a path.
+     Captured before the hash changes, so location.hash is still the page being left. */
+  let cameFrom = null;
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#/"]'); if (!a) return;
+    if (a.closest('#tabbar, #rail-nav, #menu-nav')) { cameFrom = null; return; }
+    if (a.classList.contains('back')) { cameFrom = null; return; }   // going back is not arriving
+    const here = location.hash || '#/home';
+    if (a.getAttribute('href') !== here) cameFrom = here;
+  }, true);
   window.addEventListener('hashchange', render);
 
   // ---- chrome -----------------------------------------------------------
@@ -848,6 +862,24 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
      Learn — so the link names the page it actually returns to. */
   const backTo = (href, label) => `<a class="back" href="${esc(href)}"><svg><use href="#i-back"/></svg>${esc(label)}</a>`;
   const navLabel = (id, fallback) => { const n = navItems().find(x => x.id === id); return (n && n.label) || fallback; };
+  /* What to call the page a back link returns to. */
+  function hashLabel(h) {
+    const r = route(h);
+    const N = newsCfg() || {};
+    if (r.view === 'news') return r.q.get('all') ? (N.title || "What's new") : (canWrite() ? (N.ownerTitle || 'Blog') : (N.title || "What's new"));
+    if (r.view === 'processes') return (procCfg() || {}).title || 'Process library';
+    if (r.view === 'path') { const p = pathFor(S.audience); return p ? p.title : 'Home'; }
+    if (r.view === 'item') { const it = byId[r.id]; return it ? it.title : navLabel('learn', 'Learn'); }
+    if (r.view === 'process') { const x = procById(r.id); return x ? x.name : ((procCfg() || {}).title || 'Process library'); }
+    if (r.view === 'post') { const x = postById(r.id); return x ? x.title : (N.title || "What's new"); }
+    return navLabel(r.view, r.view.charAt(0).toUpperCase() + r.view.slice(1));
+  }
+  /* The back link a page renders: where you came from if you clicked in, otherwise
+     the page's own parent, and nothing at all for a tab you arrived at directly. */
+  const backLink = (href, label) => {
+    if (cameFrom && cameFrom !== (location.hash || '#/home')) return backTo(cameFrom, hashLabel(cameFrom));
+    return href ? backTo(href, label) : '';
+  };
   const demoBar = list => (CFG.client.demoNote && list.some(i => i.demo))
     ? `<div class="demobar"><svg><use href="#i-alert"/></svg><span><b>Demo content</b>${esc(CFG.client.demoNote)}</span></div>` : '';
   const areaLabel = id => (CFG.areas.find(a => a.id === id) || {}).label || '';
@@ -879,7 +911,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function viewHome() {
     const a = aud(); const p = pathFor(a.id);
     const name = S.name ? ', ' + S.name : '';
-    let html = `<div class="hero"><h1>Welcome to <span class="g">${esc(CFG.client.name)}</span>${esc(name)}.</h1><p>${esc(a.intro)}</p></div>`;
+    let html = `${backLink('')}<div class="hero"><h1>Welcome to <span class="g">${esc(CFG.client.name)}</span>${esc(name)}.</h1><p>${esc(a.intro)}</p></div>`;
     if (a.homeTiles) return html + `<div class="tiles">${a.homeTiles.map(homeTile).join('')}</div>`;
     if (a.homeLink) html += `<a class="homelink" href="#/${esc(a.homeLink.to)}"><span><span class="t">${esc(a.homeLink.label)}</span><span class="b">${esc(a.homeLink.blurb || '')}</span></span><svg><use href="#i-arrow-r"/></svg></a>`;
     if (p) {
@@ -916,7 +948,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const chips = [['all', 'All']].concat(areas.map(a => [a.id, a.label]));
     const selArea = CFG.areas.find(a => a.id === sel);
     const A = aud(); const seesTeam = seesOf(A).length > 1;
-    let html = `<div class="hero"><h1>${esc(A.learnTitle || 'Learn')}</h1><p>${A.learnIntro ? esc(A.learnIntro) + ' ' : `${visible().length} items for ${esc(A.label.toLowerCase())}s${seesTeam ? ', including everything the team sees' : ''}. `}${selArea && selArea.blurb ? esc(selArea.blurb) : ''}</p></div>
+    let html = `${backLink('')}<div class="hero"><h1>${esc(A.learnTitle || 'Learn')}</h1><p>${A.learnIntro ? esc(A.learnIntro) + ' ' : `${visible().length} items for ${esc(A.label.toLowerCase())}s${seesTeam ? ', including everything the team sees' : ''}. `}${selArea && selArea.blurb ? esc(selArea.blurb) : ''}</p></div>
       <label class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search titles and descriptions" value="${esc(r.q.get('q') || '')}" aria-label="Search"></label>
       <div class="chips">${chips.map(([k, l]) => `<button type="button" data-area="${k}" class="${sel === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>${demoBar(items)}`;
     if (!items.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another filter.</div>`;
@@ -942,7 +974,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (!isDone(it.id)) start(it.id); else { S.lastOpened = it.id; save(); }
     currentSim = (it.type === 'simulation' || it.type === 'hotspot') ? it.id : null;
     const rec = S.items[it.id] || {};
-    let html = `${backTo('#/learn', navLabel('learn', 'Learn'))}
+    let html = `${backLink('#/learn', navLabel('learn', 'Learn'))}
       <div class="item-head"><div class="type"><svg class="ti"><use href="#t-${it.type}"/></svg>${TYPE[it.type]}${it.demo ? ' <span class="demo">Demo</span>' : ''}</div><h1>${esc(it.title)}</h1><div class="meta">${esc(metaOf(it))}</div><p class="blurb">${esc(it.blurb)}</p>
       <div class="actions" style="margin-top:14px">${favBtn(it.id, 'wide')}<span class="note" id="fav-note">${isFav(it.id) ? 'Saved. It is at the top of the list next time.' : 'Save it and it sits at the top of the list next time.'}</span></div></div>`;
     if (isDone(it.id)) {
@@ -1063,7 +1095,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (R.audiences && !R.audiences.includes(S.audience)) { go('home'); return ''; }
     const ep = pathFor('employee'); const pr = pathProgress(ep);
     const I = R.import;
-    return `<div class="hero"><div class="hero-row"><div><h1>${esc(R.title || 'Reports')}</h1><p>${esc(R.asOf || '')}${R.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
+    return `${backLink('')}<div class="hero"><div class="hero-row"><div><h1>${esc(R.title || 'Reports')}</h1><p>${esc(R.asOf || '')}${R.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
       ${I ? `<button class="btn outline small" id="imp-open" type="button"><svg><use href="#i-import"/></svg>${esc(I.label || 'Import data')}${I.demo ? ' <span class="demo">Soon</span>' : ''}</button>` : ''}</div></div>
       <div class="kpi">${(R.tiles || []).map(kpiTile).join('')}</div>
       <div class="section">${R.members ? lineChart(R.members) : ''}${R.cancellations ? barChart(R.cancellations) : ''}${R.recoverBlocks ? barChart(R.recoverBlocks) : ''}${R.classes ? barChart(R.classes) : ''}</div>
@@ -1133,7 +1165,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       <circle cx="${e.x}" cy="${e.y - 4}" r="0.95"/>
     </g>`).join('');
 
-    let html = `<div class="hero"><h1>${esc(planTitle(R))}</h1><p>${esc(R.intro || '')}${SITE.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>`;
+    let html = `${backLink('')}<div class="hero"><h1>${esc(planTitle(R))}</h1><p>${esc(R.intro || '')}${SITE.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>`;
     if (planSites().length > 1) html += `<div class="sites">${planSites().map(x => `<button type="button" data-site="${esc(x.id)}" class="${x.id === SITE.id ? 'on' : ''}">${esc(x.label)}</button>`).join('')}</div>`;
     html += `<label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="${esc(R.placeholder || 'Search')}" value="${esc(q)}" aria-label="Search equipment"></label>
       <div class="taglist">${planTags().map(t => `<button type="button" data-tag="${esc(t)}" class="${q.toLowerCase() === t ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>
@@ -1257,7 +1289,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const posts = newsPosts();
     const sched = posts.filter(isScheduled).length;
     const mine = (S.posts || []).length;
-    return `<div class="hero"><h1>${esc(N.ownerTitle || 'Blog')}</h1><p>${esc(N.ownerIntro || '')}</p></div>
+    return `${backLink('')}<div class="hero"><h1>${esc(N.ownerTitle || 'Blog')}</h1><p>${esc(N.ownerIntro || '')}</p></div>
       <div class="tiles">
         <a class="tl solid" href="#/post/new">
           <svg class="go"><use href="#i-arrow-r"/></svg>
@@ -1278,9 +1310,9 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   function viewBlog(N, author) {
     const posts = newsPosts();
-    const back = author ? backTo('#/news', N.ownerTitle || 'Blog') : '';
+    const back = author ? backLink('#/news', N.ownerTitle || 'Blog') : '';
     const write = author ? `<a class="btn small" href="#/post/new"><svg><use href="#i-plus"/></svg>${esc(N.writeLabel || 'Write a post')}</a>` : '';
-    let html = `${back}<div class="hero"><div class="hero-row"><div><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>${write}</div></div>`;
+    let html = `${back || backLink('')}<div class="hero"><div class="hero-row"><div><h1>${esc(N.title || "What's new")}</h1><p>${esc(N.intro || '')}${N.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>${write}</div></div>`;
     if (!posts.length) return html + `<div class="empty" style="margin-top:16px">Nothing posted yet.${author ? ' Write the first one.' : ''}</div>`;
     const [lead, ...rest] = posts;
     html += `<a class="post-hero" href="#/post/${esc(lead.id)}" style="display:block;color:inherit">
@@ -1311,7 +1343,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (r.id === 'new') return viewPostNew();
     const p = postById(r.id); if (!p) return `<div class="empty" style="margin-top:24px">That post does not exist. <a href="#/news">Back</a></div>`;
     if (isScheduled(p) && !canWrite()) { go('news'); return ''; }
-    return `${backTo('#/news' + (canWrite() ? '?all=1' : ''), (newsCfg() || {}).title || "What's new")}
+    return `${backLink('#/news' + (canWrite() ? '?all=1' : ''), (newsCfg() || {}).title || "What's new")}
       <div class="article-head"><span class="tag" style="color:var(--primary);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--w-semibold)">${esc(p.tag || '')}</span>${schedTag(p)}
       <h1>${esc(p.title)}</h1><div class="meta" style="font-size:14px;color:var(--text-muted)">${esc(fmtPost(p.date))}${p.local ? ' · written on this device' : ''}</div>
       <p class="blurb">${esc(p.lead)}</p></div>
@@ -1324,7 +1356,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function viewPostNew() {
     if (!canWrite()) { go('news'); return ''; }
     const N = newsCfg() || {};
-    return `${backTo('#/news', N.ownerTitle || N.title || "What's new")}
+    return `${backLink('#/news', N.ownerTitle || N.title || "What's new")}
       <div class="item-head"><h1>Write a post</h1><p class="blurb">It joins the blog as soon as you save it. Date it ahead and it waits until that day — you will see it here with the date on it in the meantime, members will not.</p></div>
       <div class="fstack">
         <div class="field"><label for="p-title">Title</label><input class="input" id="p-title" placeholder="RECOVER is open an hour earlier"></div>
@@ -1426,7 +1458,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function viewPath() {
     const p = pathFor(S.audience); if (!p) { go('home'); return ''; }
     const pr = pathProgress(p);
-    return `${backTo('#/home', navLabel('home', 'Home'))}
+    return `${backLink('#/home', navLabel('home', 'Home'))}
       <div class="item-head"><h1>${esc(p.title)}</h1><p class="blurb">${esc(p.blurb)}</p></div>
       <div class="section"><div class="bignum">${pr.done}<small>of ${pr.total} complete</small></div><div class="prog green"><i style="width:${pr.pct}%"></i></div>
       <div class="row-list" style="margin-top:16px">${p.items.map((id, i) => rowCard(byId[id], i + 1)).join('')}</div></div>`;
@@ -1447,7 +1479,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const all = procList();
     const list = all.filter(x => (sel === 'all' || x.status === sel) && (!q || (x.name + ' ' + (x.summary || '') + ' ' + procArea(x.area).label).toLowerCase().includes(q)));
     const count = s => all.filter(x => x.status === s).length;
-    let html = `${backTo('#/home', navLabel('home', 'Home'))}
+    let html = `${backLink('#/home', navLabel('home', 'Home'))}
       <div class="item-head"><h1>${esc(P.title)}</h1><p class="blurb">${esc(P.blurb)}</p></div>
       <div class="pstat">${(P.statuses || []).map(s => `<button type="button" data-s="${s.id}" class="${sel === s.id ? 'on' : ''}"><span class="n">${count(s.id)}</span><span class="l">${esc(s.label)}</span></button>`).join('')}</div>
       <div class="actions" style="margin-top:14px"><a class="btn small" href="#/process/new"><svg><use href="#i-plus"/></svg>Document a process</a>${sel !== 'all' ? `<a class="btn ghost small" href="#/processes">Show all ${all.length}</a>` : ''}</div>
@@ -1484,7 +1516,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (r.id === 'new') return viewProcessNew();
     const x = procById(r.id); if (!x) return `<div class="empty" style="margin-top:24px">That process does not exist. <a href="#/processes">Back to the library</a></div>`;
     const drives = (x.drives || []).map(id => byId[id]).filter(Boolean);
-    return `${backTo('#/processes', 'Process library')}
+    return `${backLink('#/processes', 'Process library')}
       <div class="item-head"><div class="type" style="color:var(--${x.status === 'documented' ? 'primary' : x.status === 'draft' ? 'cta' : 'error'})">${esc(statusLabel(x.status).label)}${x.local ? ' \u00B7 drafted on this device' : ''}</div>
       <h1>${esc(x.name)}</h1><p class="blurb">${esc(x.summary || '')}</p></div>
       ${x.note ? `<div class="drafts-note">${esc(x.note)}</div>` : ''}
@@ -1510,7 +1542,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
 
   function viewProcessNew() {
     const P = procCfg() || { areas: [] };
-    return `${backTo('#/processes', 'Process library')}
+    return `${backLink('#/processes', 'Process library')}
       <div class="item-head"><h1>Document a process</h1><p class="blurb">Write it while it is fresh. The draft is saved on this device and joins the library straight away, marked as a draft so nobody mistakes it for signed-off procedure. Export it when you want it turned into a guide, a checklist or a simulation.</p></div>
       <div class="fstack">
         <div class="field"><label for="f-name">What is the process called</label><input class="input" id="f-name" placeholder="Ordering consumables"></div>
@@ -1549,7 +1581,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (own) {
       const c = own.contact || {};
       const row = (icon, k, v, href, open) => `<div class="crow"><button type="button" class="copy" data-copy="${esc(v)}" data-what="${esc(k)}"><svg><use href="#${icon}"/></svg><span><span class="k">${esc(k)} \u00B7 tap to copy</span><span class="v">${esc(v)}</span></span></button><a class="open" href="${esc(href)}" aria-label="${esc(open)}"><svg><use href="#i-ext"/></svg></a></div>`;
-      return `<div class="hero"><h1>Support</h1><p>${esc(own.intro || '')}</p></div>
+      return `${backLink('')}<div class="hero"><h1>Support</h1><p>${esc(own.intro || '')}</p></div>
         <div class="section"><div class="label">${esc(own.faqLabel || 'The usual questions')}</div>${(own.faq || []).map(f => `<details><summary>${esc(f.q)}</summary><div class="ans">${esc(f.a)}</div></details>`).join('')}</div>
         <div class="section"><div class="label">${esc(c.label || 'Contact us')}</div>
           <p class="muted" style="font-size:15px;margin:-2px 0 0">${esc(c.text || '')}</p>
@@ -1562,7 +1594,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
         </div>
         <div class="section"><a class="btn outline" href="${esc(CFG.client.memberLogin)}" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg>Member login</a></div>`;
     }
-    return `<div class="hero"><h1>Support</h1><p>The answers to the questions that come up every week, then who to go to when it is not one of them.</p></div>
+    return `${backLink('')}<div class="hero"><h1>Support</h1><p>The answers to the questions that come up every week, then who to go to when it is not one of them.</p></div>
       <div class="section"><div class="label">The usual questions</div>${s.faq.map(f => `<details><summary>${esc(f.q)}</summary><div class="ans">${esc(f.a)}</div></details>`).join('')}</div>
       <div class="section"><div class="label">Direct assistance</div><p class="muted" style="font-size:14px;margin:-2px 0 14px">Find your problem, then go to the person under it.</p><div class="grid2">${s.assistance.map((c, i) => `<div class="card assist"><ul class="q">${c.queries.map(q => `<li>${esc(q)}</li>`).join('')}</ul><button type="button" class="goto" data-contact="${i}"><span class="k">Go to</span><span class="name">${esc(c.name)}</span><span class="role">${esc(c.role)}</span><span class="how">Tap for contact details</span><svg class="chev"><use href="#i-arrow-r"/></svg></button></div>`).join('')}</div></div>
       <div class="section"><div class="card"><div class="type">${esc(s.reportIssue.label)}</div><p style="margin-top:8px;font-size:15px" class="muted">${esc(s.reportIssue.text)}</p></div></div>
@@ -1572,7 +1604,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   function viewMe() {
     const p = pathFor(S.audience) || pathFor('employee'); const pr = pathProgress(p);
     const doneList = Object.entries(S.items).filter(([, v]) => v.status === 'complete').sort((a, b) => (b[1].completedAt || '').localeCompare(a[1].completedAt || ''));
-    return `<div class="hero"><h1>${esc(S.name || 'You')}</h1><p>Your record lives on this device. Export it whenever your manager asks.</p></div>
+    return `${backLink('')}<div class="hero"><h1>${esc(S.name || 'You')}</h1><p>Your record lives on this device. Export it whenever your manager asks.</p></div>
       <div class="section"><div class="label">Name</div><div class="field"><input class="input" id="me-name" value="${esc(S.name)}" placeholder="First name" aria-label="Your name"><button class="btn small" id="me-save" type="button">Save</button></div></div>
       <div class="section"><div class="label">${esc(p.title)}</div><div class="bignum">${pr.done}<small>of ${pr.total} complete</small></div><div class="prog green"><i style="width:${pr.pct}%"></i></div></div>
       <div class="section"><div class="label">Access</div><div class="kv">${CFG.audiences.map(a => `<span class="k">${esc(a.label)}</span><span>${a.key ? (S.unlocked[a.id] ? 'Unlocked on this device' : 'Locked') : 'Open to everyone'}</span>`).join('')}</div>
