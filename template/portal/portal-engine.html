@@ -366,6 +366,13 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .tl.wide .txt { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 
 /* ---- process library ---- */
+/* A gap is the one status that asks something of you, so its page says so and
+   offers the only thing that closes it. */
+.gapcta { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; margin-top: 20px;
+  border: 1px solid var(--error); border-left-width: 3px; padding: 16px; font-size: 14.5px; line-height: 1.55; color: var(--text-muted); }
+.gapcta b { color: var(--error); }
+.drafts-note.answered { border-left-color: var(--cta); }
+.gapcta .btn { flex: none; }
 .rule { border: 0; border-top: 1px solid var(--border-quiet); margin: 20px 0 16px; }
 .pstat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
 .pstat button { background: var(--surface); border: 1px solid var(--border-quiet); padding: 12px 10px; text-align: left; display: flex; flex-direction: column; gap: 3px; }
@@ -1415,7 +1422,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       return `<span class="big">${pr.done}<small>of ${pr.total} done</small></span>`;
     }
     if (t.kind === 'processes') {
-      const L = procList(); const c = s => L.filter(x => x.status === s).length;
+      const L = procList(); const c = s => L.filter(x => effStatus(x) === s).length;
       const tot = L.length || 1;
       return `<span class="big">${L.length}<small>processes</small></span>
         <span class="mini">${[['ok', c('documented')], ['dr', c('draft')], ['gp', c('gap')]].map(([k, n]) => n ? `<i class="${k}" style="flex:${n}"></i>` : '').join('')}</span>
@@ -1469,6 +1476,10 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   const procCfg = () => CFG.processes || null;
   const procList = () => { const P = procCfg(); return P ? P.items.concat(S.drafts || []) : []; };
   const procById = id => procList().find(x => x.id === id);
+  /* A draft written against a gap says which one it answers, so the gap stops
+     reading as untouched and the maintainer knows what the file is for. */
+  const resolverFor = id => (S.drafts || []).find(d => d.resolves === id);
+  const effStatus = x => (x.status === 'gap' && resolverFor(x.id)) ? 'draft' : x.status;
   const statusLabel = s => ((procCfg() || {}).statuses || []).find(x => x.id === s) || { label: s };
   const procArea = id => (((procCfg() || {}).areas) || []).find(a => a.id === id) || { label: id };
   const fmtDate = iso => { if (!iso) return 'Never'; try { return new Date(iso).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return iso; } };
@@ -1478,8 +1489,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     if (P.audiences && !P.audiences.includes(S.audience)) { go('home'); return ''; }
     const sel = r.q.get('status') || 'all'; const q = (r.q.get('q') || '').toLowerCase();
     const all = procList();
-    const list = all.filter(x => (sel === 'all' || x.status === sel) && (!q || (x.name + ' ' + (x.summary || '') + ' ' + procArea(x.area).label).toLowerCase().includes(q)));
-    const count = s => all.filter(x => x.status === s).length;
+    const list = all.filter(x => (sel === 'all' || effStatus(x) === sel) && (!q || (x.name + ' ' + (x.summary || '') + ' ' + procArea(x.area).label).toLowerCase().includes(q)));
+    const count = s => all.filter(x => effStatus(x) === s).length;
     let html = `${backLink(navItems().some(n => n.id === 'processes') ? '' : '#/home', navLabel('home', 'Home'))}
       <div class="item-head"><h1>${esc(P.title)}</h1><p class="blurb">${esc(P.blurb)}</p></div>
       <div class="pstat">${(P.statuses || []).map(s => `<button type="button" data-s="${s.id}" class="${sel === s.id ? 'on' : ''}"><span class="n">${count(s.id)}</span><span class="l">${esc(s.label)}</span></button>`).join('')}</div>
@@ -1490,8 +1501,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     (P.areas || []).forEach(ar => {
       const rows = list.filter(x => x.area === ar.id); if (!rows.length) return;
       html += `<div class="section"><div class="section-head"><h3>${esc(ar.label)}</h3><span class="muted" style="font-size:13px">${rows.length}</span></div>
-        ${rows.map(x => `<a class="prow" data-s="${esc(x.status)}" href="#/process/${esc(x.id)}">
-          <span class="top"><h4>${esc(x.name)}</h4><span class="st">${esc(statusLabel(x.status).label)}${x.local ? ' \u00B7 this device' : ''}</span></span>
+        ${rows.map(x => `<a class="prow" data-s="${esc(effStatus(x))}" href="#/process/${esc(x.id)}">
+          <span class="top"><h4>${esc(x.name)}</h4><span class="st">${esc(statusLabel(effStatus(x)).label)}${x.local ? ' \u00B7 this device' : resolverFor(x.id) ? ' \u00B7 drafted here' : ''}</span></span>
           <span class="sm">${esc(x.summary || '')}</span>
           <span class="meta"><span class="chip2">${esc(x.owner || 'Unassigned')}</span>${(x.drives || []).length ? `<span class="chip2 drv">Drives ${(x.drives || []).length}</span>` : ''}<span class="chip2">Reviewed ${esc(fmtDate(x.reviewed))}</span></span></a>`).join('')}</div>`;
     });
@@ -1515,13 +1526,18 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
 
   function viewProcess(r) {
-    if (r.id === 'new') return viewProcessNew();
+    if (r.id === 'new') return viewProcessNew(r);
     const x = procById(r.id); if (!x) return `<div class="empty" style="margin-top:24px">That process does not exist. <a href="#/processes">Back to the library</a></div>`;
     const drives = (x.drives || []).map(id => byId[id]).filter(Boolean);
     return `${backLink('#/processes', 'Process library')}
-      <div class="item-head"><div class="type" style="color:var(--${x.status === 'documented' ? 'primary' : x.status === 'draft' ? 'cta' : 'error'})">${esc(statusLabel(x.status).label)}${x.local ? ' \u00B7 drafted on this device' : ''}</div>
+      <div class="item-head"><div class="type" style="color:var(--${effStatus(x) === 'documented' ? 'primary' : effStatus(x) === 'draft' ? 'cta' : 'error'})">${esc(statusLabel(effStatus(x)).label)}${x.local ? ' \u00B7 drafted on this device' : ''}</div>
       <h1>${esc(x.name)}</h1><p class="blurb">${esc(x.summary || '')}</p></div>
       ${x.note ? `<div class="drafts-note">${esc(x.note)}</div>` : ''}
+      ${x.status === 'gap' && !resolverFor(x.id) ? `<div class="gapcta">
+        <div><b>This one is a gap.</b> Nobody has written it down, so it is done from memory and differently each time. You already know its name, its area and who owns it — what is missing is the steps.</div>
+        <a class="btn small" href="#/process/new?from=${esc(x.id)}"><svg><use href="#i-plus"/></svg>Document this process</a>
+      </div>` : ''}
+      ${resolverFor(x.id) ? `<div class="drafts-note answered">Drafted on this device as <a href="#/process/${esc(resolverFor(x.id).id)}">${esc(resolverFor(x.id).name)}</a>. It is a gap in the library until that draft is exported and taken in.</div>` : ''}
       <div class="pdet">
         <span class="k">Area</span><span>${esc(procArea(x.area).label)}</span>
         <span class="k">Owned by</span><span>${esc(x.owner || 'Unassigned')}</span>
@@ -1542,15 +1558,20 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     }));
   }
 
-  function viewProcessNew() {
+  function viewProcessNew(r) {
     const P = procCfg() || { areas: [] };
-    return `${backLink('#/processes', 'Process library')}
-      <div class="item-head"><h1>Document a process</h1><p class="blurb">Write it while it is fresh. The draft is saved on this device and joins the library straight away, marked as a draft so nobody mistakes it for signed-off procedure. Export it when you want it turned into a guide, a checklist or a simulation.</p></div>
+    const from = r && r.q.get('from') ? procById(r.q.get('from')) : null;
+    const v = (k, d = '') => from ? (from[k] || d) : d;
+    return `${backLink(from ? '#/process/' + from.id : '#/processes', from ? from.name : 'Process library')}
+      <div class="item-head"><h1>${from ? 'Document this process' : 'Document a process'}</h1><p class="blurb">${from
+        ? 'Filled in from the gap, so all that is left is the steps. Write what a person actually does, in the order they do it.'
+        : 'Write it while it is fresh. The draft is saved on this device and joins the library straight away, marked as a draft so nobody mistakes it for signed-off procedure. Export it when you want it turned into a guide, a checklist or a simulation.'}</p></div>
+      ${from ? `<input type="hidden" id="f-from" value="${esc(from.id)}">` : ''}
       <div class="fstack">
-        <div class="field"><label for="f-name">What is the process called</label><input class="input" id="f-name" placeholder="Ordering consumables"></div>
-        <div class="field"><label for="f-area">Area</label><select class="input" id="f-area">${(P.areas || []).map(a => `<option value="${esc(a.id)}">${esc(a.label)}</option>`).join('')}</select></div>
-        <div class="field"><label for="f-owner">Who owns it</label><input class="input" id="f-owner" placeholder="Manager on duty"></div>
-        <div class="field"><label for="f-sum">Why it matters, in a sentence</label><input class="input" id="f-sum" placeholder="What goes wrong when this is done differently by different people."></div>
+        <div class="field"><label for="f-name">What is the process called</label><input class="input" id="f-name" value="${esc(v('name'))}" placeholder="Ordering consumables"></div>
+        <div class="field"><label for="f-area">Area</label><select class="input" id="f-area">${(P.areas || []).map(a => `<option value="${esc(a.id)}"${a.id === v('area') ? ' selected' : ''}>${esc(a.label)}</option>`).join('')}</select></div>
+        <div class="field"><label for="f-owner">Who owns it</label><input class="input" id="f-owner" value="${esc(v('owner'))}" placeholder="Manager on duty"></div>
+        <div class="field"><label for="f-sum">Why it matters, in a sentence</label><input class="input" id="f-sum" value="${esc(v('summary'))}" placeholder="What goes wrong when this is done differently by different people."></div>
         <div class="field"><label for="f-steps">The steps</label><textarea id="f-steps" placeholder="One step per line, in the order they happen."></textarea><div class="hint">One per line. Write what a person actually does, not what the system does.</div></div>
         <div class="field"><label for="f-note">Anything unresolved</label><input class="input" id="f-note" placeholder="What still needs confirming before this becomes training."></div>
       </div>
@@ -1563,10 +1584,14 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       const name = $('#f-name').value.trim();
       if (!name) { $('#f-name').focus(); toast('Give the process a name first'); return; }
       const steps = $('#f-steps').value.split('\n').map(s => s.trim()).filter(Boolean);
+      const from = $('#f-from') ? $('#f-from').value : '';
+      const src = from ? procById(from) : null;
       const x = { id: 'draft-' + Date.now().toString(36), name, area: $('#f-area').value, owner: $('#f-owner').value.trim() || 'Unassigned',
-        status: 'draft', reviewed: new Date().toISOString().slice(0, 10), reviewCycle: 'Not set', drives: [],
+        status: 'draft', reviewed: new Date().toISOString().slice(0, 10), reviewCycle: 'Not set', drives: (src && src.drives) || [],
         summary: $('#f-sum').value.trim(), note: $('#f-note').value.trim() || 'Drafted in the portal. Not yet reviewed.', steps, local: true, by: S.name || null };
-      S.drafts = (S.drafts || []).concat([x]); save(); go('process/' + x.id); toast('Draft saved');
+      if (from) x.resolves = from;
+      S.drafts = (S.drafts || []).concat([x]); save(); go('process/' + x.id);
+      toast(from ? 'Gap answered \u2014 draft saved' : 'Draft saved');
     });
   }
   const download = (name, text) => {

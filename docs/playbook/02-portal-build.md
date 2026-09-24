@@ -96,6 +96,14 @@ makes the link between a procedure and its training explicit, so changing a proc
 you exactly what has to change with it, and a process driving nothing is visibly a process
 nobody is being trained on.
 
+A gap is the one status that asks something of you, so its page says so and offers the
+only thing that closes it: **Document this process**, which opens the form already filled
+in from the gap — name, area, owner, why it matters — leaving the steps, which is the part
+only a person can write. The draft it saves carries `resolves`, the id of the gap it
+answers, so the gap stops reading as untouched, the counts move from gap to draft, and
+whoever takes the export in knows which entry it replaces rather than adding a duplicate
+beside it.
+
 The library also takes drafts. "Document a process" captures a new one into the device's
 own storage, where it joins the list marked as a draft so nobody mistakes it for signed-off
 procedure, and exports as JSON for whoever maintains the portal. That keeps capture close
