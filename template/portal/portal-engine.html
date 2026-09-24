@@ -8,6 +8,7 @@
 <title><!-- @title --></title>
 <meta name="description" content="<!-- @description -->">
 <!-- @favicon -->
+<!-- @pwa -->
 <!-- @fonts -->
 <style>
 /* @tokens */
@@ -15,6 +16,9 @@
 
 /* ---- base ---- */
 *, *::before, *::after { box-sizing: border-box; }
+/* A class with a display rule outranks the UA's [hidden] — .install{display:grid}
+   silently beat it and showed a dead button wherever install was not on offer. */
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; height: 100%; }
 body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); font-size: var(--t-body-size); line-height: var(--t-body-lh); -webkit-font-smoothing: antialiased; }
 a { color: var(--link); text-decoration: none; }
@@ -534,6 +538,21 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .imp-note { font-size: 12px; margin-top: 14px; line-height: 1.5; }
 .imp-go { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; }
 
+/* ---- install ---- */
+.install { display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: center; width: 100%;
+  border: 1px solid var(--primary); background: var(--primary-tint); padding: 13px 15px; text-align: left; margin-top: 18px; }
+.install:hover { background: var(--primary-tint); border-color: var(--primary-deep); }
+.install svg { width: 22px; height: 22px; color: var(--primary); }
+.install .t { font-weight: var(--w-semibold); font-size: 14px; display: block; }
+.install .b { font-size: 12.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+.install .go { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); font-weight: var(--w-semibold); }
+.land .install { max-width: 420px; margin-inline: auto; }
+.ios-steps { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 12px; counter-reset: st; }
+.ios-steps li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px; align-items: start; font-size: 14.5px; line-height: 1.5; }
+.ios-steps li::before { counter-increment: st; content: counter(st); width: 26px; height: 26px; border: 1px solid var(--primary);
+  color: var(--primary); display: grid; place-items: center; font-size: 12px; font-weight: var(--w-semibold); border-radius: 50%; }
+.ios-steps b { font-weight: var(--w-semibold); }
+
 /* ---- support ---- */
 .assist .q { list-style: none; margin: 0 0 14px; padding: 0; }
 .assist .q li { display: flex; gap: 10px; align-items: flex-start; padding: 4px 0; font-size: 15px; line-height: 1.45; }
@@ -738,6 +757,17 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   <div class="actions"><button class="btn ghost small" id="imp-close" type="button">Close</button></div>
 </dialog>
 
+<dialog id="dlg-ios">
+  <h3>Add to your home screen</h3>
+  <p class="lead">iPhone and iPad do not let a website install itself, so this takes two taps in Safari.</p>
+  <ol class="ios-steps">
+    <li><span>Tap <b>Share</b> at the bottom of Safari — the square with an arrow coming out of it.</span></li>
+    <li><span>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</span></li>
+  </ol>
+  <p class="muted" style="font-size:13px;margin-top:16px">It opens full screen with its own icon. Anything saved in Safari stays in Safari: the installed copy starts fresh, so favourite your tips again from there.</p>
+  <div class="actions"><button class="btn small" id="ios-close" type="button">Got it</button></div>
+</dialog>
+
 <dialog id="dlg-confirm">
   <h3 id="confirm-title">Are you sure?</h3>
   <p id="confirm-text"></p>
@@ -836,7 +866,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     $('#tabbar').style.gridTemplateColumns = `repeat(${nav.length}, 1fr)`;
     $('#tabbar').dataset.n = nav.length;
     $('#rail-nav').innerHTML = nav.map(link).join('');
-    $('#menu-nav').innerHTML = nav.map(n => `<a href="#/${n.id}" data-close>${esc(n.label)}</a>`).join('');
+    $('#menu-nav').innerHTML = nav.map(n => `<a href="#/${n.id}" data-close>${esc(n.label)}</a>`).join('') + installHtml();
     const audHtml = CFG.audiences.map(a => `<button type="button" data-aud="${a.id}" data-c="${a.colour}" class="${a.id === S.audience ? 'on' : ''}" aria-pressed="${a.id === S.audience}">${a.key && !S.unlocked[a.id] ? '<svg><use href="#i-lock"/></svg>' : ''}${esc(a.label)}</button>`).join('');
     ['#rail-aud', '#menu-aud'].forEach(s => { $(s).innerHTML = audHtml; });
     $('#rail-login').href = CFG.client.memberLogin; $('#menu-login').href = CFG.client.memberLogin;
@@ -1572,6 +1602,42 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const reset = $('#reset-steps'); if (reset) reset.addEventListener('click', () => { delete S.checks[it.id]; delete S.items[it.id]; save(); renderBody(); });
   }
 
+  /* Installing it.
+     Android, Chrome and Edge fire beforeinstallprompt, which we hold onto so the
+     portal can offer installation in its own words instead of a browser banner.
+     Safari fires nothing and has no API for it, so on iOS the same control opens
+     the two-step instructions — the honest version of a button that cannot work.
+     None of it appears unless the hosted build injected a manifest, because a file
+     opened from a USB stick has nothing to install. */
+  const PWA = !!document.querySelector('meta[name="portal-installable"]');
+  const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const installed = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
+  let installEvt = null;
+  const canInstall = () => PWA && !installed() && (!!installEvt || isIOS());
+  const installHtml = () => `<button class="install" type="button" data-install hidden>
+    <svg><use href="#i-import"/></svg>
+    <span><span class="t">Install ${esc(CFG.client.portalTitle)}</span><span class="b">${isIOS() ? 'Add it to your home screen, two taps' : 'Keep it on your home screen, no app store'}</span></span>
+    <span class="go">Install</span></button>`;
+  const refreshInstall = () => document.querySelectorAll('[data-install]').forEach(el => { el.hidden = !canInstall(); });
+  function doInstall() {
+    if (installEvt) {
+      const e = installEvt; installEvt = null;
+      e.prompt();
+      Promise.resolve(e.userChoice).catch(() => {}).then(() => refreshInstall());
+      return;
+    }
+    if (isIOS()) { const d = $('#dlg-ios'); d.showModal(); d.scrollTop = 0; }
+  }
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; refreshInstall(); });
+  window.addEventListener('appinstalled', () => { installEvt = null; refreshInstall(); toast('Installed'); });
+  document.addEventListener('click', e => { if (e.target.closest('[data-install]')) { closeMenu(); doInstall(); } });
+  $('#ios-close').addEventListener('click', () => $('#dlg-ios').close());
+  /* The worker is what makes it installable at all, and what lets it open on a
+     phone with no signal. Registered only in the hosted build. */
+  if (PWA && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+  }
+
   function viewWelcome() {
     const doors = CFG.audiences.map(a => `<button type="button" class="door" data-c="${a.colour}" data-aud="${a.id}"><span><span class="t">${esc(a.label)}</span><span class="i">${esc(a.intro)}</span></span>${a.key && !S.unlocked[a.id] ? '<svg><use href="#i-lock"/></svg>' : '<svg><use href="#i-arrow"/></svg>'}</button>`).join('');
     return `<div class="land"><svg class="logo" viewBox="0 0 216 80"><use href="#logo"/></svg>
@@ -1579,6 +1645,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       <h1>Welcome to <span class="g">${esc(CFG.client.name)}</span>.</h1>
       <p>${esc(CFG.client.tagline)} Pick your door; you can change it any time from the menu.</p>
       <div class="doors">${doors}</div>
+      ${installHtml()}
       <div class="fine">${esc(CFG.client.tradingName)} · ${esc(CFG.client.address)}</div></div>`;
   }
 
@@ -2323,7 +2390,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const r = route();
     if (!S.landed && r.view !== 'welcome') { S.returnTo = location.hash || '#/home'; save(); location.hash = '#/welcome'; return; }
     const key = r.view + '/' + (r.id || '') + '?' + r.q.toString();
-    renderNav(); renderBody();
+    renderNav(); renderBody(); refreshInstall();
     if (r.view === 'home' && S.landed && !S.name && !S.nameSkipped && !$('#dlg-name').open) setTimeout(askName, 350);
     if (key !== lastKey && !/^learn/.test(key) && !/^processes/.test(key)) window.scrollTo(0, 0);
     lastKey = key;
