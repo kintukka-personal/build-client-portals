@@ -354,6 +354,11 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .tl .mini { display: flex; height: 6px; gap: 2px; }
 .tl .mini i { display: block; }
 .tl .mini i.ok { background: var(--primary); } .tl .mini i.dr { background: var(--cta); } .tl .mini i.gp { background: var(--error); }
+.tl.solid { background: var(--cta); border-color: var(--cta); }
+.tl.solid:hover { background: var(--cta-deep); border-color: var(--cta-deep); }
+.tl.solid .eb, .tl.solid .nx, .tl.solid .nt, .tl.solid .big, .tl.solid .bl, .tl.solid .go,
+.tl.solid .big small, .tl.solid:hover .go { color: var(--text-on-cta); }
+.tl.solid .bl, .tl.solid .big small { opacity: .78; }
 .tl.wide { flex-direction: row; align-items: center; gap: 18px; min-height: 0; }
 .tl.wide .fig { flex: none; }
 .tl.wide .txt { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -1246,7 +1251,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const mine = (S.posts || []).length;
     return `<div class="hero"><h1>${esc(N.ownerTitle || 'Blog')}</h1><p>${esc(N.ownerIntro || '')}</p></div>
       <div class="tiles">
-        <a class="tl" data-a="cta" href="#/post/new">
+        <a class="tl solid" href="#/post/new">
           <svg class="go"><use href="#i-arrow-r"/></svg>
           <span class="eb">${esc(N.writeLabel || 'Write a post')}</span>
           <span class="fig"><span class="nx"><svg><use href="#i-plus"/></svg>New</span><span class="nt">Tag, title, date, body</span></span>
@@ -1403,7 +1408,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
   function homeTile(t) {
     const wide = t.kind === 'mark' || t.kind === 'floorplan';
-    return `<a class="tl ${t.span === 2 ? 'tile-l' : ''} ${wide ? 'wide' : ''}" data-a="${esc(t.accent || 'primary')}" href="${esc(tileHref(t))}"${t.external ? ' target="_blank" rel="noopener"' : ''}>
+    return `<a class="tl ${t.span === 2 ? 'tile-l' : ''} ${wide ? 'wide' : ''} ${t.solid ? 'solid' : ''}" data-a="${esc(t.accent || 'primary')}" href="${esc(tileHref(t))}"${t.external ? ' target="_blank" rel="noopener"' : ''}>
       <svg class="go"><use href="#${t.external ? 'i-ext' : 'i-arrow-r'}"/></svg>
       ${wide ? `<span class="fig">${tileFigure(t)}</span><span class="txt"><span class="eb">${esc(t.eyebrow)}</span><span class="bl">${esc(t.blurb || '')}</span></span>`
              : `<span class="eb">${esc(t.eyebrow)}</span><span class="fig">${tileFigure(t)}</span><span class="bl">${esc(t.blurb || '')}</span>`}
