@@ -457,6 +457,8 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .tl .nx { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--cta); }
 .tl .nx svg { width: 14px; height: 14px; flex: none; }
 .tl .nt { font-size: 16px; font-weight: var(--w-semibold); line-height: 1.25; }
+.tl .nt.plus { display: flex; align-items: center; gap: 8px; }
+.tl .nt.plus svg { width: 17px; height: 17px; flex: none; }
 .tl .mk { width: 54px; color: var(--primary); }
 /* the plan at tile size: the shape of the room, no labels, nothing to read */
 .tl .mini-plan { display: block; width: 62px; flex: none; }
@@ -1389,8 +1391,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
         <a class="tl solid" href="#/post/new">
           <svg class="go"><use href="#i-arrow-r"/></svg>
           <span class="eb">${esc(N.writeLabel || 'Write a post')}</span>
-          <span class="fig"><span class="nx"><svg><use href="#i-plus"/></svg>New</span><span class="nt">Tag, title, date, body</span></span>
-          <span class="bl">Date it ahead and it waits until that day.</span>
+          <span class="fig"><span class="nt plus"><svg><use href="#i-plus"/></svg>New</span></span>
+          <span class="bl">Tag, title, date, body</span>
         </a>
         <a class="tl" href="#/news?all=1">
           <svg class="go"><use href="#i-arrow-r"/></svg>
