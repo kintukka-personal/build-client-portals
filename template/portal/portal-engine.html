@@ -162,6 +162,7 @@ a.card:hover { border-color: var(--text-muted); }
 .hero p { color: var(--text-muted); margin-top: 8px; }
 .hero-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; justify-content: space-between; }
 .hero-row .btn { flex: none; }
+.hero-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 /* the import panel: longer than a confirm, so it scrolls rather than running off */
 dialog.wide { width: min(94vw, 520px); max-height: 86vh; overflow: auto; }
 dialog.wide .lead { color: var(--text-muted); font-size: 15px; margin-top: 4px; }
@@ -452,6 +453,87 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
 .homelink .b { display: block; font-size: 14px; margin-top: 4px; opacity: .85; }
 .homelink svg { width: 24px; height: 24px; }
 
+
+/* ---- imported reports and insights ---- */
+.chips a { flex: none; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: var(--w-semibold);
+  padding: 8px 12px; border: 1px solid var(--border-quiet); color: var(--text-muted); }
+.chips a.on { border-color: var(--primary); color: var(--primary); background: var(--primary-tint); }
+.chips a:hover { text-decoration: none; }
+.tile.t-good { border-color: var(--primary); } .tile.t-good .v { color: var(--primary); }
+.tile.t-warn { border-color: var(--cta-deep); } .tile.t-warn .v { color: var(--cta); }
+.hbar .l small { color: var(--text-muted); font-size: 11px; margin-left: 5px; font-variant-numeric: tabular-nums; }
+.lowchip { font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--cta); border: 1px solid var(--cta-deep);
+  border-radius: 100px; padding: 1px 6px; margin-left: 6px; font-weight: var(--w-semibold); white-space: nowrap; }
+.hbar.low .t i { background: repeating-linear-gradient(135deg, var(--primary-deep) 0 4px, transparent 4px 9px), var(--primary-tint); }
+.hbar .t .base { position: absolute; top: -2px; bottom: -2px; width: 1px; background: var(--cta); }
+.lifts { display: grid; gap: 8px; }
+.lift { display: grid; grid-template-columns: minmax(96px, 34%) 1fr 44px; gap: 10px; align-items: center; font-size: 13px; }
+.lift .l small { color: var(--text-muted); font-size: 11px; margin-left: 5px; }
+.lift .bar { position: relative; height: 14px; }
+.lift .bar .mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--border-quiet); }
+.lift .bar i.up { position: absolute; left: 50%; top: 0; height: 14px; background: var(--primary); }
+.lift .bar i.down { position: absolute; right: 50%; top: 0; height: 14px; background: var(--error); }
+.lift.low .bar i.up { background: repeating-linear-gradient(135deg, var(--primary-deep) 0 4px, transparent 4px 9px), var(--primary-tint); }
+.lift.low .bar i.down { background: repeating-linear-gradient(135deg, var(--error) 0 4px, transparent 4px 9px), transparent; }
+.lift .v { text-align: right; font-variant-numeric: tabular-nums; font-weight: var(--w-semibold); }
+.lift .v.up { color: var(--primary); } .lift .v.down { color: var(--error); }
+.finds { display: grid; gap: 10px; }
+.find { background: var(--surface); border: 1px solid var(--border-quiet); border-left-width: 3px; padding: 15px 16px; }
+.find.p1 { border-left-color: var(--primary); } .find.p2 { border-left-color: var(--cta); } .find.p3 { border-left-color: var(--error); }
+.find h4 { font-size: 15px; display: flex; gap: 9px; align-items: baseline; flex-wrap: wrap; }
+.find .ft { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 2px 8px; border: 1px solid var(--border-quiet);
+  border-radius: 100px; color: var(--text-muted); font-weight: var(--w-semibold); }
+.find.p1 .ft { border-color: var(--primary); color: var(--primary); }
+.find.p2 .ft { border-color: var(--cta-deep); color: var(--cta); }
+.find.p3 .ft { border-color: var(--error); color: var(--error); }
+.find p { margin-top: 8px; font-size: 14px; color: var(--text-muted); line-height: 1.55; }
+.find p b { color: var(--text); font-weight: var(--w-semibold); }
+.find .do { margin-top: 10px; font-size: 14px; border-top: 1px dashed var(--border-quiet); padding-top: 9px; line-height: 1.55; }
+.find .do em { font-style: normal; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cta);
+  display: block; margin-bottom: 3px; font-weight: var(--w-semibold); }
+.splitrow { display: flex; gap: 12px; justify-content: space-between; align-items: baseline; padding: 7px 0; font-size: 14px;
+  border-bottom: 1px solid var(--border-quiet); }
+.splitrow:last-of-type { border-bottom: 0; }
+.splitrow b { font-variant-numeric: tabular-nums; font-weight: var(--w-semibold); }
+.splitrow.sub { color: var(--text-muted); padding-left: 14px; font-size: 13px; }
+.srcline { display: flex; gap: 10px 14px; align-items: baseline; flex-wrap: wrap; border: 1px solid var(--primary);
+  background: var(--primary-tint); padding: 11px 14px; font-size: 13px; margin-bottom: 10px; }
+.srcline b { font-weight: var(--w-semibold); }
+.srcline .sp { margin-left: auto; display: flex; gap: 8px; }
+.srcline button { font-size: 12px; color: var(--text-muted); text-decoration: underline; }
+.srcline button:hover { color: var(--text); }
+/* the import panel */
+.imp-list { display: grid; gap: 8px; }
+.impc { display: grid; gap: 3px; text-align: left; width: 100%; border: 1px solid var(--border-quiet); padding: 13px 14px; background: var(--surface); }
+.impc:hover { border-color: var(--primary); }
+.impc .t { font-weight: var(--w-semibold); font-size: 15px; display: flex; gap: 9px; align-items: baseline; flex-wrap: wrap; }
+.impc .tagp { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--primary); color: var(--primary);
+  border-radius: 100px; padding: 1px 8px; font-weight: var(--w-semibold); }
+.impc.soon { opacity: .55; cursor: default; }
+.impc.soon:hover { border-color: var(--border-quiet); }
+.impc.soon .tagp { border-color: var(--border-quiet); color: var(--text-muted); }
+.impc .s { font-size: 12px; color: var(--cta); letter-spacing: .04em; }
+.impc .b { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+.impc .have { font-size: 12px; color: var(--primary); margin-top: 3px; }
+.imp-drop { border: 1.5px dashed var(--border-quiet); padding: 24px 18px; text-align: center; display: grid; gap: 7px; justify-items: center; }
+.imp-drop.hot { border-color: var(--cta); background: var(--cta-tint, rgba(255,186,0,.08)); }
+.imp-drop b { font-size: 15px; } .imp-drop span { font-size: 13px; color: var(--text-muted); max-width: 42ch; }
+.imp-cols, .imp-gives, .imp-map { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; font-size: 13px; }
+.imp-cols li { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.imp-cols li b { font-weight: var(--w-semibold); }
+.imp-cols li i { font-style: normal; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--cta); }
+.imp-cols li span { color: var(--text-muted); font-size: 12px; }
+.imp-gives li { color: var(--text-muted); display: flex; gap: 9px; }
+.imp-gives li::before { content: ""; flex: none; width: 10px; height: 2px; background: var(--primary); margin-top: 9px; }
+.imp-map li { display: flex; gap: 10px; justify-content: space-between; border-bottom: 1px solid var(--border-quiet); padding: 6px 0; }
+.imp-map li span { color: var(--text-muted); text-align: right; }
+.imp-map li.ok span { color: var(--primary); }
+.imp-map li.no span { color: var(--text-muted); font-style: italic; }
+.imp-err { border: 1px solid var(--error); color: var(--text); padding: 11px 13px; font-size: 13px; line-height: 1.55; margin-top: 14px; }
+.imp-ok { border: 1px solid var(--primary); background: var(--primary-tint); padding: 11px 13px; font-size: 13px; margin-top: 16px; line-height: 1.55; }
+.imp-note { font-size: 12px; margin-top: 14px; line-height: 1.5; }
+.imp-go { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+
 /* ---- support ---- */
 .assist .q { list-style: none; margin: 0 0 14px; padding: 0; }
 .assist .q li { display: flex; gap: 10px; align-items: flex-start; padding: 4px 0; font-size: 15px; line-height: 1.45; }
@@ -569,6 +651,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     <symbol id="i-news" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12v14a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2z"/><path d="M16 9h4v10a2 2 0 0 1-2 2M7 9h6M7 13h6M7 17h4"/></g></symbol>
     <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.4" r="1.05" fill="currentColor" stroke="none"/></g></symbol>
     <symbol id="i-star" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 3.2l2.6 5.6 6 .8-4.4 4.2 1.1 6.1-5.3-2.9-5.3 2.9 1.1-6.1L3.4 9.6l6-.8z"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 18h5"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.4.3.6.7.6 1.2v.9h5.8v-.9c0-.5.2-.9.6-1.2A6 6 0 0 0 12 3Z"/></g></symbol>
     <symbol id="i-import" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M12 14V4M12 14l-3.2-3.2M12 14l3.2-3.2"/></g></symbol>
     <symbol id="t-hotspot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M21 12.5V5H3v14h10"/><path d="m3 16 4.5-4.5 3.5 3.5"/><circle cx="8.5" cy="9" r="1.4"/><path d="M18.5 14c1.9 0 3.5 1.5 3.5 3.4 0 2.4-3.5 5.1-3.5 5.1S15 19.8 15 17.4c0-1.9 1.6-3.4 3.5-3.4z"/><circle cx="18.5" cy="17.4" r="1.2"/></g></symbol>
     <symbol id="t-video" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="5" width="13" height="14" rx="1.5"/><path d="m15.5 12 6-3.5v11l-6-3.5z"/></g></symbol>
@@ -652,8 +735,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   <h3 id="imp-title"></h3>
   <p class="lead" id="imp-intro"></p>
   <div id="imp-body"></div>
-  <div class="status" id="imp-status"></div>
-  <div class="actions"><button class="btn ghost small" id="imp-close" type="button">Close</button><a class="btn small" id="imp-cta" href="#/support"></a></div>
+  <div class="actions"><button class="btn ghost small" id="imp-close" type="button">Close</button></div>
 </dialog>
 
 <dialog id="dlg-confirm">
@@ -831,29 +913,465 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       const ok = document.execCommand('copy'); ta.remove(); return ok;
     } catch (e) { return false; }
   }
-  /* The import panel. Nothing is wired to a file picker yet and the copy says so:
-     an owner shown this should come away knowing which exports to dig out, not
-     thinking the page already reads them. */
-  function importPanel() {
-    const I = (CFG.reports || {}).import; if (!I) return;
-    const list = (label, rows) => rows && rows.length
-      ? `<div class="label">${esc(label)}</div><ul>${rows.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : '';
-    $('#imp-title').textContent = I.title || 'Importing your own numbers';
-    $('#imp-intro').textContent = I.intro || '';
-    $('#imp-body').innerHTML = list('What it takes', I.takes) + list('What it does with them', I.does);
-    $('#imp-status').textContent = I.status || '';
-    const cta = $('#imp-cta');
-    cta.textContent = I.cta || 'Talk to us';
-    cta.href = '#/' + (I.to || 'support');
-    const d = $('#dlg-import');
-    cta.onclick = () => d.close();
-    $('#imp-close').onclick = () => d.close();
-    d.showModal();
-    /* This one is long enough to scroll, and the first thing a dialog focuses is
-       its first focusable child — Close, at the very bottom. So it opened at the
-       end of itself. The dialog takes focus instead and starts at the top. */
-    d.scrollTop = 0; d.focus();
+  // ---- importing a report -------------------------------------------------
+  /* A converter per kind of export. The metadata — what it is called, which columns
+     it looks for, what it gives you back — lives in the client's config, so a new
+     export becomes a config entry plus one entry here. The maths stays in code
+     because that is what it is.
+
+     Everything below runs on the aggregate side of a line: rows go in, totals come
+     out, and only the totals are ever stored. The member-level rows are read, counted
+     and dropped, which is the promise the import panel makes.
+
+     The block between the markers is lifted verbatim by tools/make-insights-demo.js
+     and run over the sample, so the worked example shipped in the config is the same
+     arithmetic an owner's own file goes through. They cannot drift. */
+  /* @converter */
+  const MIN_N = 8;                       // below this a rate is marked, never hidden
+  const esc0 = v => String(v == null ? '' : v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const pctOf = (a, b) => b ? Math.round(a / b * 1000) / 10 : 0;
+  const pc = v => (Math.round(v * 10) / 10).toFixed(1) + '%';
+
+  /* Match a wanted role to whichever column this system happens to call it. */
+  function autoMap(headers, expect) {
+    const used = new Set(), map = {};
+    (expect || []).forEach(e => {
+      const hit = [];
+      headers.forEach((h, i) => {
+        if (used.has(i) || h == null) return;
+        const n = String(h).toLowerCase();
+        if ((e.match || []).some(m => n.includes(m))) hit.push(i);
+      });
+      if (!hit.length) return;
+      if (e.multi) { map[e.role] = hit; hit.forEach(i => used.add(i)); }
+      else { map[e.role] = hit[0]; used.add(hit[0]); }
+    });
+    return map;
   }
+
+  const segsOf = s => String(s == null ? '' : s).split(/,\s*(?=[A-Z[])/).map(x => x.trim()).filter(Boolean);
+  const endedSeg = x => /\[ended\s/i.test(x);
+  const productOf = x => x.replace(/^\[[^\]]*\]\s*/, '').replace(/\s*\[end(s|ed)[^\]]*\]/i, '').trim();
+  const endedOn = x => { const m = x.match(/\[ended\s+([^\]]+)\]/i); const d = m ? new Date(m[1]) : null; return d && !isNaN(d) ? d : null; };
+
+  const CONVERTERS = {
+    /* Prospect tours, walk-ins and paid casual visits: one row per person per task. */
+    leads(rows, headers, map, cfg) {
+      const V = (cfg && cfg.vocabulary) || [];
+      const typed = !!(cfg && cfg.typed);
+      const get = (r, role) => { const i = map[role]; return i == null ? null : r[i]; };
+      const noteOf = r => (map.notes || []).map(i => r[i]).filter(v => v != null && v !== '').join('  ').toLowerCase();
+
+      /* Conversion is the export's own flag. It reconciles with the number the gym
+         system already shows, and the split underneath says what it is made of. */
+      const isNum1 = v => v === 1 || v === '1' || String(v).trim() === '1';
+      const conv = rows.map(r => isNum1(get(r, 'outcome')));
+      const n = rows.length, joined = conv.filter(Boolean).length, base = pctOf(joined, n);
+
+      const state = rows.map(r => {
+        const segs = segsOf(get(r, 'history'));
+        const live = segs.filter(x => !endedSeg(x)), ended = segs.filter(endedSeg);
+        return {
+          live: live.length > 0,
+          corporate: live.map(productOf).some(p => (cfg.corporate || []).some(c => p.toLowerCase().includes(c))),
+          winback: live.length > 0 && ended.length > 0,
+          endedDates: ended.map(endedOn).filter(Boolean)
+        };
+      });
+
+      const dates = rows.map(r => {
+        const v = get(r, 'date');
+        if (v instanceof Date) return v;
+        const d = v == null || v === '' ? null : new Date(String(v).replace(' ', 'T'));
+        return d && !isNaN(d) ? d : null;
+      });
+      const good = dates.filter(Boolean);
+      const from = good.length ? new Date(Math.min.apply(null, good)) : null;
+      const to = good.length ? new Date(Math.max.apply(null, good)) : null;
+
+      const group = (role, title, note) => {
+        if (map[role] == null) return null;
+        const m = new Map();
+        rows.forEach((r, i) => {
+          const raw = get(r, role);
+          const k = raw == null || raw === '' ? '(not recorded)' : String(raw);
+          if (!m.has(k)) m.set(k, { k: k, n: 0, c: 0 });
+          const o = m.get(k); o.n++; if (conv[i]) o.c++;
+        });
+        const list = Array.from(m.values()).sort((a, b) => b.n - a.n)
+          .map(o => ({ k: o.k, n: o.n, c: o.c, r: pctOf(o.c, o.n), low: o.n < MIN_N }));
+        return { id: role, title: title, note: note, rows: list };
+      };
+
+      /* Age is a number, so it buckets rather than groups. A blank is kept as its
+         own bucket: it is not missing at random, it means no intake happened. */
+      const ageGroup = () => {
+        if (map.age == null) return null;
+        const B = [['Under 25', v => v < 25], ['25 to 34', v => v >= 25 && v < 35], ['35 and over', v => v >= 35]];
+        const out = B.map(b => ({ k: b[0], n: 0, c: 0, t: b[1] })).concat([{ k: 'Not recorded', n: 0, c: 0, t: null }]);
+        rows.forEach((r, i) => {
+          const raw = get(r, 'age');
+          const v = raw === null || raw === '' || raw === undefined ? NaN : Number(raw);
+          const b = isNaN(v) ? out[out.length - 1] : out.find(x => x.t && x.t(v));
+          if (!b) return; b.n++; if (conv[i]) b.c++;
+        });
+        return { id: 'age', title: 'By age', note: 'a blank age usually means no real intake conversation happened',
+          rows: out.filter(b => b.n).map(b => ({ k: b.k, n: b.n, c: b.c, r: pctOf(b.c, b.n), low: b.n < MIN_N })) };
+      };
+
+      /* The notes carry the objection, the competitor and the follow-up decision, and
+         none of it is in a field you can sort. The vocabulary turns them into something
+         countable; a keyword starting with a minus sign excludes. */
+      const tagOf = r => {
+        const t = noteOf(r); if (!t) return [];
+        return V.filter(rule => {
+          const parts = String(rule.words || '').split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+          const inc = parts.filter(p => p[0] !== '-'), exc = parts.filter(p => p[0] === '-').map(p => p.slice(1).trim());
+          if (!inc.length) return false;
+          let s = t; exc.forEach(x => { if (x) s = s.split(x).join(' '); });
+          return inc.some(k => s.indexOf(k) >= 0);
+        }).map(rule => rule.name);
+      };
+      const tg = new Map();
+      rows.forEach((r, i) => tagOf(r).forEach(name => {
+        if (!tg.has(name)) tg.set(name, { t: name, n: 0, c: 0, kind: (V.find(x => x.name === name) || {}).kind || 'neu' });
+        const o = tg.get(name); o.n++; if (conv[i]) o.c++;
+      }));
+      const tags = Array.from(tg.values())
+        .map(o => ({ t: o.t, n: o.n, c: o.c, kind: o.kind, r: pctOf(o.c, o.n), lift: Math.round(pctOf(o.c, o.n) - base), low: o.n < MIN_N }))
+        .sort((a, b) => b.lift - a.lift);
+      const withNote = rows.filter(r => noteOf(r)).length;
+      const tagged = rows.filter(r => tagOf(r).length).length;
+
+      const flagN = joined;
+      const corp = state.filter(s => s.live && s.corporate).length;
+      const soldN = state.filter(s => s.live && !s.corporate).length;
+      const winback = state.filter(s => s.winback).length;
+      const agree = state.filter((s, i) => s.live === conv[i]).length;
+      const churn = state.filter((s, i) => !conv[i] && s.endedDates.some(d => from && to && d >= from && d <= to)).length;
+
+      /* Faults worth naming. A date stored as text is only visible in a typed file:
+         from a CSV every cell is text and there is nothing to compare it against. */
+      const quality = [];
+      if (typed && map.date != null) {
+        const txt = rows.reduce((a, r, i) => a + (get(r, 'date') != null && get(r, 'date') !== '' && !(get(r, 'date') instanceof Date) ? 1 : 0), 0);
+        if (txt) quality.push({ id: 'textdate', n: txt, label: txt + ' of the ' + n + ' dates are stored as text',
+          detail: 'They drop silently out of any date filter and no error tells you. Two per cent of a small file you would catch by eye; across a year of exports it is a few hundred rows.' });
+      }
+      const dupMap = new Map();
+      rows.forEach(r => { const t = noteOf(r).slice(0, 110); if (t.length > 40) dupMap.set(t, (dupMap.get(t) || 0) + 1); });
+      const dupSets = Array.from(dupMap.values()).filter(v => v > 1);
+      const dupRows = dupSets.reduce((a, b) => a + b, 0);
+      if (dupRows) quality.push({ id: 'dupes', n: dupRows, label: dupRows + ' rows are duplicate write-ups',
+        detail: dupSets.length + ' pieces of note text appear on more than one row, which is one conversation with a group logged separately against each person. Every per-lead rate here is diluted by them.' });
+      const noDate = dates.filter((d, i) => !d && get(rows[i], 'date') != null && get(rows[i], 'date') !== '').length;
+      if (noDate) quality.push({ id: 'baddate', n: noDate, label: noDate + ' dates could not be read at all', detail: 'Those rows sit outside every period this report covers.' });
+
+      const byChannel = group('channel', 'How they came in', 'the one worth putting on the wall');
+      const bySource = group('source', 'Where the leads came from', 'low = under ' + MIN_N + ' leads');
+      const byStaff = group('staff', 'By staff member', 'one sign-up moves any of these by several points');
+      const byAge = ageGroup();
+
+      /* Findings, written from the numbers rather than typed in. */
+      const F = [];
+      const tour = byChannel && byChannel.rows.find(x => /tour/i.test(x.k) && !/walk/i.test(x.k));
+      let upside = 0, ntN = 0, ntR = 0;
+      if (tour && byChannel) {
+        const rest = byChannel.rows.filter(x => x !== tour);
+        ntN = rest.reduce((a, b) => a + b.n, 0);
+        const ntC = rest.reduce((a, b) => a + b.c, 0);
+        ntR = pctOf(ntC, ntN);
+        upside = Math.round(ntN * 0.15 * (tour.r - ntR) / 100);
+        if (tour.n >= 10 && tour.r - ntR > 15) F.push({ p: 1, tag: 'Act on this',
+          h: 'A tour is worth ' + Math.round(tour.r - ntR) + ' points of conversion',
+          b: 'Tours convert at <b>' + pc(tour.r) + '</b> (' + tour.c + ' of ' + tour.n + '). Everyone else who walked through the door converted at <b>' + pc(ntR) + '</b> (' + ntC + ' of ' + ntN + '). A walk-in who does not get a booked tour behaves almost exactly like someone who just paid for a casual, so it is not the visit that converts, it is the tour.',
+          d: '<b>' + ntN + '</b> people came in without one. Turning even 15% of them into a booked tour at the current tour rate is about <b>' + upside + ' extra memberships a month</b> from foot traffic already inside the building.' });
+      }
+      const dead = tags.filter(t => t.kind === 'neg' && t.c === 0 && t.n >= 5);
+      if (dead.length) {
+        const set = new Set();
+        rows.forEach((r, i) => { if (!conv[i] && tagOf(r).some(t => dead.some(d => d.t === t))) set.add(i); });
+        F.push({ p: 1, tag: 'Act on this', h: 'The notes already say who is never going to join',
+          b: dead.map(d => '<b>' + d.t.toLowerCase() + '</b> (' + d.n + ')').join(', ') + ' &mdash; between them <b>' + set.size + '</b> leads, and not one of them converted. That judgement is sitting in a text box where nothing can count it.',
+          d: 'Close these automatically instead of having staff chase them, and the follow-up list drops to the leads that are actually live.' });
+      }
+      if (corp || winback || churn) F.push({ p: 2, tag: 'Definition', h: 'The ' + flagN + ' is three different things',
+        b: 'The flag counts who is a member at the moment the file was exported. It splits into <b>' + soldN + '</b> memberships the team sold and <b>' + corp + '</b> that arrived through an employer scheme; cutting across both, <b>' + winback + '</b> are win-backs who had a membership here before that had ended rather than new members. Separately, <b>' + churn + '</b> row' + (churn === 1 ? ' is a cancellation inside this very period' : 's are cancellations inside this very period') + ', sitting in a leads report scored as a lead that did not convert.',
+        d: 'Keep reporting the ' + flagN + ' so it reconciles with the system, and show the split underneath it. The membership history column already carries everything needed to break it out.' });
+      const na = byAge && byAge.rows.find(x => x.k === 'Not recorded');
+      if (na && na.n >= MIN_N && na.r < base - 10) F.push({ p: 2, tag: 'Leading indicator', h: 'A blank age field predicts a lost lead',
+        b: 'Rows with no age recorded convert at <b>' + pc(na.r) + '</b> against <b>' + pc(base) + '</b> overall. Age is not causing anything. It is missing because no real intake conversation happened.',
+        d: 'Treat an incomplete record as a live warning on the day, not as a gap discovered at month end.' });
+      const small = bySource ? bySource.rows.filter(x => x.low).length : 0;
+      if (small) F.push({ p: 2, tag: 'Caution', h: small + ' of the ' + bySource.rows.length + ' lead sources sit under ' + MIN_N + ' leads',
+        b: 'Their rates are shown and marked <i>low</i>. At three or four leads a source swings from 0% to 33% on one sign-up, so read those lines as direction rather than as a measurement.',
+        d: 'Report source conversion on a rolling quarter. One month of one site will not carry it on its own.' });
+      /* The sales script is pasted into the note as a block of questions. Whether
+         anyone answered it, and whether the answers survive the member being created,
+         are both readable from the same text — and both matter more than any chart
+         here, because they decide what next month's data is worth. */
+      const P = (cfg && cfg.patterns) || {};
+      if (P.scriptQuestion && byChannel) {
+        const tourKey = (byChannel.rows.find(x => /tour/i.test(x.k) && !/walk/i.test(x.k)) || {}).k;
+        const tourRows = tourKey ? rows.filter(r => String(get(r, 'channel')) === tourKey) : [];
+        const q = String(P.scriptQuestion).toLowerCase();
+        const answered = t => {
+          let i = -1;
+          while ((i = t.indexOf(q, i + 1)) >= 0) {
+            const after = t.slice(i + q.length, i + q.length + 300).split(/\s2\./)[0];
+            if (/[a-z]{3,}/.test(after)) return true;
+          }
+          return false;
+        };
+        const pasted = tourRows.filter(r => noteOf(r).indexOf(q) >= 0);
+        const blank = pasted.filter(r => !answered(noteOf(r)));
+        if (blank.length) F.push({ p: 3, tag: 'Process', h: blank.length + ' tour' + (blank.length === 1 ? ' has' : 's have') + ' the script pasted in and never filled out',
+          b: 'The qualification questions are sitting in the note exactly as the template writes them, with no answers underneath. The prompt is being pasted and the conversation is not being recorded.',
+          d: 'Either the questions get answered in the record or the template stops being pasted. As it stands it looks like data and is not.' });
+        if (P.autoConvert) {
+          const auto = String(P.autoConvert).toLowerCase();
+          const lost = pasted.filter((r, i) => noteOf(r).indexOf(auto) >= 0 && conv[rows.indexOf(r)]);
+          if (lost.length) F.push({ p: 3, tag: 'Data loss', h: 'The qualification notes vanish on exactly the people who joined',
+            b: 'All <b>' + lost.length + '</b> tours that converted carry nothing in the cleared note but the system\u2019s own <i>' + esc0(P.autoConvert) + '</i>. Whatever the member said about their goal, their old gym or their budget is not in this export.',
+            d: 'These are the most valuable records you have and they are the ones with no content. Capture the qualification answers in a field the conversion cannot overwrite.' });
+        }
+      }
+      quality.forEach(q => F.push({ p: 3, tag: 'Data fault', h: q.label, b: q.detail,
+        d: q.id === 'dupes' ? 'Deduplicate on the note text before counting, or log a group visit once and link the people to it.'
+          : 'Coerce on import and report what was coerced, rather than assuming the column is clean.' }));
+      F.sort((a, b) => a.p - b.p);
+
+      const groups = [byChannel, bySource, byStaff, byAge].filter(Boolean);
+      const tiles = [
+        { label: 'Leads', value: String(n), sub: (byChannel ? byChannel.rows.length + ' ways in' : '') },
+        { label: 'Joined', value: String(flagN), sub: soldN + ' sold · ' + corp + ' employer scheme' },
+        { label: 'Conversion', value: pc(base), sub: 'across every lead' }
+      ];
+      if (tour) {
+        tiles.push({ label: 'With a tour', value: pc(tour.r), sub: tour.c + ' of ' + tour.n + ' tours', tone: 'good' });
+        tiles.push({ label: 'Without a tour', value: pc(ntR), sub: ntN + ' walk-ins and casuals', tone: 'warn' });
+      }
+      return {
+        kind: 'leads', rows: n, typed: typed,
+        period: { from: from ? from.toISOString().slice(0, 10) : null, to: to ? to.toISOString().slice(0, 10) : null },
+        base: base, tiles: tiles, groups: groups, tags: tags, coverage: { tagged: tagged, withNote: withNote },
+        split: { flag: flagN, sold: soldN, corporate: corp, winback: winback, churn: churn, agree: agree, total: n },
+        quality: quality, findings: F
+      };
+    }
+  };
+  /* @/converter */
+
+  /* Reading the file. CSV is parsed here, which is why it always works: the portal
+     is one file with nothing to fetch, and that stays true. A spreadsheet is a zip
+     and needs a real parser, so one is fetched the first time somebody actually
+     picks an .xlsx — the only outbound request this portal ever makes, and only on
+     demand. Opened from a USB stick with no connection, the .xlsx path says so and
+     points at Save As CSV instead of failing quietly. */
+  let xlsxPromise = null;
+  function loadSheetReader() {
+    if (window.XLSX) return Promise.resolve(window.XLSX);
+    if (xlsxPromise) return xlsxPromise;
+    xlsxPromise = new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      s.onload = () => window.XLSX ? res(window.XLSX) : rej(new Error('no-parser'));
+      s.onerror = () => rej(new Error('offline'));
+      document.head.appendChild(s);
+      setTimeout(() => rej(new Error('slow')), 15000);
+    });
+    xlsxPromise.catch(() => { xlsxPromise = null; });
+    return xlsxPromise;
+  }
+  function parseCSV(text) {
+    const out = []; let row = [], f = '', q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) { if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+      else if (c === '"') q = true;
+      else if (c === ',') { row.push(f); f = ''; }
+      else if (c === '\n') { row.push(f); f = ''; out.push(row); row = []; }
+      else if (c !== '\r') f += c;
+    }
+    if (f.length || row.length) { row.push(f); out.push(row); }
+    return out;
+  }
+  const numish = v => typeof v === 'string' && /^-?\d+(\.\d+)?$/.test(v.trim()) ? Number(v) : v;
+  /* Trailing empty header columns and wholly empty rows are an artefact of the
+     export, not data. Dropped here so every count downstream is of real rows. */
+  function tidy(aoa) {
+    const hdr = aoa[0] || [];
+    let last = hdr.length - 1; while (last >= 0 && (hdr[last] == null || hdr[last] === '')) last--;
+    const headers = hdr.slice(0, last + 1).map(h => h == null ? '' : String(h));
+    const rows = aoa.slice(1)
+      .map(r => headers.map((_, i) => r[i] === undefined ? null : r[i]))
+      .filter(r => r.some(v => v !== null && v !== ''));
+    return { headers, rows };
+  }
+  function readReport(file, done) {
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
+    if (ext === 'csv' || ext === 'txt' || ext === 'tsv') {
+      const fr = new FileReader();
+      fr.onload = () => {
+        try {
+          const t = tidy(parseCSV(String(fr.result)));
+          done(null, { headers: t.headers, rows: t.rows.map(r => r.map(numish)), typed: false });
+        } catch (e) { done('That file could not be read as a CSV.'); }
+      };
+      fr.onerror = () => done('That file could not be read.');
+      fr.readAsText(file);
+      return;
+    }
+    loadSheetReader().then(XLSX => {
+      const fr = new FileReader();
+      fr.onload = () => {
+        try {
+          const wb = XLSX.read(new Uint8Array(fr.result), { type: 'array', cellDates: true });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null, blankrows: false });
+          if (!aoa.length) throw new Error('empty');
+          const t = tidy(aoa);
+          done(null, { headers: t.headers, rows: t.rows, typed: true, sheet: wb.SheetNames[0] });
+        } catch (e) { done('That spreadsheet could not be read.'); }
+      };
+      fr.onerror = () => done('That file could not be read.');
+      fr.readAsArrayBuffer(file);
+    }).catch(() => done('Spreadsheets need a reader this portal fetches when you first use one, and it could not be reached — most likely this copy is open offline. Open the sheet in Excel, Save As CSV, and drop that in instead. A CSV is read here with nothing to fetch.'));
+  }
+
+  // ---- what an import leaves behind ---------------------------------------
+  /* Totals only. The rows are counted and dropped: nothing member-level is written
+     to the device, which is the promise the panel makes before the file is chosen. */
+  const impAll = () => S.imports || (S.imports = {});
+  const impGet = id => impAll()[id] || null;
+  function impSave(id, rec) { impAll()[id] = rec; save(); }
+  function impDrop(id) { delete impAll()[id]; save(); }
+  const convList = () => ((CFG.reports || {}).import || {}).converters || [];
+  const convById = id => convList().find(c => c.id === id) || null;
+  const anyImport = () => convList().map(c => impGet(c.id)).filter(Boolean);
+
+  // ---- drawing the derived numbers ----------------------------------------
+  const lowChip = '<b class="lowchip">low</b>';
+  function dsBars(g, base) {
+    const max = Math.max(100, ...g.rows.map(r => r.r));
+    return `<div class="chart"><h3>${esc(g.title)}</h3><div class="sub">${esc(g.note || '')}</div>
+      <div class="hbars">${g.rows.map(r => `<div class="hbar${r.low ? ' low' : ''}" data-tip="<b>${esc(r.k)}</b> · ${r.c} of ${r.n}">
+        <span class="l">${esc(r.k)}<small>n=${r.n}</small>${r.low ? lowChip : ''}</span>
+        <span class="t"><i style="width:${Math.max(r.r / max * 100, r.r > 0 ? 1.5 : 0).toFixed(1)}%"></i>${base != null ? `<span class="base" style="left:${(base / max * 100).toFixed(1)}%"></span>` : ''}</span>
+        <span class="n">${pc(r.r)}</span></div>`).join('')}</div>
+      ${tableView(['', 'Leads', 'Joined', 'Rate'], g.rows.map(r => [r.k, String(r.n), String(r.c), pc(r.r)]))}</div>`;
+  }
+  function dsLift(tags) {
+    if (!tags.length) return '';
+    const mx = Math.max(20, ...tags.map(t => Math.abs(t.lift)));
+    return `<div class="chart"><h3>What the notes say, and whether it matters</h3>
+      <div class="sub">percentage points against the all-lead average</div>
+      <div class="lifts">${tags.map(t => {
+        const w = Math.abs(t.lift) / mx * 50, up = t.lift >= 0;
+        return `<div class="lift${t.low ? ' low' : ''}" data-tip="<b>${esc(t.t)}</b> · ${t.c} of ${t.n} joined">
+          <span class="l">${esc(t.t)}<small>n=${t.n}</small>${t.low ? lowChip : ''}</span>
+          <span class="bar"><i class="mid"></i><i class="${up ? 'up' : 'down'}" style="width:${w.toFixed(1)}%"></i></span>
+          <span class="v ${up ? 'up' : 'down'}">${up ? '+' : ''}${t.lift}</span></div>`;
+      }).join('')}</div></div>`;
+  }
+  const dsFindings = F => `<div class="finds">${F.map(f => `<div class="find p${f.p}">
+      <h4>${esc(f.h)}<span class="ft">${esc(f.tag)}</span></h4><p>${f.b}</p>
+      <div class="do"><em>What to do</em>${f.d}</div></div>`).join('')}</div>`;
+  const impWhen = rec => { const d = new Date(rec.at); return isNaN(d) ? '' : d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }); };
+  const impLine = rec => `${esc(rec.file)} · ${rec.result.rows} rows${rec.result.period.from ? ' · ' + rec.result.period.from + ' to ' + rec.result.period.to : ''} · read ${impWhen(rec)}`;
+
+  // ---- the import panel ----------------------------------------------------
+  /* Three steps in one dialog: which report, then the file, then what came back.
+     The list of converters is the point of the panel as much as the import is — an
+     owner should leave it knowing which of their exports we already read and which
+     are still to be built. */
+  function importPanel(preselect) {
+    const I = (CFG.reports || {}).import; if (!I) return;
+    const d = $('#dlg-import'), body = $('#imp-body');
+    const close = () => d.close();
+    $('#imp-close').onclick = close;
+    function step1() {
+      $('#imp-title').textContent = I.title || 'Import a report';
+      $('#imp-intro').textContent = I.intro || '';
+      body.innerHTML = `<div class="imp-list">${convList().map(c => {
+        const rec = impGet(c.id), ready = c.status === 'ready';
+        return `<button class="impc${ready ? '' : ' soon'}" type="button" data-conv="${esc(c.id)}"${ready ? '' : ' disabled'}>
+          <span class="t">${esc(c.title)}<span class="tagp">${ready ? (rec ? 'Imported' : 'Ready') : 'Planned'}</span></span>
+          <span class="s">${esc(c.source || '')}</span>
+          <span class="b">${esc(c.blurb || '')}</span>
+          ${rec ? `<span class="have">${esc(impLine(rec))}</span>` : ''}</button>`;
+      }).join('')}</div>
+      <p class="muted imp-note">${esc(I.privacy || '')}</p>`;
+      body.querySelectorAll('[data-conv]').forEach(b => b.onclick = () => step2(b.dataset.conv));
+    }
+    function step2(id) {
+      const c = convById(id); if (!c) return;
+      $('#imp-title').textContent = c.title;
+      $('#imp-intro').textContent = c.source ? 'From your ' + c.source : '';
+      body.innerHTML = `<div class="imp-drop" id="imp-drop">
+          <b>Drop the export here</b>
+          <span>.xlsx or .csv, straight out of the system. It is read in this browser.</span>
+          <span class="btn small" id="imp-pick">Choose a file</span>
+          <input type="file" id="imp-file" accept=".xlsx,.xls,.csv,.tsv" hidden>
+        </div>
+        <div class="label" style="margin-top:18px">Columns it looks for</div>
+        <ul class="imp-cols">${(c.expect || []).map(e => `<li><b>${esc(e.label)}</b>${e.required ? '<i>needed</i>' : ''}<span>${esc((e.match || []).join(', '))}</span></li>`).join('')}</ul>
+        <div class="label" style="margin-top:16px">What you get back</div>
+        <ul class="imp-gives">${(c.gives || []).map(g => `<li>${esc(g)}</li>`).join('')}</ul>
+        <div class="imp-err" id="imp-err" hidden></div>
+        <button class="btn ghost small" type="button" id="imp-back">← All reports</button>`;
+      $('#imp-back').onclick = step1;
+      const fi = $('#imp-file'), dz = $('#imp-drop');
+      $('#imp-pick').onclick = () => fi.click();
+      fi.onchange = e => { if (e.target.files[0]) take(c, e.target.files[0]); };
+      ['dragenter', 'dragover'].forEach(v => dz.addEventListener(v, e => { e.preventDefault(); dz.classList.add('hot'); }));
+      ['dragleave', 'drop'].forEach(v => dz.addEventListener(v, e => { e.preventDefault(); dz.classList.remove('hot'); }));
+      dz.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) take(c, f); });
+    }
+    function take(c, file) {
+      /* Every failure redraws step two first, so the message has to find the box
+         that redraw just created rather than the one captured on the way in. */
+      const fail = m => { const e = $('#imp-err'); if (!e) return; e.hidden = !m; e.textContent = m; };
+      fail('');
+      $('#imp-drop').innerHTML = '<b>Reading ' + esc(file.name) + '…</b>';
+      readReport(file, (e, data) => {
+        if (e) { step2(c.id); setTimeout(() => fail(e), 0); return; }
+        const map = autoMap(data.headers, c.expect);
+        const missing = (c.expect || []).filter(x => x.required && map[x.role] == null);
+        if (missing.length) { step2(c.id); setTimeout(() => fail('This does not look like the ' + c.title.toLowerCase() + ' export. It has no column for ' + missing.map(m => m.label.toLowerCase()).join(' or ') + '.'), 0); return; }
+        let result;
+        try {
+          result = CONVERTERS[c.kind](data.rows, data.headers, map, {
+            vocabulary: ((CFG.reports || {}).import || {}).vocabulary || [],
+            corporate: c.corporate || [], patterns: c.patterns || {}, typed: data.typed
+          });
+        } catch (x) { step2(c.id); setTimeout(() => fail('The file was read but the numbers could not be worked out from it.'), 0); return; }
+        step3(c, file, data, map, result);
+      });
+    }
+    function step3(c, file, data, map, result) {
+      $('#imp-title').textContent = 'Read ' + file.name;
+      $('#imp-intro').textContent = result.rows + ' rows, ' + data.headers.length + ' columns' + (result.period.from ? ', ' + result.period.from + ' to ' + result.period.to : '');
+      const rows = (c.expect || []).map(e => {
+        const i = map[e.role];
+        const got = i == null ? null : (Array.isArray(i) ? i.map(x => data.headers[x]).join(', ') : data.headers[i]);
+        return `<li class="${got ? 'ok' : 'no'}"><b>${esc(e.label)}</b><span>${got ? esc(got) : (e.required ? 'not found' : 'not in this file')}</span></li>`;
+      }).join('');
+      body.innerHTML = `<div class="label">Columns matched</div><ul class="imp-map">${rows}</ul>
+        <div class="imp-ok"><b>${result.findings.length} findings</b> and ${result.groups.length} breakdowns came out of it.${result.typed ? '' : ' Read as a CSV, so the check for dates stored as text was skipped — that one needs the spreadsheet.'}</div>
+        <p class="muted imp-note">${esc(((CFG.reports || {}).import || {}).privacy || '')}</p>
+        <div class="imp-go"><button class="btn ghost small" type="button" id="imp-again">← Choose another file</button>
+        <button class="btn small" type="button" id="imp-use">Use these numbers</button></div>`;
+      $('#imp-again').onclick = () => step2(c.id);
+      $('#imp-use').onclick = () => {
+        impSave(c.id, { file: file.name, at: new Date().toISOString(), result: result });
+        close(); toast(c.title + ' imported'); go('insights');
+      };
+    }
+    if (preselect && convById(preselect) && convById(preselect).status === 'ready') step2(preselect); else step1();
+    d.showModal(); d.scrollTop = 0; d.focus();
+  }
+
   function confirm(title, text, yes) {
     const d = $('#dlg-confirm'); $('#confirm-title').textContent = title; $('#confirm-text').textContent = text;
     d.showModal(); $('#confirm-yes').onclick = () => { d.close(); yes(); }; $('#confirm-no').onclick = () => d.close();
@@ -876,6 +1394,7 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const N = newsCfg() || {};
     if (r.view === 'news') return r.q.get('all') ? (N.title || "What's new") : (canWrite() ? (N.ownerTitle || 'Blog') : (N.title || "What's new"));
     if (r.view === 'processes') return (procCfg() || {}).title || 'Process library';
+    if (r.view === 'insights') return ((CFG.reports || {}).insights || {}).title || 'Insights';
     if (r.view === 'path') { const p = pathFor(S.audience); return p ? p.title : 'Home'; }
     if (r.view === 'item') { const it = byId[r.id]; return it ? it.title : navLabel('learn', 'Learn'); }
     if (r.view === 'process') { const x = procById(r.id); return x ? x.name : ((procCfg() || {}).title || 'Process library'); }
@@ -1102,13 +1621,42 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const R = CFG.reports; if (!R) return `<div class="empty" style="margin-top:24px">No reports are configured.</div>`;
     if (R.audiences && !R.audiences.includes(S.audience)) { go('home'); return ''; }
     const ep = pathFor('employee'); const pr = pathProgress(ep);
-    const I = R.import;
-    return `${backLink('')}<div class="hero"><div class="hero-row"><div><h1>${esc(R.title || 'Reports')}</h1><p>${esc(R.asOf || '')}${R.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>
-      ${I ? `<button class="btn outline small" id="imp-open" type="button"><svg><use href="#i-import"/></svg>${esc(I.label || 'Import data')}${I.demo ? ' <span class="demo">Soon</span>' : ''}</button>` : ''}</div></div>
-      <div class="kpi">${(R.tiles || []).map(kpiTile).join('')}</div>
+    const I = R.import, N = R.insights || {};
+    /* Two kinds of number on one page, and never in the same block: what an owner
+       imported this month, then the demo figures the page was drawn with. The
+       imported section only appears once there is something in it. */
+    const recs = convList().map(c => ({ c: c, rec: impGet(c.id) })).filter(x => x.rec);
+    const derived = recs.map(({ c, rec }) => {
+      const res = rec.result, head = (res.groups || [])[0];
+      return `<div class="srcline"><b>${esc(c.title)}</b><span class="muted">${esc(impLine(rec))}</span>
+          <span class="sp"><button type="button" data-reimp="${esc(c.id)}">Replace</button><button type="button" data-unimp="${esc(c.id)}">Remove</button></span></div>
+        <div class="kpi">${(res.tiles || []).map(t => `<div class="tile${t.tone ? ' t-' + t.tone : ''}"><span class="k">${esc(t.label)}</span><span class="v">${esc(t.value)}</span>${t.sub ? `<span class="sub">${esc(t.sub)}</span>` : ''}</div>`).join('')}</div>
+        ${head ? dsBars(head, res.base) : ''}
+        <a class="homelink" href="#/insights/${esc(c.id)}"><span><span class="t">${esc(N.title || 'Insights')}</span><span class="b">${res.findings.length} findings and ${res.groups.length} breakdowns read out of this file</span></span><svg><use href="#i-arrow-r"/></svg></a>`;
+    }).join('');
+    return `${backLink('')}<div class="hero"><div class="hero-row"><div><h1>${esc(R.title || 'Reports')}</h1>
+      <p>${derived ? esc(R.importedIntro || 'Your own figures, and the demo figures the page was drawn with.') : esc(R.asOf || '') + (R.demo ? ' <span class="demo">Demo</span>' : '')}</p></div>
+      <div class="hero-btns">
+        ${I ? `<button class="btn outline small" id="imp-open" type="button"><svg><use href="#i-import"/></svg>${esc(I.label || 'Import data')}</button>` : ''}
+        ${N.title ? `<a class="btn small" href="#/insights"><svg><use href="#i-bulb"/></svg>${esc(N.title)}</a>` : ''}
+      </div></div></div>
+      ${derived ? `<div class="section"><div class="label">${esc(R.derivedLabel || 'From your data')}</div>${derived}</div>` : ''}
+      <div class="section"><div class="label">${esc(R.demoLabel || 'Demo figures')}</div>
+      ${derived ? `<p class="muted" style="font-size:13px;margin:-4px 0 12px">${esc(R.asOf || '')}${R.note ? ' &middot; ' + esc(R.note) : ''}</p>` : ''}
+      <div class="kpi">${(R.tiles || []).map(kpiTile).join('')}</div></div>
       <div class="section">${R.members ? lineChart(R.members) : ''}${R.cancellations ? barChart(R.cancellations) : ''}${R.recoverBlocks ? barChart(R.recoverBlocks) : ''}${R.classes ? barChart(R.classes) : ''}</div>
       <div class="section"><div class="label">Team onboarding</div><div class="card"><div class="type">${esc(ep.title)}</div><div class="bignum" style="margin-top:6px">${pr.done}<small>of ${pr.total} on this device</small></div><p class="muted" style="font-size:14px;margin-top:10px">Progress lives on each person's own device. A team view across devices is the first thing that needs hosting; until then, managers read the progress cards their starters export from Me.</p></div></div>
-      ${R.note ? `<p class="muted" style="font-size:13px;margin-top:22px">${esc(R.note)}</p>` : ''}`;
+      ${R.note && !derived ? `<p class="muted" style="font-size:13px;margin-top:22px">${esc(R.note)}</p>` : ''}`;
+  }
+  function wireReports() {
+    const b = $('#imp-open'); if (b) b.addEventListener('click', () => importPanel());
+    $('#view').querySelectorAll('[data-reimp]').forEach(x => x.onclick = () => importPanel(x.dataset.reimp));
+    $('#view').querySelectorAll('[data-unimp]').forEach(x => x.onclick = () => {
+      const c = convById(x.dataset.unimp); if (!c) return;
+      confirm('Remove this import?', 'The figures for ' + c.title.toLowerCase() + ' come off this page. The file itself is untouched.', () => {
+        impDrop(c.id); toast('Import removed'); render();
+      });
+    });
   }
   function wireTips() {
     const tip = $('#tip'); let cur = null;
@@ -1117,6 +1665,67 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     const view = $('#view');
     view.onpointermove = e => { const el = e.target.closest('[data-tip]'); if (!el) { if (cur) hide(); return; } cur = el; show(el, e.clientX, e.clientY); };
     view.onpointerleave = hide; view.onpointerdown = e => { const el = e.target.closest('[data-tip]'); if (el) { show(el, e.clientX, e.clientY); setTimeout(hide, 1800); } };
+  }
+
+
+  // ---- insights ------------------------------------------------------------
+  /* Reports is the dashboard; this is the reading of it. It runs on whatever has
+     been imported, and falls back to the worked example so the page is never an
+     empty shell — the example is the August sample put through the same converter,
+     badged so nobody mistakes it for their own month. */
+  function insightSource(want) {
+    const R = CFG.reports || {}, N = R.insights || {};
+    const live = convList().filter(c => impGet(c.id)).map(c => ({ id: c.id, title: c.title, rec: impGet(c.id), demo: false }));
+    const pick = (want && live.find(x => x.id === want)) || live[0];
+    if (pick) return { list: live, cur: pick, result: pick.rec.result, demo: false };
+    if (N.demo) return { list: [], cur: null, result: N.demo, demo: true, note: N.demoNote || '' };
+    return { list: [], cur: null, result: null, demo: false };
+  }
+  function viewInsights(r) {
+    const R = CFG.reports || {}, N = R.insights || {};
+    if (R.audiences && !R.audiences.includes(S.audience)) { go('home'); return ''; }
+    const src = insightSource(r && r.id);
+    const res = src.result;
+    if (!res) return `${backLink('#/reports', R.title || 'Reports')}<div class="hero"><h1>${esc(N.title || 'Insights')}</h1></div>
+      <div class="empty" style="margin-top:20px">Nothing has been imported yet.</div>
+      <button class="btn" type="button" id="ins-import" style="margin-top:16px">Import a report</button>`;
+    const sp = res.split || {};
+    const cov = res.coverage || {};
+    const switcher = src.list.length > 1
+      ? `<div class="chips">${src.list.map(x => `<a class="pill${src.cur && x.id === src.cur.id ? ' on' : ''}" href="#/insights/${esc(x.id)}">${esc(x.title)}</a>`).join('')}</div>` : '';
+    return `${backLink('#/reports', R.title || 'Reports')}
+      <div class="hero"><div class="hero-row"><div>
+        <h1>${esc(N.title || 'Insights')}${src.demo ? ' <span class="demo">Worked example</span>' : ''}</h1>
+        <p>${src.demo ? esc(src.note || '') : esc(impLine(src.cur.rec))}</p>
+      </div><button class="btn outline small" id="ins-import" type="button"><svg><use href="#i-import"/></svg>${src.demo ? 'Import your own' : 'Import again'}</button></div></div>
+      ${switcher}
+      <div class="kpi" style="margin-top:4px">${(res.tiles || []).map(t => `<div class="tile${t.tone ? ' t-' + t.tone : ''}"><span class="k">${esc(t.label)}</span><span class="v">${esc(t.value)}</span>${t.sub ? `<span class="sub">${esc(t.sub)}</span>` : ''}</div>`).join('')}</div>
+      <div class="section"><div class="label">Findings</div>${dsFindings(res.findings || [])}</div>
+      <div class="section"><div class="label">The numbers behind them</div>
+        ${(res.groups || []).map(g => dsBars(g, res.base)).join('')}
+        ${dsLift(res.tags || [])}</div>
+      <div class="section"><div class="label">What the flag is made of</div>
+        <div class="card"><div class="splitrow"><span>Counted as joined</span><b>${sp.flag}</b></div>
+          <div class="splitrow sub"><span>Memberships the team sold</span><b>${sp.sold}</b></div>
+          <div class="splitrow sub"><span>Arrived through an employer scheme</span><b>${sp.corporate}</b></div>
+          <div class="splitrow sub"><span>Win-backs, cutting across both</span><b>${sp.winback}</b></div>
+          <div class="splitrow"><span>Cancellations inside this period, scored as a lead that did not convert</span><b>${sp.churn}</b></div>
+          <p class="muted" style="font-size:13px;margin-top:12px">${sp.agree === sp.total
+            ? `The flag and the membership history agree on all ${sp.total} rows, so the export's own number holds up.`
+            : `The flag and the membership history disagree on ${sp.total - sp.agree} rows, so one of them is wrong.`}
+            ${cov.withNote ? ` The vocabulary reached ${pctOf(cov.tagged, cov.withNote)}% of the ${cov.withNote} rows carrying notes.` : ''}</p></div></div>
+      ${src.demo ? '' : `<button class="btn ghost small" type="button" id="ins-drop" style="margin-top:20px">Remove this import</button>`}`;
+  }
+  function wireInsights() {
+    const b = $('#ins-import'); if (b) b.addEventListener('click', () => importPanel());
+    const d = $('#ins-drop');
+    if (d) d.addEventListener('click', () => {
+      const src = insightSource(route().id); if (!src.cur) return;
+      confirm('Remove this import?', 'The figures go back to the worked example. The file itself is untouched.', () => {
+        impDrop(src.cur.id); toast('Import removed'); render();
+      });
+    });
+    wireTips();
   }
 
   // ---- look around: the floorplan ---------------------------------------
@@ -1702,7 +2311,8 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     else if (r.view === 'lookaround') { v.innerHTML = viewLook(r); wireLook(); }
     else if (r.view === 'news') { v.innerHTML = viewNews(r); wireNews(); }
     else if (r.view === 'post') { v.innerHTML = viewPost(r); if (r.id === 'new') wirePostNew(); else wirePost(r); }
-    else if (r.view === 'reports') { v.innerHTML = viewReports(); wireTips(); const b = $('#imp-open'); if (b) b.addEventListener('click', importPanel); }
+    else if (r.view === 'reports') { v.innerHTML = viewReports(); wireTips(); wireReports(); }
+    else if (r.view === 'insights') { v.innerHTML = viewInsights(r); wireInsights(); }
     else if (r.view === 'support') v.innerHTML = viewSupport();
     else if (r.view === 'me') { v.innerHTML = viewMe(); wireMe(); }
     else { location.hash = '#/home'; return; }
