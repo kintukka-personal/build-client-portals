@@ -1,0 +1,1009 @@
+<title>ONYX Data Workbench</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#000000; --surface:#111111; --raised:#1A1A1A; --sunk:#0A0A0A;
+  --line:#2A2A2A; --line-soft:#1E1E1E;
+  --text:#FFFFFF; --muted:#8A8A8A; --dim:#5E5E5E;
+  --green:#8DCA76; --green-deep:#5E9A49; --green-tint:#8DCA761F;
+  --amber:#FFBA00; --amber-deep:#D99E00; --amber-tint:#FFBA001A;
+  --error:#E5484D; --error-tint:#E5484D1A;
+  --on-accent:#0A0A0A;
+  --font:'Poppins','Segoe UI',system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace;
+  --gutter:20px; --r:10px;
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --bg:#F6F6F3; --surface:#FFFFFF; --raised:#FAFAF8; --sunk:#EFEFEB;
+  --line:#DEDED8; --line-soft:#E9E9E3;
+  --text:#0A0A0A; --muted:#63635E; --dim:#8E8E88;
+  --green:#3F7A2C; --green-deep:#2F5E20; --green-tint:#3F7A2C14;
+  --amber:#8A6100; --amber-deep:#6B4B00; --amber-tint:#8A610014;
+  --error:#C0292E; --error-tint:#C0292E12;
+  --on-accent:#FFFFFF;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;text-wrap:balance;font-weight:600;line-height:1.25}
+p{margin:0}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500}
+
+/* ---- shell ---- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px var(--gutter)}
+.topin{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:9px;margin-right:auto}
+.brand b{font-weight:700;letter-spacing:.14em;font-size:15px}
+.brand span{color:var(--muted);font-size:12.5px;letter-spacing:.02em}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);
+  border-radius:100px;padding:4px 11px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chip.on{border-color:var(--green);color:var(--green);background:var(--green-tint)}
+.tbtn{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer}
+.tbtn:hover{border-color:var(--muted)}
+
+main{min-width:0}
+.wrap{max-width:1240px;margin:0 auto;padding:0 var(--gutter);padding-block:26px 64px;display:grid;gap:30px;
+  grid-template-columns:230px minmax(0,1fr);align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:20px}}
+
+/* ---- pipeline rail ---- */
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 74px);display:grid;gap:2px}
+.rail h4{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;font-weight:600}
+.step{display:grid;grid-template-columns:26px 1fr;gap:11px;align-items:start;width:100%;text-align:left;
+  background:none;border:0;padding:10px 10px 10px 0;cursor:pointer;border-radius:8px;position:relative}
+.step:hover .sname{color:var(--text)}
+.step .sdot{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--dim);background:var(--bg);z-index:1}
+.step .sname{display:block;font-size:13.5px;font-weight:500;color:var(--muted);line-height:1.35}
+.step .smeta{display:block;font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:1px}
+.step[aria-current="true"] .sdot{border-color:var(--amber);color:var(--on-accent);background:var(--amber);font-weight:600}
+.step[aria-current="true"] .sname{color:var(--text);font-weight:600}
+.step.done .sdot{border-color:var(--green-deep);color:var(--green)}
+.step.done .smeta{color:var(--green)}
+.rail .step:not(:last-child)::after{content:"";position:absolute;left:12.5px;top:34px;bottom:-4px;width:1px;background:var(--line)}
+@media (max-width:900px){
+  .rail{position:static;grid-auto-flow:column;grid-auto-columns:max-content;gap:8px;overflow-x:auto;
+    padding-bottom:8px;margin:0 calc(var(--gutter)*-1);padding-inline:var(--gutter);scrollbar-width:thin}
+  .rail h4{display:none}
+  .rail .step:not(:last-child)::after{display:none}
+  .step{grid-template-columns:auto auto;border:1px solid var(--line);background:var(--surface);padding:7px 13px 7px 9px;align-items:center}
+  .step .smeta{display:none}
+  .step[aria-current="true"]{border-color:var(--amber)}
+}
+
+/* ---- panels ---- */
+.panel[hidden]{display:none!important}
+.phead{margin-bottom:20px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:7px}
+.phead h2{font-size:25px;letter-spacing:-.015em}
+.phead p{color:var(--muted);margin-top:8px;max-width:64ch;font-size:14.5px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.stack{display:grid;gap:16px}
+.stack>*{min-width:0}
+main>section{min-width:0}
+.sechead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.sechead h3{font-size:16px}
+.sechead .note{color:var(--dim);font-size:12.5px;margin-left:auto;font-family:var(--mono)}
+.lede{color:var(--muted);font-size:13.5px;max-width:70ch}
+
+/* ---- source ---- */
+.drop{border:1.5px dashed var(--line);border-radius:var(--r);padding:30px 22px;text-align:center;background:var(--sunk);transition:.15s}
+.drop.hot{border-color:var(--amber);background:var(--amber-tint)}
+.drop h3{font-size:16px;margin-bottom:6px}
+.drop p{color:var(--muted);font-size:13px;max-width:52ch;margin:0 auto}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.btn{border:0;border-radius:8px;padding:9px 17px;font-size:13.5px;font-weight:600;cursor:pointer;background:var(--raised);color:var(--text);border:1px solid var(--line)}
+.btn:hover{border-color:var(--muted)}
+.btn.cta{background:var(--amber);color:var(--on-accent);border-color:var(--amber)}
+.btn.cta:hover{background:var(--amber-deep);border-color:var(--amber-deep)}
+.btn.ghost{background:none}
+.loaded{display:flex;gap:14px;align-items:center;flex-wrap:wrap;border:1px solid var(--green-deep);background:var(--green-tint);border-radius:var(--r);padding:13px 16px}
+.loaded .fn{font-family:var(--mono);font-size:13.5px;font-weight:500}
+.loaded .st{color:var(--muted);font-size:12.5px;font-family:var(--mono)}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--sunk)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line-soft);white-space:nowrap;vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);
+  background:var(--surface);position:sticky;top:0;font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+td.clip{max-width:270px;overflow:hidden;text-overflow:ellipsis}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.blank{color:var(--dim);font-style:italic}
+
+/* ---- pipeline summary strip ---- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.strip div{background:var(--surface);padding:14px 15px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.strip .v{font-size:21px;font-weight:600;font-family:var(--mono);font-variant-numeric:tabular-nums;margin-top:4px;letter-spacing:-.02em}
+.strip .s{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* ---- profile ---- */
+.cols{display:grid;gap:10px}
+.col{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.col.flag{border-left:3px solid var(--error)}
+.col.vocab{border-left:3px solid var(--green-deep)}
+.col.free{border-left:3px solid var(--amber-deep)}
+.colhead{display:grid;grid-template-columns:minmax(0,1.6fr) 96px minmax(0,1fr) auto;gap:14px;align-items:center;
+  width:100%;background:none;border:0;padding:12px 15px;cursor:pointer;text-align:left}
+.colhead:hover{background:var(--raised)}
+.cname{font-family:var(--mono);font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.cname i{display:block;font-style:normal;font-family:var(--font);font-size:11px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.role{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--line);border-radius:100px;
+  padding:2px 9px;color:var(--muted);text-align:center;white-space:nowrap}
+.role.vocab{border-color:var(--green-deep);color:var(--green)}
+.role.free{border-color:var(--amber-deep);color:var(--amber)}
+.role.key{border-color:var(--line);color:var(--muted)}
+.fill{display:grid;gap:3px;min-width:0}
+.bar{height:5px;border-radius:3px;background:var(--sunk);overflow:hidden;border:1px solid var(--line-soft)}
+.bar i{display:block;height:100%;background:var(--green)}
+.bar.warnbar i{background:var(--amber)}
+.bar.badbar i{background:var(--error)}
+.fill .l{font-family:var(--mono);font-size:10.5px;color:var(--dim);display:flex;justify-content:space-between;gap:8px}
+.caret{color:var(--dim);font-size:11px;transition:transform .15s}
+.col[open] .caret{transform:rotate(90deg)}
+.colbody{border-top:1px solid var(--line);padding:14px 15px;background:var(--sunk);display:grid;gap:12px}
+.vals{display:flex;flex-wrap:wrap;gap:6px}
+.val{border:1px solid var(--line);border-radius:6px;padding:3px 9px;font-size:12px;background:var(--surface);display:flex;gap:7px;align-items:baseline}
+.val b{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:500}
+.samp{font-size:12.5px;color:var(--muted);border-left:2px solid var(--line);padding-left:11px;display:grid;gap:7px}
+.samp em{font-style:normal;color:var(--dim);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.alert{display:flex;gap:9px;align-items:flex-start;border-radius:7px;padding:9px 12px;font-size:12.5px;line-height:1.5}
+.alert.bad{background:var(--error-tint);color:var(--text);border:1px solid var(--error)}
+.alert.warn{background:var(--amber-tint);color:var(--text);border:1px solid var(--amber-deep)}
+.alert.ok{background:var(--green-tint);color:var(--text);border:1px solid var(--green-deep)}
+.alert b{font-weight:600}
+.alert .ic{font-family:var(--mono);font-weight:700;flex:none}
+
+/* ---- map ---- */
+.maprow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:12px;align-items:center;
+  padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.maprow:last-of-type{border-bottom:0}
+.maprow .lab{font-size:13.5px;font-weight:500}
+.maprow .lab small{display:block;color:var(--dim);font-weight:400;font-size:12px;margin-top:1px}
+select{width:100%;background:var(--sunk);border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-size:13px;font-family:var(--mono)}
+select:hover{border-color:var(--muted)}
+.multi{display:flex;flex-wrap:wrap;gap:7px}
+.tog{border:1px solid var(--line);background:var(--sunk);border-radius:100px;padding:5px 12px;font-size:12px;
+  font-family:var(--mono);cursor:pointer;color:var(--muted)}
+.tog[aria-pressed="true"]{border-color:var(--green);color:var(--green);background:var(--green-tint)}
+.choice{display:grid;gap:9px;margin-top:4px}
+.opt{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:start;border:1px solid var(--line);
+  border-radius:var(--r);padding:13px 15px;cursor:pointer;background:var(--sunk)}
+.opt:hover{border-color:var(--muted)}
+.opt[data-on="1"]{border-color:var(--amber);background:var(--amber-tint)}
+.opt input{margin-top:3px;accent-color:var(--amber)}
+.opt .t{font-size:13.5px;font-weight:600}
+.opt .d{font-size:12.5px;color:var(--muted);margin-top:3px}
+.opt .big{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.opt .big small{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:500;text-align:right}
+
+/* ---- rules ---- */
+.rule{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 108px 28px;gap:11px;align-items:center;
+  padding:9px 0;border-bottom:1px solid var(--line-soft)}
+.rule:last-of-type{border-bottom:0}
+.rname{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;min-width:0}
+.dotk{width:7px;height:7px;border-radius:50%;flex:none}
+.dotk.pos{background:var(--green)} .dotk.neg{background:var(--error)} .dotk.neu{background:var(--muted)}
+.rule input[type=text]{width:100%;background:var(--sunk);border:1px solid var(--line);border-radius:7px;
+  padding:7px 10px;font-family:var(--mono);font-size:12px}
+.rule input:hover{border-color:var(--muted)}
+.rstat{font-family:var(--mono);font-size:12px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.rstat b{color:var(--text);font-weight:600}
+.del{background:none;border:1px solid var(--line);border-radius:6px;color:var(--dim);cursor:pointer;width:28px;height:28px;line-height:1;font-size:15px}
+.del:hover{border-color:var(--error);color:var(--error)}
+.rulehead{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 108px 28px;gap:11px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);padding-bottom:8px;border-bottom:1px solid var(--line)}
+.rulehead span:nth-child(3){text-align:right}
+@media (max-width:720px){
+  .rule,.rulehead{grid-template-columns:minmax(0,1fr) 100px 28px}
+  .rule input[type=text]{grid-column:1/-1}
+  .rulehead span:nth-child(2){display:none}
+}
+.cover{display:grid;gap:7px}
+.cover .big{font-size:27px;font-weight:600;font-family:var(--mono);letter-spacing:-.02em}
+
+/* ---- insights ---- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:15px 16px}
+.tile .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.tile .v{font-size:30px;font-weight:600;font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.025em;margin-top:5px;line-height:1.05}
+.tile .s{font-size:12px;color:var(--muted);margin-top:4px}
+.tile.hero{border-color:var(--green-deep);background:linear-gradient(180deg,var(--green-tint),transparent)}
+.tile.hero .v{color:var(--green)}
+.tile.flagged{border-color:var(--amber-deep);background:linear-gradient(180deg,var(--amber-tint),transparent)}
+.tile.flagged .v{color:var(--amber)}
+
+.chart{display:grid;gap:11px}
+.crow{display:grid;grid-template-columns:minmax(120px,1.1fr) minmax(0,3fr) 82px;gap:13px;align-items:center}
+.crow .cl{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow .cl small{color:var(--dim);font-family:var(--mono);font-size:11px;margin-left:5px}
+.track{height:22px;background:var(--sunk);border:1px solid var(--line-soft);border-radius:5px;overflow:hidden;position:relative}
+.track i{display:block;height:100%;background:var(--green);border-radius:4px 0 0 4px}
+.track.q i{background:var(--dim)}
+.track .base{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--amber);opacity:.85}
+.crow .cv{font-family:var(--mono);font-size:13px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.crow .cv small{display:block;font-size:10.5px;color:var(--dim);font-weight:400}
+.crow.thin .cv{font-weight:400;color:var(--dim)}
+.crow.thin .cl{color:var(--muted)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);font-family:var(--mono);margin-top:4px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:3px;border-radius:2px;display:block}
+@media (max-width:620px){.crow{grid-template-columns:minmax(0,1fr) 78px;row-gap:5px}.crow .track{grid-column:1/-1}}
+
+.lift{display:grid;grid-template-columns:minmax(100px,1fr) minmax(0,2.4fr) 62px;gap:13px;align-items:center}
+.liftbar{position:relative;height:20px}
+.liftbar .mid{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--line)}
+.liftbar i{position:absolute;top:2px;height:16px;border-radius:3px}
+.liftbar i.up{background:var(--green);left:50%}
+.liftbar i.down{background:var(--error);right:50%}
+.liftv{font-family:var(--mono);font-size:12.5px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:620px){.lift{grid-template-columns:minmax(0,1fr) 62px;row-gap:4px}.liftbar{grid-column:1/2}}
+
+.finds{display:grid;gap:11px}
+.find{border:1px solid var(--line);border-left-width:3px;border-radius:var(--r);background:var(--surface);padding:15px 17px}
+.find.p1{border-left-color:var(--green)} .find.p2{border-left-color:var(--amber)} .find.p3{border-left-color:var(--error)}
+.find h4{font-size:14.5px;display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+.find .tagq{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:100px;border:1px solid var(--line);color:var(--muted);font-weight:500}
+.find.p1 .tagq{border-color:var(--green-deep);color:var(--green)}
+.find.p2 .tagq{border-color:var(--amber-deep);color:var(--amber)}
+.find.p3 .tagq{border-color:var(--error);color:var(--error)}
+.find p{margin-top:8px;font-size:13.5px;color:var(--muted);max-width:74ch}
+.find p b{color:var(--text);font-weight:600}
+.find .do{margin-top:10px;font-size:13px;border-top:1px dashed var(--line);padding-top:9px;color:var(--text)}
+.find .do em{font-style:normal;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:3px}
+
+.foot{max-width:1240px;margin:0 auto;padding:22px var(--gutter) 40px;border-top:1px solid var(--line);
+  color:var(--dim);font-size:12px;display:grid;gap:7px}
+.foot b{color:var(--muted);font-weight:600}
+.pager{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
+.hint{font-size:12.5px;color:var(--dim);display:flex;align-items:center;gap:7px;margin-right:auto}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 22px);
+  background:var(--raised);border:1px solid var(--green);color:var(--text);padding:9px 17px;border-radius:100px;
+  font-size:13px;z-index:60;box-shadow:0 8px 28px #0008}
+.toast[hidden]{display:none}
+</style>
+
+<header class="top">
+  <div class="topin">
+    <div class="brand"><b>ONYX</b><span>Data Workbench</span></div>
+    <span class="chip" id="privacy">Runs in your browser &mdash; nothing uploaded</span>
+    <button class="tbtn" id="themebtn" type="button">Light</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="rail" id="rail" aria-label="Pipeline stages">
+    <h4>Pipeline</h4>
+  </nav>
+
+  <main>
+    <!-- 1 SOURCE -->
+    <section class="panel" id="p-source">
+      <div class="phead">
+        <div class="eyebrow">Stage 01</div>
+        <h2>Whatever the export gives you</h2>
+        <p>Drop a GymMaster export in and the workbench reads it where it sits. The file never leaves this machine &mdash; there is no server behind this page.</p>
+      </div>
+      <div class="stack">
+        <div id="loadbox"></div>
+        <div class="drop" id="drop">
+          <h3>Drop an .xlsx or .csv here</h3>
+          <p>Or load the ONYX prospect and casual-visit sheet for August 2026 &mdash; 90 rows, 13 columns, exactly as it came out of the system.</p>
+          <div class="btnrow">
+            <button class="btn cta" id="loadsample" type="button">Load the ONYX sample</button>
+            <button class="btn" id="pick" type="button">Choose a file</button>
+            <input type="file" id="file" accept=".xlsx,.xls,.csv" hidden>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sechead"><h3>Raw sheet, first 8 rows</h3><span class="note" id="rawnote"></span></div>
+          <div class="tblwrap" id="rawtbl"></div>
+        </div>
+        <div>
+          <div class="sechead"><h3>What comes out the other end</h3></div>
+          <div class="strip" id="strip"></div>
+        </div>
+      </div>
+      <div class="pager">
+        <span class="hint">Every number on the following stages is computed from the sheet above.</span>
+        <button class="btn cta" data-go="1" type="button">Profile the columns &rarr;</button>
+      </div>
+    </section>
+
+    <!-- 2 PROFILE -->
+    <section class="panel" id="p-profile" hidden>
+      <div class="phead">
+        <div class="eyebrow">Stage 02</div>
+        <h2>Read every column before trusting one</h2>
+        <p>The workbench walks each column cell by cell: what is filled, what type each value really is, how many distinct values there are, and whether the column is a fixed vocabulary you can pivot on or prose you have to interpret.</p>
+      </div>
+      <div class="stack">
+        <div id="qflags" class="stack"></div>
+        <div class="cols" id="cols"></div>
+      </div>
+      <div class="pager">
+        <button class="btn ghost" data-go="0" type="button">&larr; Source</button>
+        <button class="btn cta" data-go="2" type="button">Map the columns &rarr;</button>
+      </div>
+    </section>
+
+    <!-- 3 MAP -->
+    <section class="panel" id="p-map" hidden>
+      <div class="phead">
+        <div class="eyebrow">Stage 03</div>
+        <h2>Give each column a job</h2>
+        <p>Every gym exports different headings. The workbench guesses a role for each column from its name and its shape; you correct anything it got wrong once, and the same mapping runs every month after that.</p>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <div class="sechead"><h3>Column roles</h3><span class="note" id="mapnote"></span></div>
+          <div id="maprows"></div>
+        </div>
+        <div class="card">
+          <div class="sechead"><h3>Notes to read as free text</h3></div>
+          <p class="lede">These columns get pooled and run through the vocabulary on the next stage.</p>
+          <div class="multi" id="notetogs" style="margin-top:12px"></div>
+        </div>
+        <div class="card">
+          <div class="sechead"><h3>What counts as a conversion</h3></div>
+          <p class="lede">This is the decision that moves the headline number most, and the export does not make it for you.</p>
+          <div class="choice" id="outchoice"></div>
+          <div id="outexplain" style="margin-top:13px"></div>
+        </div>
+      </div>
+      <div class="pager">
+        <button class="btn ghost" data-go="1" type="button">&larr; Profile</button>
+        <button class="btn cta" data-go="3" type="button">Read the free text &rarr;</button>
+      </div>
+    </section>
+
+    <!-- 4 FREE TEXT -->
+    <section class="panel" id="p-text" hidden>
+      <div class="phead">
+        <div class="eyebrow">Stage 04</div>
+        <h2>Turn the notes into something countable</h2>
+        <p>Three columns hold the objection, the competitor and the follow-up decision, and none of it is in a field you can sort. Each rule below tags a row when its note matches a keyword. Edit the keywords and every chart on the next stage moves with them.</p>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <div class="sechead"><h3>Coverage</h3><span class="note">how much of the prose the rules actually reach</span></div>
+          <div class="cover" id="cover"></div>
+        </div>
+        <div class="card">
+          <div class="sechead"><h3>Vocabulary</h3><span class="note" id="rulenote"></span></div>
+          <div class="rulehead"><span>Tag</span><span>Keywords, comma separated</span><span>Rows / joined</span><span></span></div>
+          <div id="rules"></div>
+          <div class="btnrow" style="justify-content:flex-start;margin-top:14px">
+            <button class="btn" id="addrule" type="button">+ Add a tag</button>
+            <button class="btn ghost" id="resetrules" type="button">Reset to defaults</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sechead"><h3>Rows no rule reached</h3><span class="note" id="unnote"></span></div>
+          <p class="lede">The honest half of the picture. These are the notes the vocabulary does not yet understand, and they are where the next rule comes from.</p>
+          <div class="samp" id="unmatched" style="margin-top:13px"></div>
+        </div>
+      </div>
+      <div class="pager">
+        <button class="btn ghost" data-go="2" type="button">&larr; Map</button>
+        <button class="btn cta" data-go="4" type="button">See the report &rarr;</button>
+      </div>
+    </section>
+
+    <!-- 5 INSIGHTS -->
+    <section class="panel" id="p-out" hidden>
+      <div class="phead">
+        <div class="eyebrow">Stage 05</div>
+        <h2>August 2026, read back</h2>
+        <p id="outsub">Everything below recomputes from the mapping and the vocabulary. Nothing here is typed in by hand.</p>
+      </div>
+      <div class="stack">
+        <div class="tiles" id="tiles"></div>
+
+        <div class="card">
+          <div class="sechead"><h3>Conversion by how they came in</h3><span class="note">the one chart worth putting on the wall</span></div>
+          <div class="chart" id="c-type"></div>
+          <div class="legend"><span><i style="background:var(--green)"></i>joined</span><span><i style="background:var(--amber)"></i>all-lead average</span></div>
+        </div>
+
+        <div class="card">
+          <div class="sechead"><h3>Where the leads came from</h3><span class="note" id="srcnote"></span></div>
+          <div class="chart" id="c-src"></div>
+        </div>
+
+        <div class="card">
+          <div class="sechead"><h3>What the notes say, and whether it matters</h3><span class="note">percentage points against the all-lead average</span></div>
+          <div class="chart" id="c-lift"></div>
+        </div>
+
+        <div class="card">
+          <div class="sechead"><h3>By staff member</h3><span class="note" id="staffnote"></span></div>
+          <div class="chart" id="c-staff"></div>
+        </div>
+
+        <div>
+          <div class="sechead"><h3>Findings</h3><span class="note">generated from this sheet</span></div>
+          <div class="finds" id="finds"></div>
+        </div>
+
+        <div class="card">
+          <div class="sechead"><h3>Hand it on</h3></div>
+          <p class="lede">Copies the findings above as plain text you can paste into an email or the hub.</p>
+          <div class="btnrow" style="justify-content:flex-start;margin-top:13px">
+            <button class="btn cta" id="copybrief" type="button">Copy the brief</button>
+          </div>
+        </div>
+      </div>
+      <div class="pager">
+        <button class="btn ghost" data-go="3" type="button">&larr; Free text</button>
+        <button class="btn ghost" data-go="0" type="button">Start again with another file</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="foot">
+  <p><b>Proof of concept.</b> Built for ONYX Gym &amp; Fitness to show how a raw export becomes a report. The structured columns in the sample are ONYX's real August 2026 figures; the note text has been rewritten so no member is identifiable.</p>
+  <p>Files you drop in are parsed by this page in your own browser. Nothing is uploaded, stored or sent anywhere.</p>
+</footer>
+<div class="toast" id="toast" hidden></div>
+<script id="demo" type="application/json">{"name":"ONYX-AUG-2026-SAMPLE.xlsx","sheet":"Sheet1","headers":["Member ID","Member Name","Task Event","Task Description","Task Cleared On","Task Cleared Note","Staff Name","Task Type","Age","Active Memberships","Member Note","Member Source Promotion","All Memberships"],"rows":[["ID-00001","NAME-0001",null,"Paid casual. Tahlia came in for a first session. Trained legs, in and out in an hour.","2026-08-29T09:42:26",null,"STAFF-003","Casual Visit Paid - First Visit",26,0,"Member #7850 has set a new password via the Member Portal","Instagram","ONYX Black - 12 Month Membership [ended 8 Jul 2026], RECOVER Together (add-on) [ended 23 Apr 2025]"],["ID-00002","NAME-0002",null,"see tour notes","2026-08-25T18:44:28",null,"STAFF-003","Casual Visit Paid - First Visit",46,1,"Member has edited their profile: language: \"\" -> \"en_GB\".",null,"Complimentary Membership [ended 17 Mar 2026], RECOVER Together (add-on) [ended 1 Oct 2024], Fitness Passport - Alexandria [ended 2 Oct 2024], RECOVER Solo (add-on) [ended 18 Oct 2024], Fitness Passport - Alexandria [ended 18 Oct 2024], RECOVER Together (add-on) [ended 12 Nov 2024], RECOVER Solo (add-on) [ended 13 Feb 2025], ONYX Black - 12 Month Membership (No Joining Fee) [ended 24 Aug 2025], Fitness Passport - Alexandria, ONYX Black - 12 Month Membership [ended 6 Jun 2026]"],["ID-00003","NAME-0003",null,"Paid casual. Priya came in for a first session. Just moved to Mascot and is shopping around for a gym. Currently training at PUMP Chatswood. Asked about the sauna and the RECOVER add-on.","2026-08-01T11:36:49",null,"STAFF-003","Casual Visit Paid - First Visit",28,0,null,"Word of Mouth",null],["ID-00004","NAME-0004",null,"Paid casual. Marcus came in for a first session. Just moved to Erskineville and is shopping around for a gym. Currently training at Anytime Fitness. Asked about the sauna and the RECOVER add-on.","2026-08-01T11:34:42",null,"STAFF-006","Casual Visit Paid - First Visit",31,0,null,"Instagram",null],["ID-00005","NAME-0005",null,"Paid casual. Noor came in for a first session. Just moved to Newtown and is shopping around for a gym. Currently training at a boxing-only gym nearby. Only in Sydney for a couple of days, down from Canberra.","2026-08-02T12:18:09",null,"STAFF-006","Casual Visit Paid - First Visit",27,0,"Lives over in Bondi, so getting here regularly would be a stretch. Sent the membership link.","Referral",null],["ID-00006","NAME-0006",null,null,"2026-08-03T14:18:58","Happy where they are and not looking to switch.","STAFF-006","Casual Visit Paid - First Visit",22,0,"Happy where they are and not looking to switch. Took their number.","Referral",null],["ID-00007","NAME-0007",null,"Paid casual. Sienna came in for a first session. Currently training at a CrossFit box in Marrickville.","2026-08-04T12:20:54",null,"STAFF-006","Casual Visit Paid - First Visit",22,0,"Lives over in North Ryde, so getting here regularly would be a stretch. Offered a 7-day pass.","Instagram",null],["ID-00008","NAME-0008",null,"Paid casual. Hamish came in for a first session. Only in Sydney for a couple of days, down from Brisbane.","2026-08-05T09:14:39",null,"STAFF-003","Casual Visit Paid - First Visit",30,0,"Left a voicemail, will try again.","Walked/Drove By",null],["ID-00009","NAME-0009",null,"Paid casual. Rina came in for a first session. Just moved to Newtown and is shopping around for a gym. Currently training at Fitness First. Pushed back on the joining fee.","2026-08-05T10:08:49",null,"STAFF-004","Casual Visit Paid - First Visit",26,1,null,"Google Ad","ONYX Black - 12 Month Membership (No Joining Fee)"],["ID-00010","NAME-0010",null,"Paid casual. Rina came in for a first session. Just moved to Newtown and is shopping around for a gym. Currently training at Fitness First. Pushed back on the joining fee.","2026-08-05T10:10:59",null,"STAFF-005","Casual Visit Paid - First Visit",24,1,null,"Google Search","[VIP Early Access - 4th Bday] ONYX Black - 12 Month Membership"],["ID-00011","NAME-0011",null,"see toured notes","2026-08-07T14:55:39",null,"STAFF-003","Casual Visit Paid - First Visit",24,0,"Asked to be called back after payday. Walked them through the app.","Google Search",null],["ID-00012","NAME-0012",null,"Paid","2026-08-08T14:50:45",null,"STAFF-003","Casual Visit Paid - First Visit",24,1,null,"Referral","ONYX Black - Paid In Full Membership [ends 26 Sep 2027]"],["ID-00013","NAME-0013",null,"Paid casual. Bianca came in for a first session. Currently training at Snap Fitness.","2026-08-08T15:31:44",null,"STAFF-003","Casual Visit Paid - First Visit",18,0,"Subject: General Enquiry  Tour / Visit Date: 2026-08-08  Tour / Visit Time: Evening  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Google Search  Message: ","Google Search",null],["ID-00014","NAME-0014",null,"Paid casual. Omar came in for a first session. Came in with a mate who already trains here.","2026-08-11T15:39:39","test","STAFF-004","Casual Visit Paid - First Visit",26,0,"Lives over in Artarmon, so getting here regularly would be a stretch. Better fit for Artarmon, passed the lead across. Booked them in for a proper tour.","Referral",null],["ID-00015","NAME-0015",null,"Paid casual. Freya came in for a first session. Currently training at a boxing-only gym nearby.","2026-08-11T19:04:26",null,"STAFF-004","Casual Visit Paid - First Visit",30,0,"No follow up required: prospect unresponsive, closing out. Took their number.","Walked/Drove By",null],["ID-00016","NAME-0016",null,"Paid casual. Lachie came in for a first session. Currently training at World Gym.","2026-08-13T11:00:55",null,"STAFF-004","Casual Visit Paid - First Visit",37,1,null,"Google Search","ONYX Black - 12 Month Membership (No Joining Fee)"],["ID-00017","NAME-0017",null,"Paid casual. Nadia came in for a first session. Only in Sydney for a couple of days, down from the Gold Coast.","2026-08-13T08:38:28",null,"STAFF-002","Casual Visit Paid - First Visit",32,0,"Will come back on the weekend to see how busy it gets. Noted their training days.","Facebook",null],["ID-00018","NAME-0018",null,"Paid casual. Beau came in for a first session. Asked where the change rooms were and got on with it.","2026-08-13T13:24:54",null,"STAFF-003","Casual Visit Paid - First Visit",24,0,"Said they would think it over. Booked them in for a proper tour.","Word of Mouth",null],["ID-00019","NAME-0019",null,"Paid casual. Beau came in for a first session. Asked where the change rooms were and got on with it.","2026-08-13T13:24:26",null,"STAFF-004","Casual Visit Paid - First Visit",30,0,"Wants to bring their partner in before deciding.","Google Ad",null],["ID-00020","NAME-0020",null,"Paid casual. Tobias came in for a first session. Came in with a mate who already trains here.","2026-08-15 11:15:47",null,"STAFF-005","Casual Visit Paid - First Visit",36,0,"Will come back on the weekend to see how busy it gets. Took their number.","Fitness Passport",null],["ID-00021","NAME-0021",null,"Paid casual. Anika came in for a first session. Currently training at World Gym. Came in with a mate who already trains here.","2026-08-16T11:27:16",null,"STAFF-001","Casual Visit Paid - First Visit",35,0,"Happy where they are and not looking to switch. Sent the membership link.","Referral",null],["ID-00022","NAME-0022",null,"Paid casual. Rory came in for a first session. Currently training at a CrossFit box in Marrickville. Keen to sign up, following up tomorrow.","2026-08-20T08:48:45",null,"STAFF-002","Casual Visit Paid - First Visit",null,0,null,"Facebook Ad","ONYX Black - 12 Month Membership [ended 22 Aug 2026]"],["ID-00023","NAME-0023",null,null,"2026-08-17T11:57:13","No follow up required: prospect unresponsive, closing out. Booked them in for a proper tour.","STAFF-003","Casual Visit Paid - First Visit",null,0,"No follow up required: prospect unresponsive, closing out. Noted their training days.","TikTok",null],["ID-00024","NAME-0024",null,null,"2026-08-19T10:58:04","Said they would think it over. Took their number.","STAFF-004","Casual Visit Paid - First Visit",32,0,"Left a voicemail, will try again. Added them to the callback list.","Referral",null],["ID-00025","NAME-0025",null,"Paid casual. Saskia came in for a first session. Wants to come on under Fitness Passport once it activates. Pushed back on the joining fee.","2026-08-24T14:47:22",null,"STAFF-005","Casual Visit Paid - First Visit",23,0,"Left a voicemail, will try again. Flagged for the weekend shift.","Fitness Passport",null],["ID-00026","NAME-0026",null,null,"2026-08-21T09:02:22","Happy where they are and not looking to switch. Noted their training days.","STAFF-001","Casual Visit Paid - First Visit",25,0,"Happy where they are and not looking to switch. Noted their training days.",null,null],["ID-00027","NAME-0027",null,null,"2026-08-21T11:41:57","Paid","STAFF-002","Casual Visit Paid - First Visit",19,0,"Said they would think it over. Added them to the callback list.","Facebook",null],["ID-00028","NAME-0028",null,"Paid casual. Dev came in for a first session. Only in Sydney for a couple of days, down from regional Vic.","2026-08-23T12:31:22",null,"STAFF-003","Casual Visit Paid - First Visit",24,0,"Will come back on the weekend to see how busy it gets. Walked them through the app.","Instagram",null],["ID-00029","NAME-0029",null,"Paid casual. Greta came in for a first session. Only in Sydney for a couple of days, down from Perth.","2026-08-23T12:30:45",null,"STAFF-004","Casual Visit Paid - First Visit",21,0,"Will come back on the weekend to see how busy it gets. Walked them through the app.","Instagram",null],["ID-00030","NAME-0030",null,"Paid casual. Fintan came in for a first session. Currently training at Fitness First.","2026-08-24T09:51:23",null,"STAFF-005","Casual Visit Paid - First Visit",30,0,"Lives over in North Ryde, so getting here regularly would be a stretch. Better fit for Artarmon, passed the lead across. Sent the membership link.","Google Ad",null],["ID-00031","NAME-0031",null,"Paid casual. Saskia came in for a first session. Wants to come on under Fitness Passport once it activates. Pushed back on the joining fee.","2026-08-24T14:47:12",null,"STAFF-001","Casual Visit Paid - First Visit",24,0,"Wants to bring their partner in before deciding. Sent the membership link.","Fitness Passport",null],["ID-00032","NAME-0032",null,"Paid casual. Perla came in for a first session. Came in with a mate who already trains here. Wants to come on under Fitness Passport once it activates.","2026-08-24T17:21:32",null,"STAFF-002","Casual Visit Paid - First Visit",27,0,"Lives over in Lane Cove, so getting here regularly would be a stretch. Took their number.","Word of Mouth",null],["ID-00033","NAME-0033",null,"Paid casual. Ronan came in for a first session. Just moved to Erskineville and is shopping around for a gym. Only in Sydney for a couple of days, down from the Gold Coast.","2026-08-25T18:51:44",null,"STAFF-003","Casual Visit Paid - First Visit",34,1,null,"Google Ad","[VIP Early Access - 4th Bday] ONYX Black - 12 Month Membership"],["ID-00034","NAME-0034",null,"Paid casual. Mika came in for a first session. Showed them the free weights and the turf.","2026-08-25T18:30:22",null,"STAFF-004","Casual Visit Paid - First Visit",30,0,"Wants to bring their partner in before deciding. Flagged for the weekend shift.","Instagram",null],["ID-00035","NAME-0035",null,"Paid casual. Teodora came in for a first session. Ready to join, just wanted to read the contract first.","2026-08-27T09:13:58",null,"STAFF-005","Casual Visit Paid - First Visit",34,0,"No follow up required: prospect unresponsive, closing out. Added them to the callback list.","Word of Mouth",null],["ID-00036","NAME-0036",null,"Paid casual. Abe came in for a first session. Only in Sydney for a couple of days, down from regional Vic.","2026-08-26T17:46:28",null,"STAFF-001","Casual Visit Paid - First Visit",40,0,"Gave them a timetable and the casual pack pricing. Noted their training days.","Google Search",null],["ID-00037","NAME-0037",null,null,"2026-08-27T11:57:21","No follow up required: prospect unresponsive, closing out. Noted their training days.","STAFF-002","Casual Visit Paid - First Visit",null,0,"No follow up required: prospect unresponsive, closing out. Noted their training days.  Subject: General Enquiry  Tour / Visit Date: 2026-08-27  Tour / Visit Time: Morning  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Walked/Drove By  Message: ","Walked/Drove By",null],["ID-00038","NAME-0038",null,"Paid casual. Kaito came in for a first session. Came in with a mate who already trains here.","2026-08-28T14:28:20","No follow up required: prospect unresponsive, closing out. Noted their training days.","STAFF-003","Casual Visit Paid - First Visit",31,0,"No follow up required: prospect unresponsive, closing out. Added them to the callback list.","Instagram",null],["ID-00039","NAME-0039",null,"Paid casual. Sunny came in for a first session.","2026-08-27T17:59:07",null,"STAFF-004","Casual Visit Paid - First Visit",17,0,"No follow up required: prospect unresponsive, closing out. Took their number.","Referral",null],["ID-00040","NAME-0040",null,"Paid casual. Sunny came in for a first session.","2026-08-27T17:58:52",null,"STAFF-005","Casual Visit Paid - First Visit",19,0,"Lives over in out past Liverpool, so getting here regularly would be a stretch. Booked them in for a proper tour.","Referral",null],["ID-00041","NAME-0041",null,"Paid casual. Sunny came in for a first session.","2026-08-27T17:58:12",null,"STAFF-001","Casual Visit Paid - First Visit",17,0,"No follow up required: prospect unresponsive, closing out. Took their number.","Referral",null],["ID-00042","NAME-0042",null,"Paid casual. Sunny came in for a first session.","2026-08-27T17:57:52",null,"STAFF-002","Casual Visit Paid - First Visit",17,0,"No follow up required: prospect unresponsive, closing out. Added them to the callback list.","Referral",null],["ID-00043","NAME-0043",null,"Paid casual. Priya came in for a first session. Only in Sydney for a couple of days, down from Melbourne.","2026-08-28T10:05:48",null,"STAFF-003","Casual Visit Paid - First Visit",33,0,"Comparing us against two others before committing. Sent the membership link.","Word of Mouth",null],["ID-00044","NAME-0044",null,"Paid casual. Marcus came in for a first session. Only in Sydney for a couple of days, down from Perth.","2026-08-28T13:10:41",null,"STAFF-004","Casual Visit Paid - First Visit",41,0,"Gave them a timetable and the casual pack pricing. Added them to the callback list.","Corporate Offer",null],["ID-00045","NAME-0045",null,"Paid casual. Noor came in for a first session. Only in Sydney for a couple of days, down from the Gold Coast.","2026-08-29T08:42:05",null,"STAFF-005","Casual Visit Paid - First Visit",40,0,"Will come back on the weekend to see how busy it gets. Took their number.","Referral",null],["ID-00046","NAME-0046",null,"Paid casual. Eli came in for a first session. Asked where the change rooms were and got on with it.","2026-08-29T12:53:01",null,"STAFF-001","Casual Visit Paid - First Visit",30,0,null,"Referral",null],["ID-00047","NAME-0047",null,"Paid casual. Sienna came in for a first session. Currently training at Crunch. Said they would decide this week.","2026-08-29T10:56:53",null,"STAFF-002","Casual Visit Paid - First Visit",19,0,"Lives over in North Ryde, so getting here regularly would be a stretch. Happy where they are and not looking to switch. Please follow up this week. Sent the membership link.","Instagram",null],["ID-00048","NAME-0048",null,"Paid casual. Sienna came in for a first session. Currently training at Crunch. Said they would decide this week.","2026-08-29T10:57:45",null,"STAFF-003","Casual Visit Paid - First Visit",20,0,"Happy where they are and not looking to switch. Please follow up this week. Added them to the callback list.","Instagram",null],["ID-00049","NAME-0049",null,"Paid casual. Rina came in for a first session. Came in with a mate who already trains here.","2026-08-29T11:15:28",null,"STAFF-004","Casual Visit Paid - First Visit",31,0,"Wants to bring their partner in before deciding. Took their number.","Instagram",null],["ID-00050","NAME-0050",null,"Paid casual. Rina came in for a first session. Came in with a mate who already trains here.","2026-08-29T11:13:08",null,"STAFF-005","Casual Visit Paid - First Visit",null,0,"Took a card, said they would call. Walked them through the app.","Instagram Ad",null],["ID-00051","NAME-0051",null,"Paid casual. Rina came in for a first session. Came in with a mate who already trains here.","2026-08-29T11:11:34",null,"STAFF-001","Casual Visit Paid - First Visit",54,0,"Lives over in Croydon, so getting here regularly would be a stretch. Flagged for the weekend shift.","Facebook",null],["ID-00052","NAME-0052",null,"Paid casual. Cormac came in for a first session. Currently training at Anytime Fitness. Said the monthly rate was more than they wanted to spend.","2026-08-31T10:15:10","Paid","STAFF-002","Casual Visit Paid - First Visit",47,0,"No follow up required: prospect unresponsive, closing out. Happy where they are and not looking to switch. Offered a 7-day pass.","Walked/Drove By",null],["ID-00053","NAME-0053",null,"Paid casual. Bianca came in for a first session. Just moved to Mascot and is shopping around for a gym. Wants to come on under Fitness Passport once it activates.","2026-08-31T10:18:48",null,"STAFF-003","Casual Visit Paid - First Visit",31,1,"Comparing us against two others before committing. Offered a 7-day pass.","Fitness Passport","Fitness Passport - Alexandria"],["ID-00054","NAME-0054",null,"Paid casual. Omar came in for a first session. Currently training at Anytime Fitness. Wants to come on under Fitness Passport once it activates.","2026-08-31 12:21:16",null,"STAFF-004","Casual Visit Paid - First Visit",51,1,"Will come back on the weekend to see how busy it gets. Added them to the callback list.","Fitness Passport","Fitness Passport - Alexandria"],["ID-00055","NAME-0055",null,"Paid casual. Freya came in for a first session. Just moved to Mascot and is shopping around for a gym. Currently training at Snap Fitness. Ready to join, just wanted to read the contract first.","2026-08-31T16:52:56",null,"STAFF-005","Casual Visit Paid - First Visit",29,1,"Please follow up this week. Added them to the callback list.","Google Ad","ONYX Black - 12 Month Membership (No Joining Fee)"],["ID-00056","NAME-0056",null,"Paid casual. Lachie came in for a first session. Just moved to Redfern and is shopping around for a gym. Came in with a mate who already trains here. Wants to come on under Fitness Passport once it activates. Said the monthly rate was more than they wanted to spend. Ready to join, just wanted to read the contract first.","2026-08-31T16:57:53",null,"STAFF-001","Casual Visit Paid - First Visit",30,1,"Please follow up this week.","Google Ad","Fitness Passport - Alexandria"],["ID-00057","NAME-0057","Prospect Attended a Tour","Prospect Nadia last visited the facility on the 3 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-03T12:19:37","Autocompleted from prospect becoming a member","STAFF-002","Prospect Toured",30,1,"Wants to bring their partner in before deciding. Noted their training days.","Word of Mouth","ONYX Gold - Monthly Membership (No Joining Fee) [ended 8 Mar 2026], 2 Weeks Free - RECOVER Together (add-on) [ended 11 Nov 2025], ONYX Black - 12 Month Membership (No Joining Fee)"],["ID-00058","NAME-0058","Prospect Attended a Tour","Prospect Beau last visited the facility on the 26 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-26T10:45:50","Paid","STAFF-003","Prospect Toured",null,0,"No show. Sent the membership link.","Instagram Ad",null],["ID-00059","NAME-0059","Prospect Attended a Tour","Prospect Imogen last visited the facility on the 4 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-04T11:49:04","Autocompleted from prospect becoming a member","STAFF-004","Prospect Toured",22,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-04  Tour / Visit Time: Afternoon  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Google Search  Message: ","Google Search","ONYX Black - 12 Month Membership (No Joining Fee)"],["ID-00060","NAME-0060","Prospect Attended a Tour","Prospect Tobias last visited the facility on the 5 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-05T18:32:27","1. What was their purpose in coming in today? Lives in the area and is shopping around for gyms. 2. What was their problem? Very price sensitive. 3. Are they currently doing much for recovery, or are they interested in it? No, but interested once it was explained. 4. Timeframe: when are they expecting to make a change? In a week or two.","STAFF-005","Prospect Toured",null,0,"Will come back on the weekend to see how busy it gets. Added them to the callback list.","Google Search",null],["ID-00061","NAME-0061","Prospect Attended a Tour","Prospect Anika last visited the facility on the 5 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-05T18:31:55","1. What was their purpose in coming in today? Works around the corner and wanted to see the floor. 2. What was their problem? No squat racks free when they train. 3. Are they currently doing much for recovery, or are they interested in it? Uses a sauna elsewhere already. 4. Timeframe: when are they expecting to make a change? End of the month when their contract runs out.","STAFF-001","Prospect Toured",null,0,"Comparing us against two others before committing. Flagged for the weekend shift.","Word of Mouth",null],["ID-00062","NAME-0062","Prospect Attended a Tour","Prospect Rory last visited the facility on the 5 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-05T14:17:20","Happy where they are and not looking to switch. Booked them in for a proper tour.","STAFF-002","Prospect Toured",null,0,"Happy where they are and not looking to switch.","Google Search",null],["ID-00063","NAME-0063","Prospect Attended a Tour",null,"2026-08-06T17:41:33","Please follow up this week. Offered a 7-day pass.","STAFF-003","Prospect Toured",24,1,"Please follow up this week. Sent the membership link.  Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-06  Tour / Visit Time: Evening  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Flyer  Message: ","Flyer","ONYX Black - 12 Month Membership"],["ID-00064","NAME-0064","Prospect Attended a Tour","Prospect Kwame last visited the facility on the 7 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-07T18:55:45","Autocompleted from prospect becoming a member","STAFF-004","Prospect Toured",21,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-07  Tour / Visit Time: Morning  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Walked/Drove By  Message: ","Walked/Drove By","ONYX Black - 12 Month Membership"],["ID-00065","NAME-0065","Prospect Attended a Tour","Prospect Saskia last visited the facility on the 10 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-10T16:11:49","Autocompleted from prospect becoming a member","STAFF-005","Prospect Toured",null,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-10  Tour / Visit Time: Morning  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Word of Mouth  Message: ","Word of Mouth","Fitness Passport - Alexandria"],["ID-00066","NAME-0066","Prospect Attended a Tour","Prospect Callum last visited the facility on the 11 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-11T10:27:37","Autocompleted from prospect becoming a member","STAFF-001","Prospect Toured",44,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-11  Tour / Visit Time: Afternoon  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Google Search  Message: ","Google Search","ONYX Gold - Monthly Membership"],["ID-00067","NAME-0067","Prospect Attended a Tour","Prospect Mireille last visited the facility on the 14 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-14T08:21:01","see tour notes","STAFF-002","Prospect Toured",27,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-14  Tour / Visit Time: Evening  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Google Search  Message: ","Google Search","Fitness Passport - Alexandria"],["ID-00068","NAME-0068","Prospect Attended a Tour","Prospect Dev last visited the facility on the 13 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-13T17:30:12","Autocompleted from prospect becoming a member","STAFF-003","Prospect Toured",28,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-13  Tour / Visit Time: Evening  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Referral  Message: ","Referral","ONYX Gold - Monthly Membership"],["ID-00069","NAME-0069","Prospect Attended a Tour","Prospect Greta last visited the facility on the 15 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-15T12:32:05","Said they would think it over. Booked them in for a proper tour.","STAFF-004","Prospect Toured",26,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-15  Tour / Visit Time: Morning  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Word of Mouth  Message: ","Word of Mouth","ONYX Black - 12 Month Membership"],["ID-00070","NAME-0070","Prospect Attended a Tour","Prospect Fintan last visited the facility on the 15 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-15T09:36:37","Wants to bring their partner in before deciding. Took their number.","STAFF-005","Prospect Toured",56,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-15  Tour / Visit Time: Morning  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Walked/Drove By  Message: ","Walked/Drove By","ONYX Gold - Monthly Membership"],["ID-00071","NAME-0071","Prospect Attended a Tour",null,"2026-08-14T15:41:30","1. What was their purpose in coming in today? Just moved to Newtown and needs somewhere close. 2. What was their problem? Their current gym gets too busy at peak. 3. Are they currently doing much for recovery, or are they interested in it? Uses a sauna elsewhere already. 4. Timeframe: when are they expecting to make a change? In a week or two.","STAFF-001","Prospect Toured",19,0,null,"Walked/Drove By",null],["ID-00072","NAME-0072","Prospect Attended a Tour","Prospect Perla last visited the facility on the 18 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-18T13:33:18","Autocompleted from prospect becoming a member","STAFF-002","Prospect Toured",21,1,"Left a voicemail, will try again. Took their number.","Google Search","ONYX Black - 12 Month Membership"],["ID-00073","NAME-0073","Prospect Attended a Tour","Prospect Ronan last visited the facility on the 19 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-19T16:38:04","Gave them a timetable and the casual pack pricing. Booked them in for a proper tour.","STAFF-003","Prospect Toured",31,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-19  Tour / Visit Time: Afternoon  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Walked/Drove By  Message: ","Walked/Drove By","ONYX Black - 12 Month Membership"],["ID-00074","NAME-0074","Prospect Attended a Tour","Mika came in for a look around. Just moved to Waterloo and is shopping around for a gym. Currently training at Anytime Fitness. Pushed back on the joining fee.","2026-08-21T12:48:59",null,"STAFF-004","Prospect Toured",null,0,"Took a card, said they would call. Offered a 7-day pass.","Walked/Drove By",null],["ID-00075","NAME-0075","Prospect Attended a Tour","Prospect Teodora last visited the facility on the 28 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-28T16:26:24","Autocompleted from prospect becoming a member","STAFF-005","Prospect Toured",48,1,"Subject: Book a Gym Tour  Tour / Visit Date: 2026-08-28  Tour / Visit Time: Afternoon  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Word of Mouth  Message: ","Word of Mouth","[VIP Early Access - 4th Bday] ONYX Gold - Monthly Membership"],["ID-00076","NAME-0076","Prospect Attended a Tour","Prospect Abe last visited the facility on the 28 Aug 2026. Prospect has been taken through our sales & tour process. Copy and paste below required notes below, and edit accordingly for each tour. 1. What was their purpose in coming in today? 2. What was their problem? 3. Are they currently doing much for recovery, or are they interested in it? 4. Timeframe: when are they expecting to make a change?","2026-08-28T16:26:59","Autocompleted from prospect becoming a member","STAFF-001","Prospect Toured",48,1,"Took a card, said they would call.","Word of Mouth","[VIP Early Access - 4th Bday] ONYX Gold - Monthly Membership"],["ID-00077","NAME-0077","Prospect Attended a Tour",null,"2026-08-27T14:25:37","Please follow up this week. Offered a 7-day pass.","STAFF-002","Prospect Toured",29,1,null,"Word of Mouth","ONYX Black - 12 Month Membership (No Joining Fee) [ends 1 Oct 2026]"],["ID-00078","NAME-0078","Prospect Walked In","Kaito came in for a look around. Asked about the sauna and the RECOVER add-on.","2026-08-09T10:15:15",null,"STAFF-003","Prospect Toured/Walked In",34,0,"Left a voicemail, will try again. Took their number.","Google Search","ONYX Gold - Fortnightly Membership (No Joining Fee) [ended 26 Jun 2024]"],["ID-00079","NAME-0079","Prospect Walked In","Sunny came in for a look around. Currently training at a boxing-only gym nearby.","2026-08-01T11:53:30",null,"STAFF-004","Prospect Toured/Walked In",28,0,null,"Word of Mouth",null],["ID-00080","NAME-0080","Prospect Walked In","Marlo came in for a look around. Just moved to Zetland and is shopping around for a gym. Currently training at City Gym. Asked about the sauna and the RECOVER add-on. Pushed back on the joining fee.","2026-08-02T11:33:50",null,"STAFF-005","Prospect Toured/Walked In",null,0,"Lives over in Croydon, so getting here regularly would be a stretch. Sent the membership link.  Subject: General Enquiry  Tour / Visit Date: 2026-08-02  Tour / Visit Time: Morning  PT Preference:  Business Name (Partnership):  Source Promotion (Add Manually): Google Search  Message: ","Google Search",null],["ID-00081","NAME-0081","Prospect Walked In",null,"2026-08-04T13:34:14","Lives over in North Ryde, so getting here regularly would be a stretch. Sent the membership link.","STAFF-001","Prospect Toured/Walked In",null,0,"Lives over in Artarmon, so getting here regularly would be a stretch. Booked them in for a proper tour.","Walked/Drove By",null],["ID-00082","NAME-0082","Prospect Walked In","Declan came in for a look around. Just moved to Zetland and is shopping around for a gym. Asked about the sauna and the RECOVER add-on. Pushed back on the joining fee.","2026-08-07T14:55:21",null,"STAFF-002","Prospect Toured/Walked In",24,0,"Said they would think it over. Sent the membership link.","Google Search",null],["ID-00083","NAME-0083","Prospect Walked In","Priya came in for a look around. Asked about the sauna and the RECOVER add-on.","2026-08-08T14:50:33",null,"STAFF-003","Prospect Toured/Walked In",24,1,null,"Referral","ONYX Black - Paid In Full Membership [ends 26 Sep 2027]"],["ID-00084","NAME-0084","Prospect Walked In","Marcus came in for a look around. Just moved to Erskineville and is shopping around for a gym.","2026-08-09T10:36:50","Happy where they are and not looking to switch.","STAFF-004","Prospect Toured/Walked In",null,0,"Happy where they are and not looking to switch. Walked them through the app.","Google Search",null],["ID-00085","NAME-0085","Prospect Walked In","Noor came in for a look around. Currently training at Fitness First. Wants to come on under Fitness Passport once it activates. Asked about the sauna and the RECOVER add-on.","2026-08-13T18:52:36",null,"STAFF-005","Prospect Toured/Walked In",null,0,"Gave them a timetable and the casual pack pricing. Walked them through the app.","Fitness Passport",null],["ID-00086","NAME-0086","Prospect Walked In","Eli came in for a look around. Just moved to Zetland and is shopping around for a gym. Wants to come on under Fitness Passport once it activates. Asked about the sauna and the RECOVER add-on.","2026-08-20T18:31:08",null,"STAFF-001","Prospect Toured/Walked In",null,1,null,"Fitness Passport","Fitness Passport - Alexandria"],["ID-00087","NAME-0087","Prospect Walked In","Sienna came in for a look around. Ran through the floor and the class timetable.","2026-08-22T12:21:22",null,"STAFF-002","Prospect Toured/Walked In",null,0,"Asked to be called back after payday. Sent the membership link.","Word of Mouth",null],["ID-00088","NAME-0088","Prospect Walked In","Hamish came in for a look around. Only in Sydney for a couple of days, down from the Gold Coast.","2026-08-23T12:30:22",null,"STAFF-003","Prospect Toured/Walked In",21,0,"Left a voicemail, will try again. Flagged for the weekend shift.","Instagram",null],["ID-00089","NAME-0089","Prospect Walked In","Rina came in for a look around. Asked about the sauna and the RECOVER add-on.","2026-08-24T19:29:54",null,"STAFF-004","Prospect Toured/Walked In",null,0,"Left a voicemail, will try again. Noted their training days.","Google Search",null],["ID-00090","NAME-0090","Prospect Walked In","Travis came in for a look around. Asked about the sauna and the RECOVER add-on.","2026-08-24T19:31:02",null,"STAFF-005","Prospect Toured/Walked In",null,0,"Comparing us against two others before committing. Took their number.","Google Search",null]]}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct=(a,b)=>b?Math.round(a/b*1000)/10:0;
+const fmtPct=v=>(Math.round(v*10)/10).toFixed(1)+'%';
+const dstr=d=>d instanceof Date?d.toISOString().slice(0,10):String(d||'').slice(0,10);
+
+/* ---------- state ---------- */
+const S={file:'',sheet:'',headers:[],rows:[],prof:[],map:{},notes:[],outcome:'sold',rules:[],step:0};
+const MIN_N=8;              /* below this a rate is not reported as a rate */
+const STEPS=[
+  {id:'p-source',name:'Source',meta:()=>S.rows.length?S.rows.length+' rows':'no file'},
+  {id:'p-profile',name:'Profile',meta:()=>S.prof.length?S.prof.filter(p=>p.kind!=='empty').length+' columns':''},
+  {id:'p-map',name:'Map',meta:()=>Object.values(S.map).filter(Boolean).length+' roles'},
+  {id:'p-text',name:'Free text',meta:()=>S.rules.length+' tags'},
+  {id:'p-out',name:'Insights',meta:()=>{const c=window.__F||0;return c?c+' findings':''}}
+];
+const ROLES=[
+  {k:'personId',t:'Person ID',d:'One row per person; used to catch duplicates'},
+  {k:'eventDate',t:'Event date',d:'When the task was closed'},
+  {k:'channel',t:'How they came in',d:'Tour, walk-in or paid casual'},
+  {k:'source',t:'Lead source',d:'Where they heard about you'},
+  {k:'owner',t:'Staff member',d:'Who handled it'},
+  {k:'outcomeFlag',t:'Member right now',d:'The 0/1 flag the export writes'},
+  {k:'outcomeDetail',t:'Membership history',d:'Product list with its start and end dates'},
+  {k:'age',t:'Age',d:'Optional, for the age split'}
+];
+const DEFAULT_RULES=[
+  {n:'New to area',k:'pos',w:'just moved, new to the area, moved here, moving to, relocating'},
+  {n:'High intent',k:'pos',w:'keen to sign up, ready to join, decide this week, wants to sign up, please follow up, looking to join'},
+  {n:'PT interest',k:'pos',w:'consult with a pt, pt consultation, speak with a pt'},
+  {n:'Competitor named',k:'neu',w:'fitness first, world gym, anytime fitness, snap fitness, city gym, crunch, crossfit, pump chatswood, boxing-only'},
+  {n:'Brought by member',k:'neu',w:'came in with a mate, friend of existing member, friends train here'},
+  {n:'Fitness Passport',k:'neu',w:'fitness passport'},
+  {n:'RECOVER interest',k:'neu',w:'sauna, recover, -doing much for recovery'},
+  {n:'Other site lead',k:'neu',w:'artarmon'},
+  {n:'Price objection',k:'neg',w:'joining fee, price sensitive, more than they wanted, too expensive, discount'},
+  {n:'Too far',k:'neg',w:'too far, a stretch, not local, getting here regularly'},
+  {n:'Just visiting',k:'neg',w:'only in sydney, tourist, layover, interstate, couple of days'},
+  {n:'Happy elsewhere',k:'neg',w:'happy where they are, not looking to switch, not interested in making a switch'},
+  {n:'Unresponsive',k:'neg',w:'unresponsive, closing out, left voicemail, unable to contact, asked not to be contacted'},
+  {n:'No show',k:'neg',w:'no show, no-show'}
+];
+
+/* ---------- profiling ---------- */
+const typeOf=v=>{
+  if(v===null||v===undefined||v==='')return 'blank';
+  if(v instanceof Date)return 'date';
+  if(typeof v==='number')return 'number';
+  return 'text';
+};
+function profile(){
+  S.prof=S.headers.map((h,i)=>{
+    const vals=S.rows.map(r=>r[i]);
+    const c={blank:0,date:0,number:0,text:0}, seen=new Map(); let lsum=0,lmax=0;
+    const odd=[];
+    vals.forEach((v,ri)=>{
+      const t=typeOf(v); c[t]++;
+      if(t==='blank')return;
+      const key=v instanceof Date?v.toISOString():String(v);
+      seen.set(key,(seen.get(key)||0)+1);
+      const L=String(v).length; lsum+=L; if(L>lmax)lmax=L;
+    });
+    const filled=vals.length-c.blank;
+    const kinds=['date','number','text'].filter(k=>c[k]>0);
+    const major=kinds.sort((a,b)=>c[b]-c[a])[0]||null;
+    if(kinds.length>1)vals.forEach((v,ri)=>{if(typeOf(v)!=='blank'&&typeOf(v)!==major)odd.push({ri,v})});
+    const avg=filled?lsum/filled:0, distinct=seen.size;
+    const top=[...seen.entries()].sort((a,b)=>b[1]-a[1]);
+    let kind='text';
+    if(!filled)kind='empty';
+    else if(major==='date')kind='date';
+    else if(major==='number')kind=(distinct<=3&&top.every(([k])=>k==='0'||k==='1'))?'flag':'number';
+    else if(distinct===filled&&filled>10&&avg<24)kind='id';
+    else if(distinct<=15&&avg<=40)kind='vocab';
+    else if(avg>40)kind='free';
+    const flags=[];
+    if(kind!=='empty'&&kinds.length>1)flags.push({lv:'bad',msg:'<b>'+odd.length+' of '+filled+' values are stored as '+odd.map(o=>typeOf(o.v))[0]+'</b> in a column that is otherwise '+major+'. Excel sorts those alphabetically and date maths skips them.',rows:odd.slice(0,4)});
+    if(kind==='empty')flags.push({lv:'warn',msg:'Completely empty. Carried along by the export and safe to drop.'});
+    if(filled&&filled/vals.length<0.5&&kind!=='empty')flags.push({lv:'warn',msg:'Filled on <b>'+pct(filled,vals.length)+'%</b> of rows, so anything split by it is a partial picture.'});
+    if(kind==='free'){
+      const dup=top.filter(([,n])=>n>1);
+      if(dup.length)flags.push({lv:'bad',msg:'<b>'+dup.reduce((a,[,n])=>a+n,0)+' rows repeat '+dup.length+' identical entries</b> &mdash; one conversation logged against several people.'});
+    }
+    return {h:h==null?'(unnamed)':String(h),i,n:vals.length,filled,c,distinct,top,avg,lmax,kind,flags,odd};
+  });
+}
+function guessRoles(){
+  const m={}; const used=new Set();
+  const take=(k,test)=>{
+    if(m[k])return;
+    const p=S.prof.find(p=>!used.has(p.i)&&p.kind!=='empty'&&test(p));
+    if(p){m[k]=p.i;used.add(p.i)}
+  };
+  const nm=p=>p.h.toLowerCase();
+  take('personId',p=>/(member|client|prospect|person).*id|^id$/.test(nm(p))&&p.kind==='id');
+  take('eventDate',p=>p.kind==='date');
+  take('outcomeDetail',p=>/all member|membership history|products?/.test(nm(p)));
+  take('outcomeFlag',p=>p.kind==='flag');
+  take('outcomeFlag',p=>/active|current|member(ship)?s?$/.test(nm(p))&&p.c.number);
+  take('owner',p=>/staff|user|owner|assigned|rep|consultant/.test(nm(p)));
+  take('source',p=>/source|promotion|referr|channel|marketing/.test(nm(p)));
+  take('channel',p=>/task type|visit type|lead type|^type$/.test(nm(p)));
+  take('channel',p=>p.kind==='vocab');
+  take('age',p=>/\bage\b/.test(nm(p)));
+  S.map=m;
+  const structural=new Set(Object.values(m).filter(v=>v!=null));
+  S.notes=S.prof.filter(p=>p.kind!=='empty'&&p.kind!=='date'&&p.kind!=='id'&&p.avg>40&&!structural.has(p.i)).map(p=>p.i);
+  if(!S.notes.length)S.notes=S.prof.filter(p=>p.kind==='free'||p.kind==='text').map(p=>p.i);
+}
+
+/* ---------- membership parsing ---------- */
+const segsOf=s=>String(s||'').split(/,\s*(?=[A-Z\[])/).map(x=>x.trim()).filter(Boolean);
+const isEnded=x=>/\[ended\s/i.test(x);
+const productOf=x=>x.replace(/^\[[^\]]*\]\s*/,'').replace(/\s*\[end(s|ed)[^\]]*\]/i,'').trim();
+const endDate=x=>{const m=x.match(/\[ended\s+([^\]]+)\]/i);const d=m?new Date(m[1]):null;return d&&!isNaN(d)?d:null};
+function memberState(row){
+  const di=S.map.outcomeDetail, fi=S.map.outcomeFlag;
+  const raw=di!=null?row[di]:null;
+  const segs=segsOf(raw), live=segs.filter(x=>!isEnded(x)), ended=segs.filter(isEnded);
+  const liveP=live.map(productOf);
+  return {
+    flag:fi!=null?Number(row[fi])===1:false,
+    hasLive:live.length>0,
+    fp:liveP.some(p=>/fitness ?passport/i.test(p)),
+    winback:live.length>0&&ended.length>0,
+    endedDates:ended.map(endDate).filter(Boolean),
+    liveP,anySeg:segs.length>0
+  };
+}
+const converted=row=>{
+  const m=memberState(row);
+  if(S.outcome==='flag')return m.flag;
+  if(S.outcome==='live')return m.hasLive;
+  return m.hasLive&&!m.fp;
+};
+
+/* ---------- rules ---------- */
+const noteText=row=>S.notes.map(i=>row[i]).filter(v=>v!=null&&v!=='').join('  ').toLowerCase();
+function parseW(w){
+  const parts=w.split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);
+  return {inc:parts.filter(p=>p[0]!=='-'),exc:parts.filter(p=>p[0]==='-').map(p=>p.slice(1).trim()).filter(Boolean)};
+}
+function tagsFor(row){
+  const t=noteText(row); if(!t)return [];
+  return S.rules.filter(r=>{
+    const {inc,exc}=parseW(r.w); if(!inc.length)return false;
+    let s=t; exc.forEach(x=>{s=s.split(x).join(' ')});
+    return inc.some(k=>s.includes(k));
+  }).map(r=>r.n);
+}
+
+/* ---------- calculation ---------- */
+function calc(){
+  const rows=S.rows, n=rows.length;
+  const conv=rows.map(converted), nconv=conv.filter(Boolean).length;
+  const base=pct(nconv,n);
+  const group=(idx,label)=>{
+    if(idx==null)return [];
+    const g=new Map();
+    rows.forEach((r,i)=>{
+      const k=r[idx]==null||r[idx]===''?'(not recorded)':String(r[idx]);
+      if(!g.has(k))g.set(k,{k,n:0,c:0});
+      const o=g.get(k); o.n++; if(conv[i])o.c++;
+    });
+    return [...g.values()].sort((a,b)=>b.n-a.n).map(o=>({...o,r:pct(o.c,o.n),thin:o.n<MIN_N}));
+  };
+  const states=rows.map(memberState);
+  const flagN=states.filter(s=>s.flag).length;
+  const liveN=states.filter(s=>s.hasLive).length;
+  const soldN=states.filter(s=>s.hasLive&&!s.fp).length;
+  const fpN=states.filter(s=>s.hasLive&&s.fp).length;
+  const winback=states.filter(s=>s.winback).length;
+  /* a membership that ended inside the window covered by the sheet */
+  const di=S.map.eventDate;
+  const dates=di!=null?rows.map(r=>r[di]).map(v=>v instanceof Date?v:(typeof v==='string'&&!isNaN(new Date(v))?new Date(v):null)).filter(Boolean):[];
+  const lo=dates.length?new Date(Math.min(...dates)):null, hi=dates.length?new Date(Math.max(...dates)):null;
+  const churn=states.filter(s=>!s.hasLive&&s.endedDates.some(d=>lo&&hi&&d>=lo&&d<=hi)).length;
+  /* tags */
+  const tg=new Map();
+  rows.forEach((r,i)=>tagsFor(r).forEach(t=>{
+    if(!tg.has(t))tg.set(t,{t,n:0,c:0,kind:(S.rules.find(x=>x.n===t)||{}).k||'neu'});
+    const o=tg.get(t);o.n++;if(conv[i])o.c++;
+  }));
+  const tags=[...tg.values()].map(o=>({...o,r:pct(o.c,o.n),lift:pct(o.c,o.n)-base})).sort((a,b)=>b.lift-a.lift);
+  const withNote=rows.filter(r=>noteText(r)).length;
+  const tagged=rows.filter(r=>tagsFor(r).length).length;
+  /* tour script left blank + notes lost on conversion */
+  const ci=S.map.channel;
+  const tourKey=ci!=null?[...new Set(rows.map(r=>String(r[ci]||'')))].find(k=>/tour/i.test(k)&&!/walk/i.test(k)):null;
+  const tourRows=tourKey?rows.filter(r=>String(r[ci])===tourKey):[];
+  const AUTO='autocompleted from prospect becoming a member';
+  const scriptRe=/what was their purpose in coming in today\?/i;
+  const lostNotes=tourRows.filter((r,i)=>{
+    const txt=S.notes.map(j=>String(r[j]||'')).join(' ');
+    return converted(r)&&scriptRe.test(txt)&&txt.toLowerCase().includes(AUTO);
+  }).length;
+  const answered=txt=>{
+    const re=/coming in today\?([\s\S]{0,300}?)(?:\s2\.|$)/gi; let m;
+    while((m=re.exec(txt)))if(/[a-z]{3,}/i.test(m[1]))return true;
+    return false;
+  };
+  const blankScript=tourRows.filter(r=>{
+    const txt=S.notes.map(j=>String(r[j]||'')).join(' ');
+    return scriptRe.test(txt)&&!answered(txt);
+  }).length;
+  /* duplicate notes */
+  const dupMap=new Map();
+  rows.forEach(r=>{const t=S.notes.map(j=>String(r[j]||'')).join(' ').trim().slice(0,110);if(t.length>40)dupMap.set(t,(dupMap.get(t)||0)+1)});
+  const dupRows=[...dupMap.values()].filter(v=>v>1).reduce((a,b)=>a+b,0);
+  const dupSets=[...dupMap.values()].filter(v=>v>1).length;
+  /* type faults */
+  const faults=S.prof.filter(p=>p.flags.some(f=>f.lv==='bad'&&f.rows));
+  const oddCells=faults.reduce((a,p)=>a+p.odd.length,0);
+  return {n,nconv,base,conv,byChannel:group(S.map.channel),bySource:group(S.map.source),byStaff:group(S.map.owner),
+    byAge:ageGroups(conv),tags,withNote,tagged,flagN,liveN,soldN,fpN,winback,churn,lo,hi,
+    tourKey,tourRows:tourRows.length,lostNotes,blankScript,dupRows,dupSets,oddCells,faults};
+}
+function ageGroups(conv){
+  const i=S.map.age; if(i==null)return [];
+  const b=[{k:'Under 25',t:v=>v<25},{k:'25 to 34',t:v=>v>=25&&v<35},{k:'35 and over',t:v=>v>=35},{k:'Not recorded',t:v=>v==null}];
+  return b.map(x=>{
+    let n=0,c=0;
+    S.rows.forEach((r,ri)=>{
+      const raw=r[i], v=(raw===null||raw===''||raw===undefined)?null:Number(raw);
+      const isNull=v===null||isNaN(v);
+      if(x.k==='Not recorded'?isNull:(!isNull&&x.t(v))){n++;if(conv[ri])c++}
+    });
+    return {k:x.k,n,c,r:pct(c,n),thin:n<MIN_N};
+  }).filter(x=>x.n);
+}
+
+/* ---------- rendering ---------- */
+function bars(el,items,opts){
+  const o=opts||{}, max=Math.max(100,...items.map(x=>x.r));
+  el.innerHTML=items.map(x=>{
+    const thin=x.thin&&!o.noThin;
+    const w=thin?0:Math.max(x.r/max*100,x.r>0?1.5:0);
+    return '<div class="crow'+(thin?' thin':'')+'">'+
+      '<div class="cl">'+esc(x.k||x.t)+'<small>n='+x.n+'</small></div>'+
+      '<div class="track'+(thin?' q':'')+'"><i style="width:'+w+'%"></i>'+
+        (o.base!=null?'<span class="base" style="left:'+(o.base/max*100)+'%"></span>':'')+'</div>'+
+      '<div class="cv">'+(thin?'<span style="color:var(--dim)">'+x.c+'/'+x.n+'</span>':fmtPct(x.r))+
+        '<small>'+(thin?'too few':x.c+' of '+x.n)+'</small></div></div>';
+  }).join('');
+}
+function renderRail(){
+  $('#rail').innerHTML='<h4>Pipeline</h4>'+STEPS.map((s,i)=>
+    '<button class="step'+(i<S.step?' done':'')+'" data-go="'+i+'" type="button" aria-current="'+(i===S.step)+'">'+
+    '<span class="sdot">'+(i<S.step?'&#10003;':(i+1))+'</span><span><span class="sname">'+s.name+'</span>'+
+    '<span class="smeta">'+esc(s.meta()||'')+'</span></span></button>').join('');
+}
+function go(i){
+  S.step=i; STEPS.forEach((s,j)=>{$('#'+s.id).hidden=j!==i});
+  renderRail(); window.scrollTo({top:0,behavior:'auto'});
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-go]'); if(!b)return;
+  go(Number(b.dataset.go));
+});
+
+function renderSource(){
+  $('#loadbox').innerHTML=S.rows.length?'<div class="loaded"><span class="chip on">Loaded</span>'+
+    '<span class="fn">'+esc(S.file)+'</span>'+
+    '<span class="st">'+S.rows.length+' rows &middot; '+S.headers.length+' columns &middot; sheet '+esc(S.sheet)+'</span></div>':'';
+  $('#rawnote').textContent=S.rows.length?S.headers.length+' columns as exported':'';
+  const show=S.headers.map((h,i)=>({h,i})).filter(x=>S.prof[x.i]&&S.prof[x.i].kind!=='empty');
+  $('#rawtbl').innerHTML=S.rows.length?'<table><thead><tr>'+show.map(x=>'<th>'+esc(x.h||'(unnamed)')+'</th>').join('')+
+    '</tr></thead><tbody>'+S.rows.slice(0,8).map(r=>'<tr>'+show.map(x=>{
+      const v=r[x.i];
+      return '<td class="clip'+(typeof v==='number'?' n':'')+'">'+(v==null||v===''?'<span class="blank">&mdash;</span>':esc(v instanceof Date?v.toISOString().replace('T',' ').slice(0,19):v))+'</td>';
+    }).join('')+'</tr>').join('')+'</tbody></table>':'<div style="padding:22px;color:var(--dim)">No file loaded.</div>';
+  const R=window.__R||{};
+  $('#strip').innerHTML=[
+    ['Columns read',S.prof.filter(p=>p.kind!=='empty').length,'of '+S.headers.length+' in the file'],
+    ['Data faults found',R.oddCells!=null?R.oddCells+R.dupRows:'—','cells and rows to fix'],
+    ['Notes understood',R.withNote?pct(R.tagged,R.withNote)+'%':'—','of rows carrying prose'],
+    ['Findings',window.__F||0,'written from the numbers']
+  ].map(x=>'<div><div class="k">'+x[0]+'</div><div class="v">'+x[1]+'</div><div class="s">'+x[2]+'</div></div>').join('');
+}
+function renderProfile(){
+  const bad=S.prof.filter(p=>p.flags.some(f=>f.lv==='bad'));
+  $('#qflags').innerHTML=bad.length
+    ?'<div class="alert bad"><span class="ic">!</span><div><b>'+bad.length+' column'+(bad.length>1?'s need':' needs')+' attention before anything is counted.</b> '+
+      'They are marked below. At 90 rows you would catch these by eye; at 9,000 you would not.</div></div>'
+    :'<div class="alert ok"><span class="ic">&#10003;</span><div>No type faults found in this file.</div></div>';
+  $('#cols').innerHTML=S.prof.map(p=>{
+    const kcls=p.kind==='vocab'?'vocab':p.kind==='free'?'free':p.flags.some(f=>f.lv==='bad')?'flag':'';
+    const label={empty:'empty',id:'identifier',date:'date',number:'number',flag:'0 / 1 flag',vocab:'vocabulary',free:'free text',text:'text'}[p.kind];
+    const fillPc=pct(p.filled,p.n);
+    const bcls=fillPc>=90?'':fillPc>=30?'warnbar':'badbar';
+    return '<details class="col '+kcls+'"><summary class="colhead">'+
+      '<span class="cname">'+esc(p.h)+'<i>'+label+'</i></span>'+
+      '<span class="role '+(p.kind==='vocab'?'vocab':p.kind==='free'?'free':'key')+'">'+
+        (p.kind==='vocab'?p.distinct+' values':p.kind==='free'?'~'+Math.round(p.avg)+' ch':p.kind==='empty'?'drop':p.distinct+' distinct')+'</span>'+
+      '<span class="fill"><span class="bar '+bcls+'"><i style="width:'+fillPc+'%"></i></span>'+
+        '<span class="l"><span>'+p.filled+' filled</span><span>'+fillPc+'%</span></span></span>'+
+      '<span class="caret">&#9654;</span></summary><div class="colbody">'+
+      p.flags.map(f=>'<div class="alert '+(f.lv==='bad'?'bad':'warn')+'"><span class="ic">'+(f.lv==='bad'?'!':'i')+'</span><div>'+f.msg+
+        (f.rows&&f.rows.length?'<div style="margin-top:6px;font-family:var(--mono);font-size:11.5px;opacity:.85">'+
+          f.rows.map(o=>'row '+(o.ri+2)+': '+esc(String(o.v).slice(0,30))).join(' &nbsp;&middot;&nbsp; ')+'</div>':'')+'</div></div>').join('')+
+      (p.kind==='vocab'||p.kind==='flag'||(p.distinct<=15&&p.kind!=='empty')
+        ?'<div class="vals">'+p.top.slice(0,15).map(([k,n])=>'<span class="val">'+esc(k.length>34?k.slice(0,34)+'…':k)+'<b>'+n+'</b></span>').join('')+'</div>'
+        :p.kind==='empty'?'<p class="lede">Nothing to show.</p>'
+        :p.kind==='date'?(function(){
+            const ds=p.top.map(([k])=>new Date(k)).filter(d=>!isNaN(d)).sort((a,b)=>a-b);
+            const f=d=>d.toISOString().slice(0,10)+' '+d.toISOString().slice(11,16);
+            return '<div class="samp"><em>'+p.distinct+' distinct timestamps</em>'+
+              (ds.length?'<div>earliest &nbsp;'+f(ds[0])+'</div><div>latest &nbsp;&nbsp;&nbsp;'+f(ds[ds.length-1])+'</div>':'')+'</div>';
+          })()
+        :'<div class="samp"><em>longest '+p.lmax+' characters &middot; '+p.distinct+' distinct &middot; average '+Math.round(p.avg)+'</em>'+
+          p.top.slice(0,3).map(([k])=>'<div>'+esc(k.slice(0,190))+(k.length>190?'…':'')+'</div>').join('')+'</div>')+
+      '</div></details>';
+  }).join('');
+}
+function renderMap(){
+  const opts=sel=>'<option value="">— not mapped —</option>'+S.prof.filter(p=>p.kind!=='empty')
+    .map(p=>'<option value="'+p.i+'"'+(sel===p.i?' selected':'')+'>'+esc(p.h)+'</option>').join('');
+  $('#maprows').innerHTML=ROLES.map(r=>'<div class="maprow"><div class="lab">'+r.t+'<small>'+r.d+'</small></div>'+
+    '<select data-role="'+r.k+'">'+opts(S.map[r.k])+'</select></div>').join('');
+  $('#mapnote').textContent=Object.values(S.map).filter(v=>v!=null).length+' of '+ROLES.length+' filled automatically';
+  $('#notetogs').innerHTML=S.prof.filter(p=>p.kind==='free'||p.kind==='text').map(p=>
+    '<button class="tog" type="button" data-note="'+p.i+'" aria-pressed="'+S.notes.includes(p.i)+'">'+esc(p.h)+'</button>').join('')||'<span class="lede">No text columns found.</span>';
+  const st=S.rows.map(memberState);
+  const cnt={flag:st.filter(s=>s.flag).length,live:st.filter(s=>s.hasLive).length,sold:st.filter(s=>s.hasLive&&!s.fp).length};
+  const O=[
+    ['sold','A membership your team sold','A live product on the account that is not a corporate scheme. The number you can hold a sales conversation about.'],
+    ['live','Any live membership','Includes Fitness Passport, which arrives through an employer rather than through the funnel.'],
+    ['flag','Whatever the export flags','The Active Memberships column as-is. This is what a pivot table gives you today.']
+  ];
+  $('#outchoice').innerHTML=O.map(o=>'<label class="opt" data-on="'+(S.outcome===o[0]?1:0)+'">'+
+    '<input type="radio" name="oc" value="'+o[0]+'"'+(S.outcome===o[0]?' checked':'')+'>'+
+    '<span><span class="t">'+o[1]+'</span><span class="d">'+o[2]+'</span></span>'+
+    '<span class="big">'+cnt[o[0]]+'<small>rows</small></span></label>').join('');
+  const fp=st.filter(s=>s.hasLive&&s.fp).length, wb=st.filter(s=>s.winback).length;
+  $('#outexplain').innerHTML='<div class="alert warn"><span class="ic">i</span><div>'+
+    'The gap between <b>'+cnt.flag+'</b> and <b>'+cnt.sold+'</b> is not rounding. <b>'+fp+'</b> of the accounts came in on Fitness Passport, and <b>'+wb+
+    '</b> had a membership here before that had already ended, so they are win-backs rather than new members. '+
+    'The export has one flag for all three and no column that separates them.</div></div>';
+}
+function renderRules(){
+  const R=window.__R;
+  $('#rules').innerHTML=S.rules.map((r,i)=>{
+    const o=R.tags.find(t=>t.t===r.n)||{n:0,c:0};
+    return '<div class="rule"><span class="rname"><i class="dotk '+(r.k==='pos'?'pos':r.k==='neg'?'neg':'neu')+'"></i>'+esc(r.n)+'</span>'+
+      '<input type="text" data-rule="'+i+'" value="'+esc(r.w)+'" spellcheck="false" aria-label="Keywords for '+esc(r.n)+'">'+
+      '<span class="rstat"><b>'+o.n+'</b> rows &middot; '+o.c+'</span>'+
+      '<button class="del" data-del="'+i+'" type="button" aria-label="Remove '+esc(r.n)+'">&times;</button></div>';
+  }).join('');
+  $('#rulenote').textContent='a keyword starting with a minus sign excludes';
+  const cov=R.withNote?pct(R.tagged,R.withNote):0;
+  $('#cover').innerHTML='<div class="big" style="color:'+(cov>=75?'var(--green)':'var(--amber)')+'">'+cov+'%</div>'+
+    '<div class="bar" style="height:8px"><i style="width:'+cov+'%;background:'+(cov>=75?'var(--green)':'var(--amber)')+'"></i></div>'+
+    '<p class="lede"><b>'+R.tagged+'</b> of the <b>'+R.withNote+'</b> rows carrying prose matched at least one tag. '+
+    'The rules below started as the words ONYX staff actually use in this sheet, not a generic list.</p>';
+  const un=S.rows.filter(r=>noteText(r)&&!tagsFor(r).length).slice(0,5);
+  $('#unnote').textContent=(R.withNote-R.tagged)+' rows';
+  $('#unmatched').innerHTML=un.length?un.map(r=>'<div>'+esc(noteText(r).slice(0,180))+'…</div>').join(''):'<div>Every note matched a rule.</div>';
+}
+function renderOut(){
+  const R=window.__R, name={sold:'sold membership',live:'live membership',flag:'export flag'}[S.outcome];
+  $('#outsub').innerHTML='Counting a conversion as <b>'+name+'</b>, across '+R.n+' leads between '+
+    (R.lo?dstr(R.lo):'?')+' and '+(R.hi?dstr(R.hi):'?')+'. Everything recomputes from the mapping and the vocabulary; nothing here is typed by hand.';
+  const tour=R.byChannel.find(x=>/tour/i.test(x.k)&&!/walk/i.test(x.k));
+  const nonTour=R.byChannel.filter(x=>x!==tour);
+  const ntN=nonTour.reduce((a,b)=>a+b.n,0), ntC=nonTour.reduce((a,b)=>a+b.c,0), ntR=pct(ntC,ntN);
+  const upside=tour?Math.round(ntN*0.15*(tour.r-ntR)/100):0;
+  $('#tiles').innerHTML=[
+    ['Leads',R.n,'tours, walk-ins and paid casuals','' ],
+    ['Joined',R.nconv,'the export flags '+R.flagN,''],
+    ['Conversion',fmtPct(R.base),'across every lead',''],
+    tour?['Tour conversion',fmtPct(tour.r),tour.c+' of '+tour.n+' tours','hero']:null,
+    tour?['Without a tour',fmtPct(ntR),ntC+' of '+ntN+' walk-ins and casuals','flagged']:null,
+    ['Rows to fix',R.oddCells+R.dupRows,'type faults and duplicates','']
+  ].filter(Boolean).map(t=>'<div class="tile '+t[3]+'"><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div><div class="s">'+t[2]+'</div></div>').join('');
+  bars($('#c-type'),R.byChannel.map(x=>({...x})),{base:R.base});
+  bars($('#c-src'),R.bySource,{base:R.base});
+  $('#srcnote').textContent='rates hidden below '+MIN_N+' leads';
+  bars($('#c-staff'),R.byStaff,{base:R.base});
+  $('#staffnote').textContent='rates hidden below '+MIN_N+' leads &middot; one sign-up moves these by several points';
+  const shown=R.tags.filter(t=>t.n>=MIN_N);
+  const mx=Math.max(20,...shown.map(t=>Math.abs(t.lift)));
+  $('#c-lift').innerHTML=shown.length?shown.map(t=>{
+    const w=Math.abs(t.lift)/mx*50, up=t.lift>=0;
+    return '<div class="lift"><div class="cl" style="font-size:13px">'+esc(t.t)+'<small style="color:var(--dim);font-family:var(--mono);font-size:11px;margin-left:5px">n='+t.n+'</small></div>'+
+      '<div class="liftbar"><span class="mid"></span><i class="'+(up?'up':'down')+'" style="width:'+w+'%"></i></div>'+
+      '<div class="liftv" style="color:'+(up?'var(--green)':'var(--error)')+'">'+(up?'+':'')+Math.round(t.lift)+'<span style="color:var(--dim);font-weight:400"> pts</span></div></div>';
+  }).join(''):'<p class="lede">No tag reached '+MIN_N+' rows.</p>';
+  /* findings */
+  const F=[];
+  if(tour&&tour.n>=10&&tour.r-ntR>15)F.push({p:1,tag:'Act on this',h:'A tour is worth '+Math.round(tour.r-ntR)+' points of conversion',
+    b:'Tours convert at <b>'+fmtPct(tour.r)+'</b> ('+tour.c+' of '+tour.n+'). Everyone else who walked through the door converted at <b>'+fmtPct(ntR)+'</b> ('+ntC+' of '+ntN+
+      '). A walk-in who does not get a booked tour behaves almost exactly like someone who just paid for a casual, so it is not the visit that converts, it is the tour.',
+    d:'<b>'+ntN+'</b> people came in without one. Converting even 15% of them into a booked tour at the current tour rate is about <b>'+upside+' extra memberships a month</b> from foot traffic already inside the building.'});
+  if(R.fpN||R.winback||R.churn)F.push({p:2,tag:'Definition',h:'The membership flag is not a conversion count',
+    b:'It records who is a member at the moment the file was exported, not who joined from this lead. <b>'+R.fpN+'</b> arrived on Fitness Passport through an employer, <b>'+R.winback+
+      '</b> already had a membership here that ended, and <b>'+R.churn+'</b> row'+(R.churn===1?' is a cancellation inside this very month':'s are cancellations inside this very month')+
+      ' sitting in the leads report scored as a lead that did not convert.',
+    d:'Report sold memberships, corporate scheme and win-backs as three separate lines. The membership history column already carries everything needed to split them.'});
+  if(R.lostNotes)F.push({p:3,tag:'Data loss',h:'The qualification notes vanish on exactly the people who joined',
+    b:'All <b>'+R.lostNotes+'</b> tours that converted carry nothing in the cleared note but <i>Autocompleted from prospect becoming a member</i>. Whatever the member said about their goal, their old gym or their budget is not in this export.',
+    d:'These are the most valuable records you have and they are the ones with no content. Capture the qualification answers in a field the conversion cannot overwrite.'});
+  if(R.blankScript)F.push({p:3,tag:'Process',h:R.blankScript+' tour'+(R.blankScript===1?' has':'s have')+' the script pasted in and never filled out',
+    b:'The four qualification questions are sitting in the note exactly as the template writes them, with no answers underneath. The prompt is being pasted and the conversation is not being recorded.',
+    d:'Either the questions get answered in the record or the template stops being pasted. Right now it looks like data and is not.'});
+  if(R.dupRows)F.push({p:3,tag:'Counting',h:R.dupRows+' rows are duplicate write-ups',
+    b:'<b>'+R.dupSets+'</b> pieces of note text appear on more than one row &mdash; one conversation with a group logged separately against each person. Every per-lead rate in this report is diluted by them.',
+    d:'Deduplicate on the note text before counting, or log a group visit once and link the people to it.'});
+  if(R.oddCells)F.push({p:3,tag:'Data fault',h:R.oddCells+' date'+(R.oddCells===1?' is':'s are')+' stored as text',
+    b:'Two per cent of this file, which you would catch by eye. In a year of exports it is a few hundred rows that silently drop out of any date filter, with no error to tell you.',
+    d:'Coerce on import and report what was coerced, rather than assuming the column is clean.'});
+  const dead=R.tags.filter(t=>t.kind==='neg'&&t.c===0&&t.n>=5);
+  if(dead.length){
+    const tot=new Set(); S.rows.forEach((r,i)=>{if(!R.conv[i]&&tagsFor(r).some(t=>dead.find(d=>d.t===t)))tot.add(i)});
+    F.push({p:1,tag:'Act on this',h:'The notes already say who is never going to join',
+      b:dead.map(d=>'<b>'+d.t.toLowerCase()+'</b> ('+d.n+')').join(', ')+' &mdash; between them <b>'+tot.size+'</b> leads, and not one of them converted. That judgement is sitting in a text box where nothing can count it.',
+      d:'Close these automatically instead of having staff chase them, and the follow-up list drops to the leads that are actually live.'});
+  }
+  const na=R.byAge.find(x=>x.k==='Not recorded');
+  if(na&&na.n>=MIN_N&&na.r<R.base-10)F.push({p:2,tag:'Leading indicator',h:'A blank age field predicts a lost lead',
+    b:'Rows with no age recorded convert at <b>'+fmtPct(na.r)+'</b> against <b>'+fmtPct(R.base)+'</b> overall. Age is not causing anything. It is missing because no real intake conversation happened.',
+    d:'Treat an incomplete record as a live warning on the day, not as a gap discovered at month end.'});
+  const small=R.bySource.filter(x=>x.thin).length;
+  if(small)F.push({p:2,tag:'Caution',h:small+' of the '+R.bySource.length+' lead sources have too few rows to rate',
+    b:'At three or four leads a source moves from 0% to 33% on a single sign-up. Percentages on those lines would be invented precision, so this report shows the counts and withholds the rate.',
+    d:'Report source conversion on a rolling quarter. One month of a single site will not carry it.'});
+  F.sort((a,b)=>a.p-b.p);
+  window.__F=F.length;
+  $('#finds').innerHTML=F.map(f=>'<div class="find p'+f.p+'"><h4>'+esc(f.h)+'<span class="tagq">'+f.tag+'</span></h4>'+
+    '<p>'+f.b+'</p><div class="do"><em>What to do</em>'+f.d+'</div></div>').join('');
+  window.__BRIEF='ONYX — '+(R.lo?dstr(R.lo):'')+' to '+(R.hi?dstr(R.hi):'')+'\n'+
+    R.n+' leads, '+R.nconv+' joined ('+fmtPct(R.base)+'), counting a conversion as '+name+'.\n\n'+
+    F.map((f,i)=>(i+1)+'. '+f.h+'\n   '+f.b.replace(/<[^>]+>/g,'')+'\n   What to do: '+f.d.replace(/<[^>]+>/g,'')).join('\n\n')+
+    '\n\nGenerated by the ONYX Data Workbench from a raw export. Proof of concept.';
+}
+
+/* ---------- recompute ---------- */
+function refresh(which){
+  window.__R=calc();
+  if(!which||which==='out')renderOut();
+  if(!which||which==='rules')renderRules();
+  if(!which||which==='map')renderMap();
+  if(!which)renderProfile();
+  renderSource(); renderRail();
+}
+
+/* ---------- loading ---------- */
+function ingest(name,sheet,aoa){
+  const hdr=aoa[0]||[];
+  let last=hdr.length-1; while(last>=0&&(hdr[last]==null||hdr[last]===''))last--;
+  S.file=name; S.sheet=sheet; S.headers=hdr.slice(0,last+1).map(h=>h==null?'':String(h));
+  S.rows=aoa.slice(1).map(r=>S.headers.map((_,i)=>{const v=r[i];return v===undefined?null:v}))
+    .filter(r=>r.some(v=>v!==null&&v!==''));
+  profile(); guessRoles(); S.rules=DEFAULT_RULES.map(r=>({...r}));
+  refresh(); go(0); toast(S.rows.length+' rows read from '+name);
+}
+function loadSample(){
+  const d=JSON.parse($('#demo').textContent);
+  /* T separator marks a real datetime cell; the two space-separated ones were text in the source file */
+  const rows=d.rows.map(r=>r.map(v=>(typeof v==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(v))?new Date(v+'Z'):v));
+  ingest(d.name,d.sheet,[d.headers,...rows]);
+}
+function readFile(f){
+  const fr=new FileReader();
+  fr.onload=()=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(fr.result),{type:'array',cellDates:true});
+      const sn=wb.SheetNames[0];
+      const aoa=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:true,defval:null,blankrows:false});
+      if(!aoa.length)throw new Error('the sheet is empty');
+      ingest(f.name,sn,aoa);
+    }catch(err){toast('Could not read that file: '+err.message,true)}
+  };
+  fr.onerror=()=>toast('Could not read that file',true);
+  fr.readAsArrayBuffer(f);
+}
+let tT;
+function toast(m,bad){
+  const t=$('#toast'); t.textContent=m; t.hidden=false;
+  t.style.borderColor=bad?'var(--error)':'var(--green)';
+  clearTimeout(tT); tT=setTimeout(()=>{t.hidden=true},2600);
+}
+
+/* ---------- wiring ---------- */
+$('#loadsample').addEventListener('click',loadSample);
+$('#pick').addEventListener('click',()=>$('#file').click());
+$('#file').addEventListener('change',e=>{if(e.target.files[0])readFile(e.target.files[0])});
+const dz=$('#drop');
+['dragenter','dragover'].forEach(v=>dz.addEventListener(v,e=>{e.preventDefault();dz.classList.add('hot')}));
+['dragleave','drop'].forEach(v=>dz.addEventListener(v,e=>{e.preventDefault();dz.classList.remove('hot')}));
+dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)readFile(f)});
+$('#maprows').addEventListener('change',e=>{
+  const s=e.target.closest('select[data-role]'); if(!s)return;
+  S.map[s.dataset.role]=s.value===''?undefined:Number(s.value);
+  refresh();
+});
+$('#notetogs').addEventListener('click',e=>{
+  const b=e.target.closest('[data-note]'); if(!b)return;
+  const i=Number(b.dataset.note);
+  S.notes=S.notes.includes(i)?S.notes.filter(x=>x!==i):[...S.notes,i];
+  refresh();
+});
+$('#outchoice').addEventListener('change',e=>{
+  if(e.target.name!=='oc')return; S.outcome=e.target.value; refresh();
+});
+$('#rules').addEventListener('input',e=>{
+  const inp=e.target.closest('[data-rule]'); if(!inp)return;
+  S.rules[Number(inp.dataset.rule)].w=inp.value;
+  window.__R=calc(); renderOut();
+  const o=window.__R.tags.find(t=>t.t===S.rules[Number(inp.dataset.rule)].n)||{n:0,c:0};
+  inp.closest('.rule').querySelector('.rstat').innerHTML='<b>'+o.n+'</b> rows &middot; '+o.c;
+  const cov=window.__R.withNote?pct(window.__R.tagged,window.__R.withNote):0;
+  const c=$('#cover .big'); if(c){c.textContent=cov+'%';c.style.color=cov>=75?'var(--green)':'var(--amber)';
+    $('#cover .bar i').style.width=cov+'%'}
+});
+$('#rules').addEventListener('click',e=>{
+  const b=e.target.closest('[data-del]'); if(!b)return;
+  S.rules.splice(Number(b.dataset.del),1); refresh();
+});
+$('#addrule').addEventListener('click',()=>{
+  S.rules.push({n:'New tag '+(S.rules.length+1),k:'neu',w:''}); refresh();
+  const l=$('#rules').lastElementChild; if(l)l.querySelector('input').focus();
+});
+$('#resetrules').addEventListener('click',()=>{S.rules=DEFAULT_RULES.map(r=>({...r}));refresh();toast('Vocabulary reset')});
+$('#copybrief').addEventListener('click',()=>{
+  const t=window.__BRIEF||'';
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(()=>toast('Brief copied')).catch(()=>fallbackCopy(t));
+  }else fallbackCopy(t);
+});
+function fallbackCopy(t){
+  const ta=document.createElement('textarea');
+  ta.value=t; ta.style.cssText='position:fixed;left:-9999px'; document.body.appendChild(ta);
+  ta.select(); try{document.execCommand('copy');toast('Brief copied')}catch(e){toast('Select the text to copy it',true)}
+  ta.remove();
+}
+const tb=$('#themebtn');
+tb.addEventListener('click',()=>{
+  const dark=document.documentElement.getAttribute('data-theme')!=='light';
+  document.documentElement.setAttribute('data-theme',dark?'light':'dark');
+  tb.textContent=dark?'Dark':'Light';
+  try{localStorage.setItem('onyx-wb-theme',dark?'light':'dark')}catch(e){}
+});
+try{const t=localStorage.getItem('onyx-wb-theme');
+  if(t){document.documentElement.setAttribute('data-theme',t);tb.textContent=t==='light'?'Dark':'Light'}}catch(e){}
+
+loadSample();
+})();
+</script>
