@@ -125,6 +125,32 @@ Once something is imported, Reports grows a **From your data** section above the
 figures, with the file, the period and the row count on it, and Replace and Remove beside
 them. The two kinds of number never share a block.
 
+## Modules on Learn
+
+A short library reads fine as one page of cards. A long one does not: thirty-six items is
+a scroll nobody finishes, and the group headings end up doing the work of a contents page
+without being one. Put `learnModules: true` on an audience and Learn becomes that contents
+page — a card per group with its own progress — and the items sit one click in at
+`#/learn?module=<group>`.
+
+Nothing else changes: the groups are already the modules. Searching skips them and goes
+straight to matching items, because somebody typing a word wants the thing rather than the
+shelf it is on; searching inside a module stays inside it. The area chips come off, since
+each module card already carries its area.
+
+Leave it off where the library is small. ONYX members have eleven tips across three
+groups and read better flat, so employee, manager and owner have it on and member does not.
+
+## Home cards
+
+`homeCards` on an audience is a list of `{to, type, title}` and replaces the path listing
+on their Home with a row of cards. Up next still appears — it comes off the same path — so
+what goes is the full contents, not the sense of where you are up to.
+
+Use it when the path is long enough that printing it on the Home page buries everything
+else. The employee's eighteen-item first week did exactly that; two cards to Learn and
+Support say the same thing in a screen's worth of space.
+
 ## Home tiles
 
 An audience with a `homeTiles` array gets a tile grid on Home instead of the standard
@@ -190,6 +216,12 @@ second location is data rather than code:
               "zones": [...], "equipment": [...] }]
 }
 ```
+
+A site's `note` is its disclaimer, shown as a callout directly under the heading with
+`noteTitle` as its bold lead-in. It sits above the plan on purpose: a drawn layout looks
+authoritative whether or not it is one, so a caveat parked under the equipment list is a
+caveat nobody reads before drawing conclusions. Say plainly that the zones are
+placeholders and that the real thing is their layout, their equipment, their names.
 
 The heading reads **Look around ONYX (Alexandria)** — the client's name and the site's
 label, composed by the engine. With two or more sites a switcher appears above the search

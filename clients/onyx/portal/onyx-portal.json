@@ -68,7 +68,20 @@
       "intro": "Everything you need for your first weeks at ONYX.",
       "sees": [
         "employee"
-      ]
+      ],
+      "homeCards": [
+        {
+          "to": "learn",
+          "type": "Learn",
+          "title": "Every guide, checklist and simulation, grouped into modules"
+        },
+        {
+          "to": "support",
+          "type": "Support",
+          "title": "Who to ask, and the answers to the usual questions"
+        }
+      ],
+      "learnModules": true
     },
     {
       "id": "manager",
@@ -79,7 +92,8 @@
       "sees": [
         "employee",
         "manager"
-      ]
+      ],
+      "learnModules": true
     },
     {
       "id": "owner",
@@ -132,7 +146,8 @@
       "sees": [
         "employee",
         "owner"
-      ]
+      ],
+      "learnModules": true
     }
   ],
   "_keysNote": "Keys are a curtain, not security. They keep the portal off a random phone and hide the manager and owner areas on a shared device. Content that must be genuinely restricted needs a hosted backend.",
@@ -3040,7 +3055,7 @@
         "label": "Alexandria",
         "viewBox": "0 0 100 134",
         "demo": true,
-        "note": "Demo layout. The real plan of Alexandria goes in here once ONYX marks up where everything sits, and each machine's pin moves to where it actually stands; the search and the list work the same way against it.",
+        "note": "The zones and the kit on this plan are placeholders, drawn to show how it works. Yours would be the real layout of each site — Alexandria and any gym after it — with your own equipment, named the way you name it, pinned where it actually stands. The search, the filters and the pins all work the same way against a real plan.",
         "zones": [
           {
             "id": "studio",
@@ -3672,7 +3687,8 @@
             "x": 31,
             "y": 19.8
           }
-        ]
+        ],
+        "noteTitle": "Demo floorplan"
       }
     ],
     "countLabel": "pieces of kit"
