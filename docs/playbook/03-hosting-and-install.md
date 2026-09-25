@@ -55,11 +55,9 @@ cd clients/onyx/site && python3 -m http.server 8000
 
 ## Deploying
 
-Any static host. There is nothing to configure, because the portal routes on the hash —
-`#/reports` never reaches the server, so there are no rewrite rules or SPA fallbacks to
-get wrong. Drag the folder onto Netlify, or point Cloudflare Pages at the repo with
-`node tools/build-portal.js <slug> --site` as the build command and `clients/<slug>/site`
-as the output directory.
+Any static host will do. There is nothing to configure, because the portal routes on the
+hash — `#/reports` never reaches the server, so there are no rewrite rules or SPA
+fallbacks to get wrong.
 
 `_headers` is read by both Netlify and Cloudflare Pages. It keeps `index.html`, `sw.js`
 and the manifest on `no-cache` so a deploy actually reaches people, and lets the icons
@@ -70,12 +68,106 @@ Site builds are `noindex` in `robots.txt`, in `_headers` and in a meta tag. Pass
 `--indexable` when a portal is genuinely meant to be found. Client-branded demo content
 should not be.
 
+## Cloudflare Pages, start to finish
+
+What ONYX was set up with. Roughly twenty minutes for the next client.
+
+### 1. Decide where DNS lives
+
+Moving the domain's nameservers to Cloudflare is worth it once you are hosting more than
+one client: custom domains become one click each, and you get the zone settings and
+Cloudflare Access. Dashboard → **Add a domain** → it scans the existing records → set the
+two nameservers it gives you at the registrar.
+
+**Check for MX records before you move.** If anything receives mail on that domain, carry
+those records across first or you will break it.
+
+Keeping DNS elsewhere also works for a subdomain — Pages gives you a CNAME target to add
+at your provider. You just lose the zone settings and Access.
+
+### 2. Create the project
+
+**Workers & Pages** → **Create** → **Pages** → **Connect to Git** → pick the repo.
+
+### 3. Build settings
+
+Because `clients/<slug>/site/` is committed, the simplest correct configuration is no
+build at all:
+
+| Field | Value |
+|---|---|
+| Project name | `<slug>-learning-hub` |
+| Production branch | `main` |
+| Framework preset | None |
+| Build command | *(empty)* |
+| Build output directory | `clients/<slug>/site` |
+| Root directory | `/` |
+
+That uploads the folder and nothing can fail. To have Pages build instead — so a config
+edit deploys without remembering to rebuild — use `node tools/build-portal.js <slug>
+--site` as the build command and set `NODE_VERSION` to `20`. There are no npm
+dependencies, so there is no install step and no lockfile to keep.
+
+Test on the `*.pages.dev` URL before touching DNS.
+
+### 4. Add the custom domain
+
+Project → **Custom domains** → `<slug>.<your-domain>`. On a Cloudflare zone it writes the
+CNAME and issues the certificate itself.
+
+**Until the certificate is issued the site will not load at all.** On `.app` that is the
+HSTS preload doing its job, not a broken deploy. Wait it out rather than changing things.
+
+### 5. Zone settings that will break it
+
+Only apply when the domain is on a Cloudflare zone:
+
+- **Caching → Configuration → Browser Cache TTL** → **Respect Existing Headers**. If
+  Cloudflare substitutes its own TTL, the `no-cache` on `sw.js` is ignored and a stale
+  worker pins everyone to an old portal. It is the one failure a redeploy cannot fix.
+- **Speed → Optimization → Rocket Loader** → **off**. It defers inline scripts and the
+  portal's whole boot is one inline script. Off by default; do not switch it on.
+- **Always Use HTTPS** → on, which is the default.
+
+### 6. Check it before showing anyone
+
+1. Padlock, no certificate warning.
+2. DevTools → Application → **Manifest**: name, icons, `display: standalone`, no errors.
+3. DevTools → Application → **Service Workers**: one worker, *activated and is running*.
+4. Network → **Offline** → reload. The portal should come up with its navigation intact.
+5. `curl -I https://<host>/sw.js` → confirm `cache-control: no-cache` survived the CDN.
+6. Install it on an Android handset, and once on an iPhone so you have seen both flows.
+
+### 7. Shipping updates, and previews
+
+Push to `main` and Pages deploys. If content changed, rebuild first —
+
+```
+node tools/build-portal.js <slug> --site
+```
+
+— because the worker's cache name is a hash of `index.html`, and that is what makes the
+update reach a phone that already has it installed. **Rollback** on any earlier
+deployment is one click, which is worth knowing the morning of a showcase.
+
+The Git integration also builds every branch and posts a **Cloudflare Pages** check on
+each pull request, so a change can be reviewed on its own preview URL before it merges.
+A preview is a different origin from production, so it has its own `localStorage` and its
+own install identity — which makes it the easy way to test a clean first run without
+clearing the real one.
+
 ## The keys are still a curtain
 
 `employee`, `manager` and `owner` are checked in the browser. On a public URL anyone who
 finds it can type `owner`. That is fine for a showcase and it is documented as such, but
-if a client asks who can see this, the answer is authentication in front of the site —
-Cloudflare Access is free for a small team — not a better key.
+if a client asks who can see this, the answer is authentication in front of the site, not
+a better key.
+
+On Cloudflare that is Zero Trust → **Access** → an application covering the hostname,
+with a policy on the client's email domain plus your own. Free for a small team.
+
+Do not switch it on for a showcase that has a member area: it puts a login in front of
+the part that is meant to have no password.
 
 ## Installing
 
