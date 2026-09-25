@@ -99,11 +99,11 @@
           "accent": "cta"
         },
         {
-          "id": "t-upnext",
-          "to": "upnext",
-          "eyebrow": "Up next",
-          "kind": "upnext",
-          "blurb": "Pick up where you left off."
+          "id": "t-desk",
+          "to": "path",
+          "eyebrow": "Owner's desk",
+          "kind": "progress",
+          "blurb": "The nine things worth your time."
         },
         {
           "id": "t-processes",
@@ -118,13 +118,6 @@
           "eyebrow": "What's new",
           "kind": "news",
           "blurb": "The member blog. Write one, or schedule it."
-        },
-        {
-          "id": "t-desk",
-          "to": "path",
-          "eyebrow": "Owner's desk",
-          "kind": "progress",
-          "blurb": "The nine things worth your time."
         },
         {
           "id": "t-brand",
