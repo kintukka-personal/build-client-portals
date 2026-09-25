@@ -553,6 +553,19 @@ li.done .tick { border-color: var(--primary); background: var(--primary); color:
   color: var(--primary); display: grid; place-items: center; font-size: 12px; font-weight: var(--w-semibold); border-radius: 50%; }
 .ios-steps b { font-weight: var(--w-semibold); }
 
+/* ---- learn modules ---- */
+.modules { display: grid; gap: 10px; }
+@media (min-width: 720px) { .modules { grid-template-columns: repeat(2, 1fr); } }
+.modcard { position: relative; display: grid; gap: 4px; align-content: start; background: var(--surface);
+  border: 1px solid var(--border-quiet); padding: 16px 44px 16px 16px; min-width: 0; }
+.modcard:hover { border-color: var(--primary); text-decoration: none; }
+.modcard .eb { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--cta); font-weight: var(--w-semibold); }
+.modcard h4 { font-size: 17px; line-height: 1.25; }
+.modcard p { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
+.modcard .n { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; margin-top: 6px; }
+.modcard .prog { margin-top: 2px; }
+.modcard .go { position: absolute; top: 16px; right: 16px; width: 20px; height: 20px; color: var(--primary); }
+
 /* ---- support ---- */
 .assist .q { list-style: none; margin: 0 0 14px; padding: 0; }
 .assist .q li { display: flex; gap: 10px; align-items: flex-start; padding: 4px 0; font-size: 15px; line-height: 1.45; }
@@ -1481,12 +1494,17 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       } else {
         html += `<div class="section"><div class="done-banner"><svg><use href="#i-check"/></svg><span><b>${esc(p.title)} complete.</b> Export your progress card from the Me page and hand it to your manager.</span></div></div>`;
       }
-      html += `<div class="section"><div class="section-head"><h3>${esc(p.title)}</h3><a href="#/learn">All content</a></div>
+      /* An audience with its own cards gets those instead of the whole path listed
+         out underneath. The path is still there — Up next comes off it, and Learn
+         opens it — it just is not the shape of the Home page. */
+      if (!a.homeCards) html += `<div class="section"><div class="section-head"><h3>${esc(p.title)}</h3><a href="#/learn">All content</a></div>
         <div class="bignum">${pr.done}<small>of ${pr.total} complete</small></div>
         <div class="prog green"><i style="width:${pr.pct}%"></i></div>
         <p class="muted" style="font-size:14px;margin:10px 0 14px">${esc(p.blurb)}</p>
         <div class="row-list">${p.items.map((id, i) => rowCard(byId[id], i + 1)).join('')}</div></div>`;
     }
+    if (a.homeCards) return html + `<div class="section grid2">${a.homeCards.map(c =>
+      `<a class="card" href="#/${esc(c.to)}"><div class="type">${esc(c.type)}</div><h4>${esc(c.title)}</h4></a>`).join('')}</div>`;
     if (S.audience !== 'employee') {
       const ep = pathFor('employee'); const pr = pathProgress(ep);
       html += `<div class="section"><div class="section-head"><h3>${esc(ep.title)}</h3><a href="#/learn">Open</a></div><p class="muted" style="font-size:14px">The employee path, as your team sees it. ${pr.done} of ${pr.total} complete on this device.</p></div>`;
@@ -1497,16 +1515,80 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     return html;
   }
 
+  /* Learn, two ways. A short library reads best as one page of cards, which is what
+     a member's handful of tips is. Thirty-six items does not: it is a scroll nobody
+     finishes, and the group headings are doing the work of a contents page without
+     being one. An audience with `learnModules` gets that contents page — a card per
+     module, with its own progress — and the items live one click in. Searching skips
+     the modules and goes straight to matching items, because somebody typing a word
+     wants the thing, not the shelf it is on. */
+  const moduleList = () => {
+    const seen = visible();
+    return groups().map(g => {
+      const list = seen.filter(i => groupOf(i) === g.id);
+      return { g, list, done: list.filter(i => isDone(i.id)).length };
+    }).filter(m => m.list.length);
+  };
+  const moduleCard = m => {
+    const pct = m.list.length ? Math.round(m.done / m.list.length * 100) : 0;
+    return `<a class="modcard" href="#/learn?module=${esc(m.g.id)}">
+      <span class="eb">${esc(areaLabel(m.g.area))}</span>
+      <h4>${esc(m.g.label)}</h4>
+      ${m.g.blurb ? `<p>${esc(m.g.blurb)}</p>` : ''}
+      <span class="n">${m.done} of ${m.list.length} done</span>
+      <span class="prog green"><i style="width:${pct}%"></i></span>
+      <svg class="go"><use href="#i-arrow-r"/></svg></a>`;
+  };
+  const matches = (i, q) => (i.title + ' ' + i.blurb + ' ' + groupLabel(groupOf(i))).toLowerCase().includes(q);
+
   function viewLearn(r) {
-    const q = (r.q.get('q') || '').toLowerCase(); const sel = r.q.get('area') || 'all';
-    const items = visible().filter(i => (sel === 'all' || i.area === sel) && (!q || (i.title + ' ' + i.blurb + ' ' + groupLabel(groupOf(i))).toLowerCase().includes(q)));
+    const A = aud(); const mods = !!A.learnModules;
+    const q = (r.q.get('q') || '').toLowerCase();
+    const modId = mods ? (r.q.get('module') || '') : '';
+    const mod = modId ? groups().find(g => g.id === modId) : null;
+    if (modId && !mod) { go('learn'); return ''; }
+    const sel = mods ? 'all' : (r.q.get('area') || 'all');
+    const scope = visible().filter(i => !mod || groupOf(i) === mod.id);
+    const items = scope.filter(i => (sel === 'all' || i.area === sel) && (!q || matches(i, q)));
+    const searchBox = `<label class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="${mod ? 'Search ' + esc(mod.label) : 'Search titles and descriptions'}" value="${esc(r.q.get('q') || '')}" aria-label="Search"></label>`;
+
+    /* One module, opened. */
+    if (mod) {
+      const done = scope.filter(i => isDone(i.id)).length;
+      let html = `${backLink('#/learn', navLabel('learn', 'Learn'))}
+        <div class="hero"><div class="label">${esc(areaLabel(mod.area))}</div><h1>${esc(mod.label)}</h1>
+        <p>${esc(mod.blurb || '')} ${done} of ${scope.length} done.</p></div>
+        ${searchBox}${demoBar(items)}`;
+      if (!items.length) html += `<div class="empty" style="margin-top:16px">Nothing in this module matches. Clear the search.</div>`;
+      else html += `<div class="section"><div class="grid2">${items.map(i => card(i)).join('')}</div></div>`;
+      return html;
+    }
+
+    const seesTeam = seesOf(A).length > 1;
+    const mlist = moduleList();
+    const intro = A.learnIntro ? esc(A.learnIntro) + ' '
+      : mods ? `${visible().length} items across ${mlist.length} modules${seesTeam ? ', including everything the team sees' : ''}. `
+      : `${visible().length} items for ${esc(A.label.toLowerCase())}s${seesTeam ? ', including everything the team sees' : ''}. `;
+    let html = `${backLink('')}<div class="hero"><h1>${esc(A.learnTitle || 'Learn')}</h1><p>${intro}`;
+
+    if (mods) {
+      html += `</p></div>${searchBox}${demoBar(visible())}`;
+      const fv = favs().filter(i => !q || matches(i, q));
+      if (fv.length) html += `<div class="section"><div class="section-head"><h3><svg style="color:var(--cta)"><use href="#i-star"/></svg>Favourites</h3><span class="muted" style="font-size:13px">${fv.length}</span></div><div class="grid2">${fv.map(i => card(i)).join('')}</div></div>`;
+      if (q) {
+        html += items.length
+          ? `<div class="section"><div class="section-head"><h3>${items.length} match${items.length === 1 ? '' : 'es'}</h3></div><div class="grid2">${items.map(i => card(i)).join('')}</div></div>`
+          : `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search to see the modules.</div>`;
+        return html;
+      }
+      return html + `<div class="section"><div class="label">Modules</div><div class="modules">${mlist.map(moduleCard).join('')}</div></div>`;
+    }
+
     const present = new Set(visible().map(i => i.area));
     const areas = CFG.areas.filter(a => present.has(a.id));
     const chips = [['all', 'All']].concat(areas.map(a => [a.id, a.label]));
     const selArea = CFG.areas.find(a => a.id === sel);
-    const A = aud(); const seesTeam = seesOf(A).length > 1;
-    let html = `${backLink('')}<div class="hero"><h1>${esc(A.learnTitle || 'Learn')}</h1><p>${A.learnIntro ? esc(A.learnIntro) + ' ' : `${visible().length} items for ${esc(A.label.toLowerCase())}s${seesTeam ? ', including everything the team sees' : ''}. `}${selArea && selArea.blurb ? esc(selArea.blurb) : ''}</p></div>
-      <label class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search titles and descriptions" value="${esc(r.q.get('q') || '')}" aria-label="Search"></label>
+    html += `${selArea && selArea.blurb ? esc(selArea.blurb) : ''}</p></div>${searchBox}
       <div class="chips">${chips.map(([k, l]) => `<button type="button" data-area="${k}" class="${sel === k ? 'on' : ''}">${esc(l)}</button>`).join('')}</div>${demoBar(items)}`;
     if (!items.length) html += `<div class="empty" style="margin-top:16px">Nothing matches. Clear the search or pick another filter.</div>`;
     const fv = favs().filter(i => items.includes(i));
@@ -1850,6 +1932,10 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     </g>`).join('');
 
     let html = `${backLink('')}<div class="hero"><h1>${esc(planTitle(R))}</h1><p>${esc(R.intro || '')}${SITE.demo ? ' <span class="demo">Demo</span>' : ''}</p></div>`;
+    /* This was a muted line under the equipment list, which is to say nobody read it
+       before drawing conclusions about the plan. A drawn layout looks authoritative
+       whether or not it is, so the caveat goes where the drawing is. */
+    if (SITE.note) html += `<div class="demobar"><svg><use href="#i-alert"/></svg><span><b>${esc(SITE.noteTitle || 'Demo floorplan')}</b>${esc(SITE.note)}</span></div>`;
     if (planSites().length > 1) html += `<div class="sites">${planSites().map(x => `<button type="button" data-site="${esc(x.id)}" class="${x.id === SITE.id ? 'on' : ''}">${esc(x.label)}</button>`).join('')}</div>`;
     html += `<label class="search"><svg><use href="#i-search"/></svg><input id="pq" type="search" placeholder="${esc(R.placeholder || 'Search')}" value="${esc(q)}" aria-label="Search equipment"></label>
       <div class="taglist">${planTags().map(t => `<button type="button" data-tag="${esc(t)}" class="${q.toLowerCase() === t ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>
@@ -1866,7 +1952,6 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
     } else {
       html += `<p class="muted" style="font-size:14px;margin-top:14px">Tap an area to see what is in it, or search above.</p>`;
     }
-    if (SITE.note) html += `<p class="muted" style="font-size:13px;margin-top:22px">${esc(SITE.note)}</p>`;
     return html;
   }
   const planRow = (e, i) => `<div class="row" data-row="${i}"><b>${esc(e.name)}</b><span class="where">${esc((zoneById(e.zone) || {}).label || '')}</span>
