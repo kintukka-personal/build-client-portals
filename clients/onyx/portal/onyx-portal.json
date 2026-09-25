@@ -81,7 +81,8 @@
           "title": "Who to ask, and the answers to the usual questions"
         }
       ],
-      "learnModules": true
+      "learnModules": true,
+      "doorGroup": "Working here — you'll need a key"
     },
     {
       "id": "manager",
@@ -93,7 +94,8 @@
         "employee",
         "manager"
       ],
-      "learnModules": true
+      "learnModules": true,
+      "doorGroup": "Working here — you'll need a key"
     },
     {
       "id": "owner",
@@ -147,7 +149,8 @@
         "employee",
         "owner"
       ],
-      "learnModules": true
+      "learnModules": true,
+      "doorGroup": "Working here — you'll need a key"
     }
   ],
   "_keysNote": "Keys are a curtain, not security. They keep the portal off a random phone and hide the manager and owner areas on a shared device. Content that must be genuinely restricted needs a hosted backend.",

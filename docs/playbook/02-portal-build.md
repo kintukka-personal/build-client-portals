@@ -125,6 +125,19 @@ Once something is imported, Reports grows a **From your data** section above the
 figures, with the file, the period and the row count on it, and Replace and Remove beside
 them. The two kinds of number never share a block.
 
+## Grouping the doors
+
+The welcome screen lists every audience as a door. Give some of them a `doorGroup` and
+a labelled hairline appears above the first one carrying it, and again whenever the value
+changes — so the list reads as groups rather than a flat four.
+
+Use it where the split is real. At ONYX the member door is the public way in and the
+other three are staff behind a key, which is a true and permanent division; the padlock
+icons say the same thing but only while the doors are locked, and they vanish the moment
+somebody unlocks one. Make the label earn its place by explaining the group rather than
+naming it twice: *Working here — you'll need a key* also tells a new starter what the
+padlock means, which nothing else on the page did.
+
 ## Modules on Learn
 
 A short library reads fine as one page of cards. A long one does not: thirty-six items is

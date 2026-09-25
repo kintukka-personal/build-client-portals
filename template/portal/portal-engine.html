@@ -640,6 +640,9 @@ body.landing main { max-width: 560px; margin: 0 auto; padding: 0 16px calc(24px 
 .door .t { display: block; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; font-weight: var(--w-semibold); color: var(--ac); }
 .door .i { display: block; font-size: 15px; color: var(--text); margin-top: 6px; line-height: 1.45; }
 .door svg { width: 22px; height: 22px; color: var(--text-muted); }
+.doorgroup { display: flex; align-items: center; gap: 12px; font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase; font-weight: var(--w-semibold); color: var(--text-muted); margin-top: 10px; }
+.doorgroup::after { content: ""; flex: 1; height: 1px; background: var(--border-quiet); }
 .land .fine { font-size: 12px; color: var(--text-muted); margin-top: 28px; line-height: 1.5; }
 
 /* ---- dialogs and toast ---- */
@@ -1721,7 +1724,13 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
   }
 
   function viewWelcome() {
-    const doors = CFG.audiences.map(a => `<button type="button" class="door" data-c="${a.colour}" data-aud="${a.id}"><span><span class="t">${esc(a.label)}</span><span class="i">${esc(a.intro)}</span></span>${a.key && !S.unlocked[a.id] ? '<svg><use href="#i-lock"/></svg>' : '<svg><use href="#i-arrow"/></svg>'}</button>`).join('');
+    let lastGroup = null;
+    const doors = CFG.audiences.map(a => {
+      const g = a.doorGroup || '';
+      const head = (g && g !== lastGroup) ? `<div class="doorgroup">${esc(g)}</div>` : '';
+      lastGroup = g;
+      return head + `<button type="button" class="door" data-c="${a.colour}" data-aud="${a.id}"><span><span class="t">${esc(a.label)}</span><span class="i">${esc(a.intro)}</span></span>${a.key && !S.unlocked[a.id] ? '<svg><use href="#i-lock"/></svg>' : '<svg><use href="#i-arrow"/></svg>'}</button>`;
+    }).join('');
     return `<div class="land"><svg class="logo" viewBox="0 0 216 80"><use href="#logo"/></svg>
       <div class="label">Who are you here as</div>
       <h1>Welcome to <span class="g">${esc(CFG.client.name)}</span>.</h1>
