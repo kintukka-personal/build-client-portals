@@ -1767,10 +1767,10 @@ dialog .err { color: var(--error); font-size: 14px; margin-top: 10px; min-height
       </div><button class="btn outline small" id="ins-import" type="button"><svg><use href="#i-import"/></svg>${src.demo ? 'Import your own' : 'Import again'}</button></div></div>
       ${switcher}
       <div class="kpi" style="margin-top:4px">${(res.tiles || []).map(t => `<div class="tile${t.tone ? ' t-' + t.tone : ''}"><span class="k">${esc(t.label)}</span><span class="v">${esc(t.value)}</span>${t.sub ? `<span class="sub">${esc(t.sub)}</span>` : ''}</div>`).join('')}</div>
-      <div class="section"><div class="label">Findings</div>${dsFindings(res.findings || [])}</div>
-      <div class="section"><div class="label">The numbers behind them</div>
+      <div class="section"><div class="label">The numbers</div>
         ${(res.groups || []).map(g => dsBars(g, res.base)).join('')}
         ${dsLift(res.tags || [])}</div>
+      <div class="section"><div class="label">Findings</div>${dsFindings(res.findings || [])}</div>
       <div class="section"><div class="label">What the flag is made of</div>
         <div class="card"><div class="splitrow"><span>Counted as joined</span><b>${sp.flag}</b></div>
           <div class="splitrow sub"><span>Memberships the team sold</span><b>${sp.sold}</b></div>
