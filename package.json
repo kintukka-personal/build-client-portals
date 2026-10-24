@@ -4,7 +4,12 @@
   "version": "0.1.0",
   "description": "Branded client learning portals and brand portfolios, built beside SimStudio.",
   "scripts": {
-    "tokens": "node tools/build-tokens.js"
+    "new-client": "node tools/new-client.js",
+    "check": "node tools/check-client.js",
+    "tokens": "node tools/build-tokens.js",
+    "portal": "node tools/build-portal.js",
+    "icons": "node tools/make-icons.js",
+    "smoke": "node tools/smoke-portal.js"
   },
   "engines": { "node": ">=18" }
 }

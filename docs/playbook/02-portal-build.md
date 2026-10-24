@@ -17,9 +17,13 @@ clients/<slug>/portal/
 
 ## Steps
 
-1. **Copy the ONYX config** to `<slug>-portal.json` and replace the client block, the
-   audiences and their keys, and the footer.
-2. **Write the first path.** Ten to fifteen items for the first audience, in the order a
+1. **Start from the scaffold.** `node tools/new-client.js` wrote `<slug>-portal.json` from
+   `template/portal.template.json`: four audiences, the standard tabs, Reports, the process
+   library and the blog, with every value still ours to write starting `TODO`. Fill the
+   client block, the audiences and their keys, and the footer. ONYX's config is the worked
+   example of every block, including the floorplan the template leaves out. What goes in
+   each block is [Playbook 05](05-content-standards.md).
+2. **Write the first path.** Ten to eighteen items for the first audience, in the order a
    new starter meets them. Videos first, the opening shift, then the systems simulations.
 3. **Fill items.** Each item has a type: `simulation`, `hotspot`, `video`, `guide`,
    `checklist`, `article` or `link`, and each type carries its own icon in the interface.

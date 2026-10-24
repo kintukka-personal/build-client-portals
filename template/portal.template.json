@@ -1,0 +1,339 @@
+{
+  "_help": "Portal config for {{name}}. Written by tools/new-client.js from template/portal.template.json and built into {{slug}}-portal.html by `node tools/build-portal.js {{slug}}`. Two markers, two owners: a value starting TODO is ours to write before anyone outside the team sees it (the Phase 3 gate counts them), and demo:true is plausible placeholder content for {{name}} to confirm or replace (the Phase 8 gate counts those). clients/onyx/portal/onyx-portal.json is the worked example of every block, including the optional floorplans block this skeleton leaves out.",
+  "client": {
+    "slug": "{{slug}}",
+    "name": "{{name}}",
+    "tradingName": "{{tradingName}}",
+    "site": "TODO: the main site or location name, e.g. Alexandria",
+    "address": "TODO: the main site's street address",
+    "website": "{{website}}",
+    "memberLogin": "{{website}}",
+    "portalTitle": "{{name}} Learning Hub",
+    "tagline": "TODO: the client's own line, quoted from their site",
+    "demoNote": "Everything in here is placeholder material written to show the shape of the portal. None of it is {{name}}'s real procedure yet — treat it as a draft to correct, not as instructions to follow."
+  },
+  "storageKey": "{{slug}}-portal:v1",
+  "audiences": [
+    {
+      "id": "member",
+      "label": "Member",
+      "colour": "primary",
+      "sees": ["member"],
+      "intro": "TODO: one line for the client's customers — what they can do here.",
+      "learnTitle": "Helpful tips",
+      "learnIntro": "Short how-tos for the things people ask us at the desk most.",
+      "homeTiles": [
+        { "id": "t-tips", "to": "learn", "eyebrow": "Helpful tips", "kind": "count", "countLabel": "tips", "blurb": "TODO: the three things the tips cover.", "span": 2, "accent": "primary" },
+        { "id": "t-news", "to": "news", "eyebrow": "What's new", "kind": "news", "blurb": "Changes, news and what is on." },
+        { "id": "t-support", "to": "support", "eyebrow": "Support", "blurb": "The usual questions, and how to reach us." },
+        { "id": "t-site", "to": "{{website}}", "external": true, "eyebrow": "{{websiteLabel}}", "kind": "mark", "blurb": "The rest of the site.", "span": 2 }
+      ]
+    },
+    {
+      "id": "employee",
+      "label": "Employee",
+      "colour": "primary",
+      "key": "employee",
+      "intro": "Everything you need for your first weeks at {{name}}.",
+      "sees": ["employee"],
+      "homeCards": [
+        { "to": "learn", "type": "Learn", "title": "Every guide, checklist and simulation, grouped into modules" },
+        { "to": "support", "type": "Support", "title": "Who to ask, and the answers to the usual questions" }
+      ],
+      "learnModules": true,
+      "doorGroup": "Working here — you'll need a key"
+    },
+    {
+      "id": "manager",
+      "label": "Manager",
+      "colour": "cta",
+      "key": "manager",
+      "intro": "Running a shift, running the roster, running the team.",
+      "sees": ["employee", "manager"],
+      "learnModules": true,
+      "doorGroup": "Working here — you'll need a key"
+    },
+    {
+      "id": "owner",
+      "label": "Owner",
+      "colour": "white",
+      "key": "owner",
+      "intro": "The numbers, the processes, the people.",
+      "sees": ["employee", "owner"],
+      "learnModules": true,
+      "doorGroup": "Working here — you'll need a key",
+      "homeTiles": [
+        { "id": "t-reports", "to": "reports", "eyebrow": "Reports and analytics", "kind": "stat", "statFrom": "active", "blurb": "The month so far, in the numbers that matter.", "span": 2, "accent": "cta" },
+        { "id": "t-desk", "to": "path", "eyebrow": "Owner's desk", "kind": "progress", "blurb": "The things worth your time." },
+        { "id": "t-processes", "to": "processes", "eyebrow": "Process library", "kind": "processes", "blurb": "Every process, and the training it drives." },
+        { "id": "t-news", "to": "news", "eyebrow": "What's new", "kind": "news", "blurb": "The customer blog. Write one, or schedule it." },
+        { "id": "t-site", "to": "{{website}}", "external": true, "eyebrow": "{{websiteLabel}}", "kind": "mark", "blurb": "The public site, as your customers see it.", "span": 2 }
+      ]
+    }
+  ],
+  "_keysNote": "Keys are a curtain, not security. They keep the portal off a random phone and hide the manager and owner areas on a shared device. Content that must be genuinely restricted needs a hosted backend.",
+  "nav": [
+    { "id": "home", "label": "Home" },
+    { "id": "learn", "label": "Learn", "audiences": ["employee", "manager"] },
+    { "id": "learn", "label": "Tips", "audiences": ["member"] },
+    { "id": "reports", "label": "Reports", "audiences": ["owner"] },
+    { "id": "news", "label": "Blog", "audiences": ["owner"] },
+    { "id": "news", "label": "News", "audiences": ["member"] },
+    { "id": "processes", "label": "Processes", "audiences": ["owner"] },
+    { "id": "support", "label": "Support" },
+    { "id": "me", "label": "Me", "audiences": ["employee", "manager"] }
+  ],
+  "paths": [
+    {
+      "id": "week1",
+      "audience": "employee",
+      "title": "Week 1",
+      "blurb": "Everything for your first week, in order. Do them in order or jump around; the portal keeps track either way.",
+      "items": ["vid-welcome", "chk-week1", "art-how-we-work", "gd-opening", "chk-opening", "sim-core-task", "gd-closing", "chk-closing"]
+    },
+    {
+      "id": "manager-essentials",
+      "audience": "manager",
+      "title": "Running the floor",
+      "blurb": "The handful of things a manager does every week, in the order they come up.",
+      "items": ["gd-mgr-roster", "art-mgr-numbers", "chk-mgr-week"]
+    },
+    {
+      "id": "owner-desk",
+      "audience": "owner",
+      "title": "Owner's desk",
+      "blurb": "The things worth an owner's time, read in order once and then as needed.",
+      "items": ["art-owner-scorecard", "gd-owner-reports", "gd-owner-portal", "lnk-owner-site"]
+    }
+  ],
+  "areas": [
+    { "id": "getting-started", "label": "Getting Started", "blurb": "Your first week at {{name}}. Start here and work down." },
+    { "id": "guides", "label": "Guides", "blurb": "How to do the job, step by step. Simulations sit with the guide they belong to." },
+    { "id": "checklists", "label": "Checklists", "blurb": "Run these on shift." },
+    { "id": "tips", "label": "Helpful tips", "blurb": "The things people ask us at the desk most, answered once." }
+  ],
+  "_areasNote": "Areas are the Learn filters. Groups are the subheadings inside them, in this order. Name a group after the job, not the content type.",
+  "groups": [
+    { "id": "getting-started", "area": "getting-started", "label": "Getting Started", "blurb": "Your first week. Start here." },
+    { "id": "open-close", "area": "guides", "label": "Opening and closing", "blurb": "The two shifts that cannot be left uncovered." },
+    { "id": "customers", "area": "guides", "label": "Helping members", "blurb": "TODO: the customer-facing jobs, named the way the client names them." },
+    { "id": "team", "area": "guides", "label": "Team and roster", "blurb": "Who works when, and how the week is planned." },
+    { "id": "business", "area": "guides", "label": "The business", "blurb": "The numbers, and how to read them." },
+    { "id": "bau", "area": "checklists", "label": "BAU", "blurb": "The tick lists for every shift." },
+    { "id": "m-start", "area": "tips", "label": "Getting started", "blurb": "TODO: the first things a new customer asks." }
+  ],
+  "items": [
+    {
+      "id": "vid-welcome", "type": "video", "audience": "employee", "area": "getting-started", "group": "getting-started",
+      "title": "A welcome from the founders", "minutes": 2, "demo": true, "src": null,
+      "blurb": "TODO: why {{name}} exists and what the first week looks like, in the founders' own words."
+    },
+    {
+      "id": "chk-week1", "type": "checklist", "audience": "employee", "area": "getting-started", "group": "getting-started",
+      "title": "Your first week", "minutes": 3, "demo": true,
+      "blurb": "The things to have done by the end of your first week.",
+      "checks": ["TODO: logins issued", "TODO: shadow shifts done", "TODO: emergency procedure walked through", "TODO: first solo shift booked"]
+    },
+    {
+      "id": "art-how-we-work", "type": "article", "audience": "employee", "area": "getting-started", "group": "getting-started",
+      "title": "How we work here", "minutes": 3, "demo": true,
+      "blurb": "TODO: the three or four things that make {{name}} {{name}}.",
+      "body": ["TODO: the opening paragraph — who the customers are and what they come for.", "TODO: how the team treats them, in the client's own voice."]
+    },
+    {
+      "id": "gd-opening", "type": "guide", "audience": "employee", "area": "guides", "group": "open-close",
+      "title": "Opening up", "minutes": 6, "demo": true,
+      "blurb": "TODO: the opening shift, from arrival to the first customer through the door.",
+      "steps": ["TODO: arrive and check the exterior", "TODO: alarm, lights, systems on", "TODO: walk the space and note anything out of place", "TODO: open the doors"]
+    },
+    {
+      "id": "chk-opening", "type": "checklist", "audience": "employee", "area": "checklists", "group": "bau",
+      "title": "Opening checklist", "minutes": 3, "demo": true,
+      "blurb": "Run it every opening shift. The guide explains why; this is the tick list.",
+      "checks": ["TODO: exterior checked", "TODO: alarm disarmed and lights on", "TODO: systems logged in", "TODO: doors open on time"]
+    },
+    {
+      "id": "sim-core-task", "type": "simulation", "audience": "employee", "area": "guides", "group": "customers",
+      "title": "The task every shift starts with", "minutes": 6, "steps": 8, "demo": true,
+      "src": "content/sims/{{slug}}-sim-placeholder.html?title=The+task+every+shift+starts+with&steps=8",
+      "blurb": "TODO: the one system task a new starter does most — check-in, booking, sale — as a SimStudio click-through."
+    },
+    {
+      "id": "gd-closing", "type": "guide", "audience": "employee", "area": "guides", "group": "open-close",
+      "title": "Closing up", "minutes": 5, "demo": true,
+      "blurb": "TODO: the closing shift, from last customer to alarm on.",
+      "steps": ["TODO: last call", "TODO: clean and reset", "TODO: systems off and takings recorded", "TODO: lock up and arm the alarm"]
+    },
+    {
+      "id": "chk-closing", "type": "checklist", "audience": "employee", "area": "checklists", "group": "bau",
+      "title": "Closing checklist", "minutes": 3, "demo": true,
+      "blurb": "Run it every closing shift.",
+      "checks": ["TODO: space cleared", "TODO: takings recorded", "TODO: systems off", "TODO: alarm armed"]
+    },
+    {
+      "id": "gd-mgr-roster", "type": "guide", "audience": "manager", "area": "guides", "group": "team",
+      "title": "Building the weekly roster", "minutes": 6, "demo": true,
+      "blurb": "TODO: how the week is covered, and the shifts that cannot be left empty.",
+      "steps": ["TODO: start from the shifts that must be covered", "TODO: fill from availability", "TODO: publish and confirm"]
+    },
+    {
+      "id": "art-mgr-numbers", "type": "article", "audience": "manager", "area": "guides", "group": "business",
+      "title": "What we look at each week", "minutes": 3, "demo": true,
+      "blurb": "TODO: the five numbers read every Monday. Reference only; the client's system is the source of truth.",
+      "body": ["TODO: the opening paragraph — why these numbers, and when to read them.", "TODO: one paragraph per number: what it is, what good looks like, what to do when it is not."]
+    },
+    {
+      "id": "chk-mgr-week", "type": "checklist", "audience": "manager", "area": "checklists", "group": "bau",
+      "title": "Weekly manager checklist", "minutes": 4, "demo": true,
+      "blurb": "The Monday list.",
+      "checks": ["TODO: numbers read", "TODO: roster published", "TODO: incidents followed up", "TODO: stock and maintenance checked"]
+    },
+    {
+      "id": "art-owner-scorecard", "type": "article", "audience": "owner", "area": "guides", "group": "business",
+      "title": "Reading the monthly scorecard", "minutes": 4, "demo": true,
+      "blurb": "The Reports page, read in order.",
+      "body": ["TODO: what each tile on Reports counts and where the number comes from.", "TODO: the order to read them in, and the one question each answers."]
+    },
+    {
+      "id": "gd-owner-reports", "type": "guide", "audience": "owner", "area": "guides", "group": "business",
+      "title": "Updating the reports with your own numbers", "minutes": 5, "demo": true,
+      "blurb": "Which exports to pull, and what happens to them.",
+      "steps": ["TODO: name the exports the client's system produces", "One real file beats a sample: the converter is written against the columns your system actually writes.", "The file is read in your browser and never uploaded. Only the totals are kept.", "Check the first month against what you already know before trusting the rest."]
+    },
+    {
+      "id": "gd-owner-portal", "type": "guide", "audience": "owner", "area": "guides", "group": "business",
+      "title": "Keeping this portal current", "minutes": 3, "demo": true,
+      "blurb": "How a correction gets from you into the portal.",
+      "steps": ["Spot something wrong: note the page and what it should say.", "Send it to whoever maintains the portal, or document the process from the Process library and export it.", "The correction goes into the config, the portal is rebuilt, and everyone gets it on their next load."]
+    },
+    {
+      "id": "lnk-owner-site", "type": "link", "audience": "owner", "area": "guides", "group": "business",
+      "title": "{{websiteLabel}}", "minutes": 2, "href": "{{website}}",
+      "blurb": "The public site, as your customers see it."
+    },
+    {
+      "id": "m-first-visit", "type": "guide", "audience": "member", "area": "tips", "group": "m-start",
+      "title": "Your first visit", "minutes": 2, "demo": true,
+      "blurb": "TODO: what to bring, where to go, who to ask.",
+      "steps": ["TODO: getting in", "TODO: finding your way around", "TODO: who to ask"]
+    },
+    {
+      "id": "m-included", "type": "article", "audience": "member", "area": "tips", "group": "m-start",
+      "title": "What your membership includes", "minutes": 2, "demo": true,
+      "blurb": "TODO: the inclusions people forget they have.",
+      "body": ["TODO: the inclusions, in the client's own words."]
+    },
+    {
+      "id": "m-booking", "type": "simulation", "audience": "member", "area": "tips", "group": "m-start",
+      "title": "Booking in the app", "minutes": 2, "steps": 5, "demo": true,
+      "src": "content/sims/{{slug}}-sim-placeholder.html?title=Booking+in+the+app&steps=5",
+      "blurb": "TODO: the booking flow in the client's own app, as a SimStudio click-through."
+    }
+  ],
+  "support": {
+    "faq": [
+      { "q": "TODO: the question the desk gets asked most.", "a": "TODO: the answer, in two or three sentences." },
+      { "q": "TODO: the second most common question.", "a": "TODO: the answer." }
+    ],
+    "assistance": [
+      {
+        "queries": ["Anything on shift you are unsure about", "A customer's booking, account or payment", "An incident, injury or safety concern", "A refund, cancellation or complaint", "Roster and shift changes"],
+        "name": "Manager on duty", "role": "Rostered per shift", "how": "Find them on the floor first. Safety emergencies are 000 before anyone else.",
+        "email": "duty.manager@example.com", "phone": "+61255500118", "phoneLabel": "(02) 5550 0118", "demo": true
+      },
+      {
+        "queries": ["Pay, contracts and leave", "Anything the manager on duty cannot answer"],
+        "name": "TODO: the owner's or operations lead's name", "role": "Owner", "how": "Email first; phone for anything that cannot wait until tomorrow.",
+        "email": "owner@example.com", "phone": "+61255500119", "phoneLabel": "(02) 5550 0119", "demo": true
+      }
+    ],
+    "_assistanceNote": "Each card leads with the problems it covers, then the person. Email and phone are placeholders on example.com and on Australia's reserved fictitious number ranges; replace with the real details and drop the demo flag. phone is what tel: dials, phoneLabel is what a person reads.",
+    "reportIssue": { "label": "Something wrong in this portal?", "text": "Tell the manager on duty what page you were on and what you expected. Corrections go to whoever maintains the portal and are updated for everyone." },
+    "audience": {
+      "member": {
+        "intro": "The questions we get asked at the desk most. If yours is not here, ask us.",
+        "faq": [
+          { "q": "TODO: the question customers ask most.", "a": "TODO: the answer." },
+          { "q": "TODO: how to cancel or change a booking.", "a": "TODO: the answer." }
+        ],
+        "contact": {
+          "label": "Still stuck?", "text": "Come and see whoever is on the desk — that is what we are there for. Outside opening hours these reach us and someone will get back to you.",
+          "name": "{{tradingName}}", "address": "TODO: the main site's street address",
+          "email": "hello@example.com", "phone": "+61255500100", "phoneLabel": "(02) 5550 0100", "demo": true
+        }
+      }
+    }
+  },
+  "footer": "{{name}} Learning Hub · Built beside SimStudio · Content marked Demo is for {{name}} to confirm.",
+  "reports": {
+    "audiences": ["owner"],
+    "title": "Reports",
+    "asOf": "TODO: the period these figures cover, e.g. September 2026, month to date",
+    "note": "Demo figures. The client's own system is the source of truth; these show the shape of the page, not {{name}}'s numbers.",
+    "demo": true,
+    "derivedLabel": "From your data",
+    "demoLabel": "Demo figures",
+    "tiles": [
+      { "id": "active", "label": "Active members", "value": "1,000", "delta": "+20", "deltaLabel": "vs last month", "upIsGood": true, "trend": [880, 890, 900, 910, 905, 920, 930, 945, 950, 960, 980, 1000] },
+      { "id": "net", "label": "Net movement", "value": "+20", "delta": "+6", "deltaLabel": "vs last month", "upIsGood": true, "trend": [4, 10, 10, 10, -5, 15, 10, 15, 5, 10, 14, 20] },
+      { "id": "visits", "label": "Visits per member per week", "value": "1.8", "delta": "+0.1", "deltaLabel": "vs last month", "upIsGood": true, "trend": [1.6, 1.6, 1.7, 1.7, 1.6, 1.7, 1.7, 1.8, 1.7, 1.7, 1.7, 1.8] },
+      { "id": "rpm", "label": "Revenue per member", "value": "$120", "delta": "+$2", "deltaLabel": "vs last month", "upIsGood": true, "trend": [112, 113, 113, 114, 115, 115, 116, 117, 117, 118, 118, 120] }
+    ],
+    "members": { "title": "Active members, twelve months", "months": ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"], "values": [880, 890, 900, 910, 905, 920, 930, 945, 950, 960, 980, 1000] },
+    "cancellations": { "title": "Cancellation reasons, this month", "unit": "members", "rows": [["Moving away", 8], ["Cost", 7], ["Not using it", 5], ["Injury or illness", 4], ["Other", 3]] },
+    "import": {
+      "label": "Import data",
+      "title": "Import a report",
+      "intro": "Pick the export you have. Each one has a converter written against the columns your system actually produces, so the file goes in as it comes out.",
+      "privacy": "The file is read in this browser and never uploaded. Only the totals are kept on this device; the member-level rows are counted and dropped as soon as the numbers are worked out.",
+      "converters": [
+        { "id": "members", "kind": "members", "title": "Members, joins and cancellations", "source": "TODO: the client's system · member export", "status": "planned", "blurb": "Join and cancel dates against a member ID: how long people stay, and when they leave." },
+        { "id": "takings", "kind": "takings", "title": "Takings", "source": "TODO: POS or payment provider", "status": "planned", "blurb": "Revenue by day and by product." }
+      ],
+      "vocabulary": []
+    }
+  },
+  "processes": {
+    "audiences": ["owner"],
+    "title": "Process library",
+    "blurb": "One place for how this business works. Every process here drives the guides, checklists and simulations your team sees, so the training and the procedure can never say different things.",
+    "demo": true,
+    "note": "Demo content. Processes, owners and review dates are placeholders for {{name}} to confirm.",
+    "statuses": [
+      { "id": "documented", "label": "Documented", "blurb": "Written up and driving live content." },
+      { "id": "draft", "label": "Draft", "blurb": "Captured, not yet turned into training." },
+      { "id": "gap", "label": "Gap", "blurb": "Known to be needed, not yet written." }
+    ],
+    "areas": [
+      { "id": "front-desk", "label": "Front desk" },
+      { "id": "operations", "label": "Operations" },
+      { "id": "people", "label": "People" },
+      { "id": "money", "label": "Money" }
+    ],
+    "items": [
+      { "id": "pr-opening", "name": "Opening up", "area": "operations", "owner": "Manager on duty", "status": "documented", "reviewed": "{{today}}", "reviewCycle": "6 months", "drives": ["gd-opening", "chk-opening"], "summary": "From arrival to the first customer through the door." },
+      { "id": "pr-closing", "name": "Closing up", "area": "operations", "owner": "Manager on duty", "status": "documented", "reviewed": "{{today}}", "reviewCycle": "6 months", "drives": ["gd-closing", "chk-closing"], "summary": "From the last customer to the alarm on." },
+      { "id": "pr-roster", "name": "Building the roster", "area": "people", "owner": "Manager", "status": "draft", "reviewed": "{{today}}", "reviewCycle": "12 months", "drives": ["gd-mgr-roster"], "summary": "Covering the week, starting from the shifts that cannot be left empty." },
+      { "id": "pr-refunds", "name": "Refunds and complaints", "area": "money", "owner": "Owner", "status": "gap", "reviewed": "", "reviewCycle": "12 months", "drives": [], "summary": "TODO: why this matters at {{name}} — the gap's page asks for it to be documented." }
+    ]
+  },
+  "news": {
+    "title": "What's new",
+    "intro": "Changes, news and what is on at {{name}}.",
+    "demo": true,
+    "note": "Demo posts. A post written here is saved on this device and joins the list straight away; export it and it goes into the config as a permanent one. A date in the future holds it back until then.",
+    "audiences": ["member", "owner"],
+    "authors": ["owner"],
+    "writeLabel": "Write a post",
+    "tags": ["Facilities", "Opening hours", "Community", "Memberships"],
+    "ownerTitle": "Blog",
+    "ownerIntro": "Write a post for your customers, or read the blog the way they see it.",
+    "posts": [
+      {
+        "id": "n-welcome", "title": "Welcome to the {{name}} Learning Hub", "date": "{{today}}", "tag": "Community",
+        "lead": "TODO: the one line that says what changed and why it matters to a customer.",
+        "body": ["TODO: the post, a paragraph per idea. A blank line in the Write a post form starts a new one."]
+      }
+    ]
+  }
+}

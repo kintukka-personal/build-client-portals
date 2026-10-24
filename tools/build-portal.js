@@ -118,7 +118,9 @@ if (embed) {
   for (const i of config.items) {
     if (!i.src || /^https?:/.test(i.src)) continue;
     const rel = i.src.split('?')[0];          // one copy however many items point at it
-    if (sims[rel] !== undefined) continue;
+    // Only pages are inlined. A video plays from its own src and never reads this copy,
+    // and an .mp4 read as text would only bloat the file and corrupt on the way.
+    if (!/\.html?$/i.test(rel) || sims[rel] !== undefined) continue;
     const f = path.join(portalDir, rel);
     if (!fs.existsSync(f)) continue;
     sims[rel] = read(f);
@@ -142,7 +144,7 @@ if (!site) {
 
   const name = config.client.portalTitle;
   const short = config.client.name;
-  const theme = (brand.tokens && brand.tokens.palette && brand.tokens.palette.black) || '#000000';
+  const theme = (brand.color.palette[brand.color.roles.bg] || {}).hex || '#000000';
   const pwa = [
     '<link rel="manifest" href="manifest.webmanifest">',
     '<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">',
