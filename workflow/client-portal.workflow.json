@@ -1,0 +1,283 @@
+{
+  "_help": "The client-portal workflow as data. docs/ROADMAP.md is the same thing written for people; this file is what tools/check-client.js evaluates and what an automation reads. Paths use {slug}. Every gate check has a type that check-client.js implements; 'manual' checks are listed for a person to tick and never pass on their own. Change the workflow here and in the roadmap together, and bump version.",
+  "workflow": "client-portal",
+  "version": "1.0.0",
+  "referenceClient": "onyx",
+  "markers": {
+    "TODO": "A value starting TODO is ours to write. It must be gone before anyone outside the team sees the portal (Phase 3 gate).",
+    "demo": "demo:true is ours-written, theirs-to-confirm placeholder content. It may ship to a showcase; it must be gone or explicitly accepted at sign-off (Phase 8 gate).",
+    "_help": "A _help key is a template instruction. It is deleted when its section is completed (Phase 1 gate for the brand file).",
+    "PLACEHOLDER": "A stand-in value or asset written by tools/new-client.js. Replaced in Phase 1."
+  },
+  "outputs": {
+    "intake":          "clients/{slug}/{slug}-intake.md",
+    "brandJson":       "clients/{slug}/brand/{slug}-brand.json",
+    "tokensCss":       "clients/{slug}/brand/{slug}-tokens.css",
+    "brandSheet":      "clients/{slug}/brand/{slug}-brand-sheet.html",
+    "brandMd":         "clients/{slug}/brand/{slug}-brand.md",
+    "logo":            "clients/{slug}/brand/assets/{slug}-logo.svg",
+    "mark":            "clients/{slug}/brand/assets/{slug}-mark.svg",
+    "reference":       "clients/{slug}/brand/assets/reference/",
+    "icons":           "clients/{slug}/brand/assets/icons/",
+    "simKit":          "clients/{slug}/brand/{slug}.simbrand.json",
+    "portalJson":      "clients/{slug}/portal/{slug}-portal.json",
+    "portalHtml":      "clients/{slug}/portal/{slug}-portal.html",
+    "contentReadme":   "clients/{slug}/portal/content/README.md",
+    "sims":            "clients/{slug}/portal/content/sims/",
+    "simSources":      "clients/{slug}/portal/content/sims/src/",
+    "video":           "clients/{slug}/portal/content/video/",
+    "workbenchSample": "clients/{slug}/workbench/demo-data.json",
+    "site":            "clients/{slug}/site/"
+  },
+  "commands": {
+    "scaffold":     "node tools/new-client.js {slug} --name \"<Short name>\" --trading \"<Trading name>\" --website <https://…>",
+    "status":       "node tools/check-client.js {slug}",
+    "tokens":       "node tools/build-tokens.js {slug}",
+    "portal":       "node tools/build-portal.js {slug}",
+    "site":         "node tools/build-portal.js {slug} --site",
+    "icons":        "node tools/make-icons.js {slug}",
+    "insightsDemo": "node tools/make-insights-demo.js {slug}",
+    "smoke":        "node tools/smoke-portal.js {slug}"
+  },
+  "phases": [
+    {
+      "id": "P0", "key": "intake", "title": "Intake and kickoff",
+      "playbook": "docs/playbook/00-intake.md",
+      "goal": "Agree what is being built, for whom, by when, and start every request to the client on day one so nothing waits on them later.",
+      "owner": "us, with the client's main contact",
+      "inputs": ["Signed engagement or go-ahead", "Client's website and socials", "Name of the main contact and of whoever signs off"],
+      "steps": [
+        { "id": "P0.1", "title": "Choose the slug: short, lowercase, permanent. It is in every file name and the subdomain.", "automation": "manual" },
+        { "id": "P0.2", "title": "Scaffold the client", "automation": "command", "command": "scaffold" },
+        { "id": "P0.3", "title": "Send the asks list the same day: master logos, guideline, photos, SOPs, system names, a sample export, domain and DNS owner", "automation": "assisted" },
+        { "id": "P0.4", "title": "Run the kickoff and fill {slug}-intake.md: audiences, what they call their customers, features on or off, dates", "automation": "manual" },
+        { "id": "P0.5", "title": "Copy the open asks into brand meta.confirmWithClient so the sheet and the handover pack print them", "automation": "manual" }
+      ],
+      "outputs": ["intake", "brandJson", "portalJson", "logo", "mark", "contentReadme"],
+      "gate": [
+        { "id": "G0.1", "type": "exists", "path": "intake" },
+        { "id": "G0.2", "type": "exists", "path": "brandJson" },
+        { "id": "G0.3", "type": "exists", "path": "portalJson" },
+        { "id": "G0.4", "type": "noTodoText", "path": "intake", "label": "every intake question answered, or marked n/a with a reason" },
+        { "id": "G0.5", "type": "manual", "text": "Asks list sent to the client, with a date to chase" }
+      ],
+      "onyx": { "dates": "2026-09-17", "prs": [], "note": "Not a separate step for ONYX: the capture started from the public site and the asks went into meta.confirmWithClient. Written down here so the next client gets it on day one." }
+    },
+    {
+      "id": "P1", "key": "brand", "title": "Brand portfolio",
+      "playbook": "docs/playbook/01-brand-portfolio.md",
+      "goal": "One source of truth for how the client looks, sounds and behaves, signed off by the client, that the portal and every simulation read from.",
+      "owner": "us; the client signs off",
+      "inputs": ["Sixteen or more phone captures of the client's site", "Master logo files and guideline when they arrive"],
+      "steps": [
+        { "id": "P1.1", "title": "Collect sources and save cropped captures and a contact sheet to assets/reference/", "automation": "assisted" },
+        { "id": "P1.2", "title": "Sample colours with a pixel histogram, not an eyedropper; record hex and RGB", "automation": "assisted" },
+        { "id": "P1.3", "title": "Identify the typeface and the weights in use; add its woff2 files to template/portal/fonts/", "automation": "manual" },
+        { "id": "P1.4", "title": "Fill {slug}-brand.json, deleting each _help as its section is done; derive the portal tones including primaryTint, primaryDeep and ctaDeep", "automation": "manual" },
+        { "id": "P1.5", "title": "Build tokens and read the contrast report; every failing site pattern gets a portal variant", "automation": "command", "command": "tokens" },
+        { "id": "P1.6", "title": "Redraw the logo and mark stand-ins as SVG over a 10% grid", "automation": "manual" },
+        { "id": "P1.7", "title": "Build the brand sheet from ONYX's, keeping the @tokens markers, and render it at 390px and 1280px", "automation": "assisted" },
+        { "id": "P1.8", "title": "Write {slug}-brand.md from the sheet, with provenance and the open items", "automation": "assisted" },
+        { "id": "P1.9", "title": "Enter the six SimStudio decisions, save the kit under the client's name, export it beside the brand file", "automation": "manual" },
+        { "id": "P1.10", "title": "Render the app icons from the mark", "automation": "command", "command": "icons" },
+        { "id": "P1.11", "title": "Send the sheet for sign-off; corrections go into the JSON, the build runs, the version bumps, the changelog gets a line", "automation": "manual" }
+      ],
+      "outputs": ["brandJson", "tokensCss", "brandSheet", "brandMd", "logo", "mark", "reference", "simKit", "icons"],
+      "gate": [
+        { "id": "G1.1", "type": "noHelpKeys", "path": "brandJson", "label": "template _help notes all removed" },
+        { "id": "G1.2", "type": "jsonNotIn", "path": "brandJson", "at": "meta.status", "values": ["draft"], "label": "brand status moved past draft" },
+        { "id": "G1.3", "type": "jsonMin", "path": "brandJson", "at": "meta.sources", "min": 1, "label": "sources recorded" },
+        { "id": "G1.4", "type": "notContains", "path": "brandJson", "text": "PLACEHOLDER", "label": "no placeholder colours left" },
+        { "id": "G1.5", "type": "notContains", "path": "logo", "text": "PLACEHOLDER", "label": "logo stand-in redrawn" },
+        { "id": "G1.6", "type": "notContains", "path": "mark", "text": "PLACEHOLDER", "label": "mark stand-in redrawn" },
+        { "id": "G1.7", "type": "brandRoles", "path": "brandJson", "label": "tint and deep roles have their own colours" },
+        { "id": "G1.8", "type": "exists", "path": "tokensCss" },
+        { "id": "G1.9", "type": "exists", "path": "brandSheet" },
+        { "id": "G1.10", "type": "exists", "path": "brandMd" },
+        { "id": "G1.11", "type": "dirFiles", "path": "reference", "min": 2, "label": "reference captures and a contact sheet" },
+        { "id": "G1.12", "type": "dirFiles", "path": "icons", "min": 4, "suffix": ".png", "label": "four app icons" },
+        { "id": "G1.13", "type": "exists", "path": "simKit", "label": "SimStudio kit exported beside the brand file" },
+        { "id": "G1.14", "type": "manual", "text": "Sheet rendered and checked at 390px and 1280px" },
+        { "id": "G1.15", "type": "manual", "text": "Sheet sent to the client for sign-off" }
+      ],
+      "onyx": { "dates": "2026-09-17", "prs": [1, 2], "effort": "one working day from the public site", "note": "Sixteen mobile captures; Poppins; green, amber and black pixel-sampled; white on green and white on amber failed AA and became ink in the portal." }
+    },
+    {
+      "id": "P2", "key": "structure", "title": "Portal structure",
+      "playbook": "docs/playbook/02-portal-build.md",
+      "goal": "The portal's skeleton decided and built: who comes in, through which doors, behind which keys, and what each of them sees on Home and in the tab bar.",
+      "owner": "us",
+      "inputs": ["Intake: audiences, their names for things, features on or off"],
+      "steps": [
+        { "id": "P2.1", "title": "Fill the client block: names, site, address, website, member login, tagline, demoNote", "automation": "manual" },
+        { "id": "P2.2", "title": "Set the audiences: member (no key, first), employee, manager, owner; keys, sees, doorGroup, learnModules", "automation": "manual" },
+        { "id": "P2.3", "title": "Set nav per audience, five tabs at most; choose homeTiles, homeCards or the path list per audience", "automation": "manual" },
+        { "id": "P2.4", "title": "Set areas (usually four) and groups named after the job", "automation": "manual" },
+        { "id": "P2.5", "title": "Turn optional modules on or off: reports, processes, news, floorplans", "automation": "manual" },
+        { "id": "P2.6", "title": "Build", "automation": "command", "command": "portal" }
+      ],
+      "outputs": ["portalJson", "portalHtml"],
+      "gate": [
+        { "id": "G2.1", "type": "noTodo", "path": "portalJson", "at": "client", "label": "client block filled" },
+        { "id": "G2.2", "type": "jsonMin", "path": "portalJson", "at": "audiences", "min": 1 },
+        { "id": "G2.3", "type": "built", "path": "portalHtml", "label": "single-file build matches the current config" },
+        { "id": "G2.4", "type": "manual", "text": "Audiences, keys and module choices agreed with the client" }
+      ],
+      "onyx": { "dates": "2026-09-17 to 2026-09-25", "prs": [3, 4, 7, 9, 11, 12, 21, 24, 25], "note": "Started with three audiences; members arrived on day three, sees replaced the implied rule, doorGroup came last." }
+    },
+    {
+      "id": "P3", "key": "content", "title": "Content authoring",
+      "playbook": "docs/playbook/05-content-standards.md",
+      "goal": "Every item, path, support answer, process and post written in the client's voice, with nothing of ours left to write.",
+      "owner": "us drafts; the client corrects",
+      "inputs": ["The client's SOPs, onboarding notes, checklists and FAQs", "Brand voice rules"],
+      "steps": [
+        { "id": "P3.1", "title": "Write the first path: ten to eighteen items in the order a new starter meets them", "automation": "assisted" },
+        { "id": "P3.2", "title": "Write guides, checklists and articles to the content standards; mark everything unconfirmed demo", "automation": "assisted" },
+        { "id": "P3.3", "title": "Write the manager and owner content", "automation": "assisted" },
+        { "id": "P3.4", "title": "Write member tips and their own Support page", "automation": "assisted" },
+        { "id": "P3.5", "title": "Write Support: the questions first, then problem-led Direct assistance, with placeholder contacts on reserved ranges", "automation": "assisted" },
+        { "id": "P3.6", "title": "Write the process library: every process drives named items; include real drafts and gaps", "automation": "assisted" },
+        { "id": "P3.7", "title": "Write the first posts", "automation": "assisted" },
+        { "id": "P3.8", "title": "Build", "automation": "command", "command": "portal" }
+      ],
+      "outputs": ["portalJson", "portalHtml"],
+      "gate": [
+        { "id": "G3.1", "type": "noTodo", "path": "portalJson", "label": "no TODO left anywhere in the config" },
+        { "id": "G3.2", "type": "built", "path": "portalHtml" },
+        { "id": "G3.3", "type": "processDrives", "path": "portalJson", "label": "every process drives items that exist" },
+        { "id": "G3.4", "type": "manual", "text": "Read through once in the client's voice against the brand voice rules" }
+      ],
+      "onyx": { "dates": "2026-09-17 to 2026-09-24", "prs": [4, 5, 6, 8, 10, 17], "note": "57 items, 3 paths, 29 processes (22 documented, 4 drafts, 3 gaps), 5 posts. A wrong fact (RECOVER is booked, not walk-in) was in five places and fixed in all of them." }
+    },
+    {
+      "id": "P4", "key": "simulations", "title": "Simulations and media",
+      "playbook": "docs/playbook/06-simulations-and-media.md",
+      "goal": "Every simulation, interactive photo and video in place of its placeholder, wearing the client's kit, and working inside the portal's frame at phone width.",
+      "owner": "us in SimStudio; the client supplies access and photos",
+      "inputs": ["SimStudio brand kit from Phase 1", "Access to the client's systems or recordings of them", "Photos of the real space"],
+      "steps": [
+        { "id": "P4.1", "title": "Record each simulation in SimStudio with the client's kit; bars hidden while embedded", "automation": "manual" },
+        { "id": "P4.2", "title": "Export to content/sims/{slug}-sim-<item-id>.html and keep the .simproj.json in content/sims/src/", "automation": "manual" },
+        { "id": "P4.3", "title": "Photographs as JPEG, never PNG; check the export's size against the budget", "automation": "manual" },
+        { "id": "P4.4", "title": "Point each item at its file, set demo false, rebuild", "automation": "command", "command": "portal" },
+        { "id": "P4.5", "title": "Check each export in the frame at phone width; record any hand fix in content/README.md", "automation": "manual" }
+      ],
+      "outputs": ["sims", "simSources", "video", "contentReadme"],
+      "gate": [
+        { "id": "G4.1", "type": "noPlaceholderSims", "path": "portalJson", "label": "no simulation still on the placeholder" },
+        { "id": "G4.2", "type": "srcExists", "path": "portalJson", "label": "every local src points at a file" },
+        { "id": "G4.3", "type": "noNullVideo", "path": "portalJson", "label": "every video has a file" },
+        { "id": "G4.4", "type": "manual", "text": "Every export opened in the portal frame at 390px; hand fixes recorded" }
+      ],
+      "onyx": { "dates": "2026-09-23", "prs": [13, 15], "note": "One real export so far, the locker hotspot photo. It brought a new item type, two hand fixes to the export, and a PNG-to-JPEG recompression that halved the portal." }
+    },
+    {
+      "id": "P5", "key": "data", "title": "Reports and data",
+      "playbook": "docs/playbook/04-reports-and-data.md",
+      "optional": "reports",
+      "goal": "The owner's Reports page reading the client's own exports: a converter per export, written against their real columns, with a worked example generated by the same arithmetic.",
+      "owner": "us; the client supplies one real month of each export",
+      "inputs": ["One real export per report, with identifiers tokenised before it reaches us"],
+      "steps": [
+        { "id": "P5.1", "title": "Get one real month of the export; keep the source files out of the repository", "automation": "manual" },
+        { "id": "P5.2", "title": "Profile it in the workbench: fill, types, faults, vocabulary columns versus prose", "automation": "assisted" },
+        { "id": "P5.3", "title": "Decide the definitions that move the headline (what counts as a conversion) with the client", "automation": "manual" },
+        { "id": "P5.4", "title": "Write the sample: real structured columns, synthetic free text carrying the same tags", "automation": "assisted" },
+        { "id": "P5.5", "title": "Add the converter config: expect roles and match fragments, required roles, vocabulary, patterns; status ready", "automation": "manual" },
+        { "id": "P5.6", "title": "Generate the Insights worked example", "automation": "command", "command": "insightsDemo" },
+        { "id": "P5.7", "title": "List every other export as planned, so the owner sees what is read and what is still to build", "automation": "manual" }
+      ],
+      "outputs": ["workbenchSample", "portalJson"],
+      "gate": [
+        { "id": "G5.1", "type": "readyConverter", "path": "portalJson", "label": "at least one converter marked ready" },
+        { "id": "G5.2", "type": "exists", "path": "workbenchSample" },
+        { "id": "G5.3", "type": "jsonPresent", "path": "portalJson", "at": "reports.insights.demo", "label": "Insights worked example generated" },
+        { "id": "G5.4", "type": "manual", "text": "The first imported month checked against a number the client already knows" }
+      ],
+      "onyx": { "dates": "2026-09-23 to 2026-09-25", "prs": [16, 18, 19, 20, 22], "note": "GymMaster task report, 90 rows. Tours convert at 71.4% against 15.4% for walk-ins. Conversion counts the export's own flag; rates under eight rows are shown and marked low, never withheld." }
+    },
+    {
+      "id": "P6", "key": "hosting", "title": "Hosting and install",
+      "playbook": "docs/playbook/03-hosting-and-install.md",
+      "goal": "The portal live on its own subdomain over HTTPS, installable on a phone, updating on every push.",
+      "owner": "us; the client's DNS owner if it is their domain",
+      "inputs": ["Icons from Phase 1", "A subdomain and who controls its DNS"],
+      "steps": [
+        { "id": "P6.1", "title": "Build the hosted folder", "automation": "command", "command": "site" },
+        { "id": "P6.2", "title": "Create the Cloudflare Pages project: no build, output clients/{slug}/site", "automation": "manual" },
+        { "id": "P6.3", "title": "Test on the *.pages.dev URL, then add the custom domain and wait for the certificate", "automation": "manual" },
+        { "id": "P6.4", "title": "Zone settings: Browser Cache TTL respects headers, Rocket Loader off, Always Use HTTPS on", "automation": "manual" },
+        { "id": "P6.5", "title": "Run the six checks: padlock, manifest, worker, offline reload, no-cache on sw.js, install on Android and iPhone", "automation": "assisted" }
+      ],
+      "outputs": ["site", "icons"],
+      "gate": [
+        { "id": "G6.1", "type": "dirFiles", "path": "icons", "min": 4, "suffix": ".png" },
+        { "id": "G6.2", "type": "built", "path": "site", "file": "index.html", "label": "hosted build matches the current config" },
+        { "id": "G6.3", "type": "manual", "text": "Live on {slug}.<domain> with a certificate; all six checks in the playbook passed" }
+      ],
+      "onyx": { "dates": "2026-09-24 to 2026-09-25", "prs": [21, 23], "effort": "about twenty minutes for the next client" }
+    },
+    {
+      "id": "P7", "key": "qa", "title": "QA and walkthrough",
+      "playbook": "docs/playbook/07-qa-release-handover.md",
+      "goal": "Proof, before anyone outside the team sees it, that every audience gets a working portal on a phone and on a desktop.",
+      "owner": "us",
+      "inputs": ["A build that passes Phases 2 and 3"],
+      "steps": [
+        { "id": "P7.1", "title": "Run the smoke test: every audience, every page, no errors, nothing empty, nothing wider than a phone", "automation": "command", "command": "smoke" },
+        { "id": "P7.2", "title": "Walk the script on a real phone: landing, name, a simulation to completion, a guide ticked through, a wrong key then the right one, an export from Me", "automation": "manual" },
+        { "id": "P7.3", "title": "File-alone test: copy the single file into an empty folder and open it", "automation": "assisted" },
+        { "id": "P7.4", "title": "Run the pitfalls list in the QA playbook against anything new in the engine", "automation": "manual" }
+      ],
+      "outputs": [],
+      "gate": [
+        { "id": "G7.1", "type": "command", "command": "smoke", "label": "smoke test passes" },
+        { "id": "G7.2", "type": "manual", "text": "Walkthrough script done on a real phone and on a desktop" },
+        { "id": "G7.3", "type": "manual", "text": "File-alone test passed" }
+      ],
+      "onyx": { "dates": "every PR", "note": "Every bug in the pitfalls list was caught in a render pass, not by a test. The smoke test exists so the next client does not depend on someone looking." }
+    },
+    {
+      "id": "P8", "key": "handover", "title": "Handover and sign-off",
+      "playbook": "docs/playbook/07-qa-release-handover.md",
+      "goal": "The client has the portal, the keys, the open items and the one caveat they must hear from us, and has confirmed or replaced every demo item.",
+      "owner": "us, with whoever signs off",
+      "inputs": ["A build that passes Phase 7"],
+      "steps": [
+        { "id": "P8.1", "title": "Send the link (or the single file) and, separately, the keys", "automation": "manual" },
+        { "id": "P8.2", "title": "Send the handover pack: what is live, what is demo, the open asks, how corrections reach us", "automation": "assisted" },
+        { "id": "P8.3", "title": "Say the iOS caveat out loud: an installed app has its own storage, and progress is per device", "automation": "manual" },
+        { "id": "P8.4", "title": "Take the client's corrections, clear demo flags as content is confirmed, rebuild, bump the version", "automation": "manual" }
+      ],
+      "outputs": ["brandJson", "portalJson"],
+      "gate": [
+        { "id": "G8.1", "type": "noDemo", "path": "portalJson", "label": "no demo content left" },
+        { "id": "G8.2", "type": "jsonIn", "path": "brandJson", "at": "meta.status", "values": ["confirmed-by-client"], "label": "brand confirmed by the client" },
+        { "id": "G8.3", "type": "jsonMax", "path": "brandJson", "at": "meta.confirmWithClient", "max": 0, "label": "no open asks" },
+        { "id": "G8.4", "type": "manual", "text": "Keys delivered separately from the link" },
+        { "id": "G8.5", "type": "manual", "text": "iOS storage and per-device progress caveat raised with the client" }
+      ],
+      "onyx": { "dates": "open", "note": "ONYX is a showcase: 62 demo flags and five open asks stand, which is correct for where it is." }
+    },
+    {
+      "id": "P9", "key": "run", "title": "Run and iterate",
+      "playbook": "docs/playbook/07-qa-release-handover.md",
+      "goal": "The portal stays true: processes reviewed on their cycle, corrections in within the week, every release versioned.",
+      "owner": "us, on a cadence agreed at handover",
+      "inputs": ["Corrections from the portal's 'Something wrong?' route", "Exported process drafts and posts from the client's devices"],
+      "steps": [
+        { "id": "P9.1", "title": "Take in exported drafts and posts: a draft with resolves replaces its gap, it does not sit beside it", "automation": "assisted" },
+        { "id": "P9.2", "title": "Review processes that are past their cycle", "automation": "assisted" },
+        { "id": "P9.3", "title": "Rebuild both targets and push; Pages deploys; bump the version and write the changelog line", "automation": "command", "command": "site" }
+      ],
+      "outputs": [],
+      "gate": [
+        { "id": "G9.1", "type": "processReviews", "path": "portalJson", "label": "no process past its review cycle" },
+        { "id": "G9.2", "type": "built", "path": "portalHtml" },
+        { "id": "G9.3", "type": "built", "path": "site", "file": "index.html", "optional": true }
+      ],
+      "onyx": { "dates": "ongoing" }
+    }
+  ]
+}
