@@ -85,15 +85,21 @@ if (fs.existsSync(sheet)) {
 }
 
 // ---- contrast report -------------------------------------------------------
-const pairs = [
-  ['green', 'black'], ['white', 'black'], ['amber', 'black'], ['grey', 'black'], ['muted', 'black'],
-  ['white', 'green'], ['ink', 'green'], ['white', 'amber'], ['ink', 'amber'], ['green', 'surface'], ['white', 'surface'],
-  ['error', 'black'], ['white', 'error'],
+// The pairs are named by role, so every client gets the same report whatever its
+// palette keys are called. Printed by palette key, which is what <slug>-brand.md quotes.
+// text-on-primary and text-on-cta are checked in plain text as well as in ink, because
+// that is the site pattern that usually fails and needs a portal variant.
+const rolePairs = [
+  ['primary', 'bg'], ['text', 'bg'], ['cta', 'bg'], ['logoWordmark', 'bg'], ['textMuted', 'bg'],
+  ['text', 'primary'], ['textOnPrimary', 'primary'], ['text', 'cta'], ['textOnCta', 'cta'],
+  ['primary', 'surface'], ['text', 'surface'], ['error', 'bg'], ['text', 'error'],
 ];
 console.log('\ncontrast (foreground on background)');
-for (const [f, b] of pairs) {
+const live = rolePairs.map(([fr, br]) => [roles[fr], roles[br]]).filter(([f, b]) => f && b);
+const [fw, bw] = [Math.max(6, ...live.map(p => p[0].length)), Math.max(8, ...live.map(p => p[1].length))];
+for (const [f, b] of live) {
   const r = contrast(pal[f].hex, pal[b].hex);
-  console.log(`  ${f.padEnd(6)} on ${b.padEnd(8)} ${r.toFixed(2).padStart(6)}:1  ${grade(r)}`);
+  console.log(`  ${f.padEnd(fw)} on ${b.padEnd(bw)} ${r.toFixed(2).padStart(6)}:1  ${grade(r)}`);
 }
 
 function kebab(s) { return s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase(); }
